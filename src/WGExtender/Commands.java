@@ -24,6 +24,7 @@ public class Commands implements CommandExecutor {
 		{
 			config.loadConfig();
 			sender.sendMessage(ChatColor.BLUE+"Конфиг перезагружен");
+			return true;
 		}
 		return false;
 	}
