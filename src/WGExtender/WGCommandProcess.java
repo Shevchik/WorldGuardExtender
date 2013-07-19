@@ -1,6 +1,7 @@
 package WGExtender;
 
 import org.bukkit.Bukkit;
+import org.bukkit.ChatColor;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.EventPriority;
@@ -37,6 +38,7 @@ public class WGCommandProcess implements Listener {
 		//process group block limits
 		if (!processBlockLimits(event.getPlayer()))
 		{
+			event.getPlayer().sendMessage(ChatColor.RED+"Вы не можете заприватить такой большой регион");
 			event.setCancelled(true);
 			return;
 		}
