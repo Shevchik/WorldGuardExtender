@@ -11,6 +11,7 @@ public class Main extends JavaPlugin {
 	public void onEnable()
 	{
 		config = new Config();
+		config.loadConfig();
 		cmdprocess = new WGCommandProcess(config);
 		getServer().getPluginManager().registerEvents(cmdprocess, this);
 	}
