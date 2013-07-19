@@ -5,13 +5,13 @@ import org.bukkit.plugin.java.JavaPlugin;
 public class Main extends JavaPlugin {
 
 	private Config config;
-	private CommandProcess cmdprocess;
+	private WGCommandProcess cmdprocess;
 	
 	@Override
 	public void onEnable()
 	{
 		config = new Config();
-		cmdprocess = new CommandProcess(config);
+		cmdprocess = new WGCommandProcess(config);
 		getServer().getPluginManager().registerEvents(cmdprocess, this);
 	}
 	
