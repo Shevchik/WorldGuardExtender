@@ -23,6 +23,7 @@ public class Config {
 		FileConfiguration config = YamlConfiguration.loadConfiguration(new File("plugins/WGExtender/config.yml"));
 		
 		blocklimitsenabled = config.getBoolean("blocklimits.enabled",blocklimitsenabled);
+		blocklimits.clear();
 		if (config.getConfigurationSection("blocklimits.limits") != null)
 		{
 			for (String group : config.getConfigurationSection("blocklimits.limits").getKeys(false))
