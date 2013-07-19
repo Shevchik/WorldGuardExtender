@@ -1,0 +1,9 @@
+name: WGExtender
+main: WGExtender.Main
+version: 0.1-dev
+author: Shevchik
+depend: [WorldGuard, WorldEdit]
+load: STARTUP
+commands:
+  wgex:
+    usage: 'Тут ничего нет ещё'
