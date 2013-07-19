@@ -9,6 +9,7 @@ import org.bukkit.configuration.file.YamlConfiguration;
 
 public class Config {
 
+	public boolean blocklimitsenabled = true;
 	public HashMap<String, Integer> blocklimits = new HashMap<String, Integer>();
 	
 	public void loadConfig()
@@ -20,26 +21,34 @@ public class Config {
 	private void loadcfg()
 	{
 		FileConfiguration config = YamlConfiguration.loadConfiguration(new File("plugins/WGExtender/config.yml"));
-		for (String group : config.getConfigurationSection("blocklimits").getKeys(false))
+		
+		blocklimitsenabled = config.getBoolean("blocklimits.enabled",blocklimitsenabled);
+		if (config.getConfigurationSection("blocklimits.limits") != null)
 		{
-			blocklimits.put(group, config.getInt("blocklimits."+group));
+			for (String group : config.getConfigurationSection("blocklimits.limits").getKeys(false))
+			{
+				blocklimits.put(group, config.getInt("blocklimits.limits."+group));
+			}
 		}
 	}
 	
 	private void savecfg()
 	{
 		FileConfiguration config = new YamlConfiguration();
+		
+		config.set("blocklimits.enabled",blocklimitsenabled);
 		if (blocklimits.isEmpty())
 		{
-			config.createSection("blocklimits");
+			config.createSection("blocklimits.limits");
 		}
 		else
 		{
 			for (String group : blocklimits.keySet())
 			{
-				config.set("blocklimits."+group, blocklimits.get(group));
+				config.set("blocklimits.limits."+group, blocklimits.get(group));
 			}
 		}
+		
 		try {
 			config.save(new File("plugins/WGExtender/config.yml"));
 		} catch (IOException e) {
