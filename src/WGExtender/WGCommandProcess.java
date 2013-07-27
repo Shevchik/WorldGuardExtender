@@ -1,5 +1,7 @@
 package WGExtender;
 
+import java.util.Arrays;
+
 import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
 import org.bukkit.entity.Player;
@@ -14,11 +16,13 @@ import com.sk89q.worldguard.bukkit.WorldGuardPlugin;
 
 public class WGCommandProcess implements Listener {
 
+	private Main main;
 	private Config config;
 	private WorldEditPlugin we = null;
 	private WorldGuardPlugin wg = null;
 	
-	public WGCommandProcess(Config config) {
+	public WGCommandProcess(Main main, Config config) {
+		this.main = main;
 		this.config = config;
 	}
 
@@ -33,6 +37,8 @@ public class WGCommandProcess implements Listener {
 		//check only claim command
 		if (!cmds[1].equalsIgnoreCase("claim")) {return;}
 		//now process command
+		main.debug("Processing player "+event.getPlayer().getName());
+		main.debug("Processing limits for "+event.getPlayer().getName());
 		we = (WorldEditPlugin) Bukkit.getPluginManager().getPlugin("WorldEdit");
 		wg = (WorldGuardPlugin) Bukkit.getPluginManager().getPlugin("WorldGuard");
 		//process group block limits
@@ -40,8 +46,10 @@ public class WGCommandProcess implements Listener {
 		{
 			event.getPlayer().sendMessage(ChatColor.RED+"Вы не можете заприватить такой большой регион");
 			event.setCancelled(true);
+			main.debug("Finished processing player "+event.getPlayer().getName());
 			return;
 		}
+		main.debug("Finished processing player "+event.getPlayer().getName());
 	}
 	
 	
@@ -54,28 +62,29 @@ public class WGCommandProcess implements Listener {
 			//selection is null, allow player to process command
 			if (psel == null)
 			{
+				main.debug("Selection is null");
 				return true;
 			}
 			else
 			//no groups, allow player to process command
 			if (pgroups.length == 0)
 			{
+				main.debug("Player doesn't have a permission group");
 				return true;
 			}
 			//process limits
 			else
 			{
+				main.debug("Player selection size: "+psel.getArea()+", player groups: "+Arrays.asList(pgroups));
 				//get limit for player
 				int maxblocks = 0;
 				for (String pgroup : pgroups)
 				{
 					int blocks = config.blocklimits.get(pgroup);
-					if (blocks == -1) 
-					{//no limit for group, allow player to process command
-						return true;
-					}
 					if (blocks > maxblocks) {maxblocks = blocks;}
+					main.debug("Player group: "+pgroup+", blocklimit: "+blocks);
 				}
+				main.debug("Final player blocklimit: "+maxblocks);
 				//if player tried to claim above limit - disallow player to process command
 				if (psel.getArea() > maxblocks)
 				{

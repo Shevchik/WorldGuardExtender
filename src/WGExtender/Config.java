@@ -9,6 +9,8 @@ import org.bukkit.configuration.file.YamlConfiguration;
 
 public class Config {
 
+	public boolean debug = false;
+	
 	public boolean blocklimitsenabled = true;
 	public HashMap<String, Integer> blocklimits = new HashMap<String, Integer>();
 	
@@ -21,6 +23,8 @@ public class Config {
 	private void loadcfg()
 	{
 		FileConfiguration config = YamlConfiguration.loadConfiguration(new File("plugins/WGExtender/config.yml"));
+		
+		debug = config.getBoolean("debug.enabled",debug);
 		
 		blocklimitsenabled = config.getBoolean("blocklimits.enabled",blocklimitsenabled);
 		blocklimits.clear();
@@ -36,6 +40,8 @@ public class Config {
 	private void savecfg()
 	{
 		FileConfiguration config = new YamlConfiguration();
+		
+		config.set("debug.enabled",debug);
 		
 		config.set("blocklimits.enabled",blocklimitsenabled);
 		if (blocklimits.isEmpty())
