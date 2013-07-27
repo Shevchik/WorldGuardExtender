@@ -80,7 +80,8 @@ public class WGCommandProcess implements Listener {
 				int maxblocks = 0;
 				for (String pgroup : pgroups)
 				{
-					int blocks = config.blocklimits.get(pgroup);
+					int blocks = 0;
+					try {blocks = config.blocklimits.get(pgroup);} catch (Exception e) {}
 					if (blocks > maxblocks) {maxblocks = blocks;}
 					main.debug("Player group: "+pgroup+", blocklimit: "+blocks);
 				}
