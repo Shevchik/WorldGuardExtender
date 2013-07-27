@@ -11,6 +11,8 @@ public class Config {
 
 	public boolean debug = false;
 	
+	public boolean expandvert = true;
+	
 	public boolean blocklimitsenabled = true;
 	public HashMap<String, Integer> blocklimits = new HashMap<String, Integer>();
 	

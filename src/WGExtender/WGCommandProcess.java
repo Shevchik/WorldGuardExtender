@@ -38,9 +38,12 @@ public class WGCommandProcess implements Listener {
 		if (!cmds[1].equalsIgnoreCase("claim")) {return;}
 		//now process command
 		main.debug("Processing player "+event.getPlayer().getName());
-		main.debug("Processing limits for "+event.getPlayer().getName());
+		main.debug("Processing limits");
 		we = (WorldEditPlugin) Bukkit.getPluginManager().getPlugin("WorldEdit");
 		wg = (WorldGuardPlugin) Bukkit.getPluginManager().getPlugin("WorldGuard");
+		//process expand
+		main.debug("processing vertical expand");
+		processVertExpand(event.getPlayer());
 		//process group block limits
 		if (!processBlockLimits(event.getPlayer()))
 		{
@@ -95,6 +98,22 @@ public class WGCommandProcess implements Listener {
 			
 		}
 		return true;
+	}
+	
+	private void processVertExpand(Player pl)
+	{
+		if (config.expandvert)
+		{
+			Selection psel = we.getSelection(pl);
+			if (psel == null)
+			{
+				return;
+			}
+			else
+			{
+				Bukkit.dispatchCommand(pl, "/expand vert");
+			}
+		}
 	}
 	
 }
