@@ -28,6 +28,8 @@ public class Config {
 		
 		debug = config.getBoolean("debug.enabled",debug);
 		
+		expandvert = config.getBoolean("vertexpand.enabled",expandvert);
+		
 		blocklimitsenabled = config.getBoolean("blocklimits.enabled",blocklimitsenabled);
 		blocklimits.clear();
 		if (config.getConfigurationSection("blocklimits.limits") != null)
@@ -44,6 +46,8 @@ public class Config {
 		FileConfiguration config = new YamlConfiguration();
 		
 		config.set("debug.enabled",debug);
+		
+		config.set("vertexpand.enabled",expandvert);
 		
 		config.set("blocklimits.enabled",blocklimitsenabled);
 		if (blocklimits.isEmpty())
