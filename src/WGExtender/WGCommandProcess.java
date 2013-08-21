@@ -1,7 +1,5 @@
 package WGExtender;
 
-import java.util.Arrays;
-
 import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
 import org.bukkit.entity.Player;
@@ -34,20 +32,15 @@ public class WGCommandProcess implements Listener {
 		//check only claim command
 		if (!cmds[1].equalsIgnoreCase("claim")) {return;}
 		//now process command
-		main.debug("Processing player "+event.getPlayer().getName());
-		main.debug("Processing limits");
 		//process expand
-		main.debug("processing vertical expand");
 		processVertExpand(event.getPlayer());
 		//process group block limits
 		if (!processBlockLimits(event.getPlayer()))
 		{
 			event.getPlayer().sendMessage(ChatColor.RED+"Вы не можете заприватить такой большой регион");
 			event.setCancelled(true);
-			main.debug("Finished processing player "+event.getPlayer().getName());
 			return;
 		}
-		main.debug("Finished processing player "+event.getPlayer().getName());
 	}
 	
 	
@@ -60,20 +53,17 @@ public class WGCommandProcess implements Listener {
 			//selection is null, allow player to process command
 			if (psel == null)
 			{
-				main.debug("Selection is null");
 				return true;
 			}
 			else
 			//no groups, allow player to process command
 			if (pgroups.length == 0)
 			{
-				main.debug("Player doesn't have a permission group");
 				return true;
 			}
 			//process limits
 			else
 			{
-				main.debug("Player selection size: "+psel.getArea()+", player groups: "+Arrays.asList(pgroups));
 				//get limit for player
 				int maxblocks = 0;
 				for (String pgroup : pgroups)
@@ -81,9 +71,7 @@ public class WGCommandProcess implements Listener {
 					int blocks = 0;
 					try {blocks = config.blocklimits.get(pgroup);} catch (Exception e) {}
 					if (blocks > maxblocks) {maxblocks = blocks;}
-					main.debug("Player group: "+pgroup+", blocklimit: "+blocks);
 				}
-				main.debug("Final player blocklimit: "+maxblocks);
 				//if player tried to claim above limit - disallow player to process command
 				if (psel.getArea() > maxblocks)
 				{

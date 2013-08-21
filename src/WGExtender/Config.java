@@ -8,8 +8,6 @@ import org.bukkit.configuration.file.FileConfiguration;
 import org.bukkit.configuration.file.YamlConfiguration;
 
 public class Config {
-
-	public boolean debug = false;
 	
 	public boolean expandvert = true;
 	
@@ -28,8 +26,6 @@ public class Config {
 	private void loadcfg()
 	{
 		FileConfiguration config = YamlConfiguration.loadConfiguration(new File("plugins/WGExtender/config.yml"));
-		
-		debug = config.getBoolean("debug.enabled",debug);
 		
 		expandvert = config.getBoolean("vertexpand.enabled",expandvert);
 		
@@ -51,8 +47,6 @@ public class Config {
 	private void savecfg()
 	{
 		FileConfiguration config = new YamlConfiguration();
-		
-		config.set("debug.enabled",debug);
 		
 		config.set("vertexpand.enabled",expandvert);
 		

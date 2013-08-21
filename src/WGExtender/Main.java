@@ -1,7 +1,5 @@
 package WGExtender;
 
-import java.util.logging.Logger;
-
 import org.bukkit.Bukkit;
 import org.bukkit.event.HandlerList;
 import org.bukkit.plugin.java.JavaPlugin;
@@ -10,8 +8,6 @@ import com.sk89q.worldedit.bukkit.WorldEditPlugin;
 import com.sk89q.worldguard.bukkit.WorldGuardPlugin;
 
 public class Main extends JavaPlugin {
-
-	private Logger log = Bukkit.getLogger();
 	
 	private Config config;
 	private WGCommandProcess cmdprocess;
@@ -46,16 +42,7 @@ public class Main extends JavaPlugin {
 		HandlerList.unregisterAll(this);
 		we = null;
 		wg = null;
-		log = null;
 	}
-	
-	
-	public void debug(Object msg)
-	{
-		if (config.debug)
-		{
-			log.info(msg.toString());
-		}
-	}
+
 	
 }
