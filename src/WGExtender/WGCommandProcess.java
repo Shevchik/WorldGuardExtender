@@ -10,16 +10,13 @@ import org.bukkit.event.EventPriority;
 import org.bukkit.event.Listener;
 import org.bukkit.event.player.PlayerCommandPreprocessEvent;
 
-import com.sk89q.worldedit.bukkit.WorldEditPlugin;
 import com.sk89q.worldedit.bukkit.selections.Selection;
-import com.sk89q.worldguard.bukkit.WorldGuardPlugin;
 
 public class WGCommandProcess implements Listener {
 
 	private Main main;
 	private Config config;
-	private WorldEditPlugin we = null;
-	private WorldGuardPlugin wg = null;
+
 	
 	public WGCommandProcess(Main main, Config config) {
 		this.main = main;
@@ -39,8 +36,6 @@ public class WGCommandProcess implements Listener {
 		//now process command
 		main.debug("Processing player "+event.getPlayer().getName());
 		main.debug("Processing limits");
-		we = (WorldEditPlugin) Bukkit.getPluginManager().getPlugin("WorldEdit");
-		wg = (WorldGuardPlugin) Bukkit.getPluginManager().getPlugin("WorldGuard");
 		//process expand
 		main.debug("processing vertical expand");
 		processVertExpand(event.getPlayer());
@@ -60,8 +55,8 @@ public class WGCommandProcess implements Listener {
 	{
 		if (config.blocklimitsenabled)
 		{
-			Selection psel = we.getSelection(pl);
-			String[] pgroups = wg.getGroups(pl);
+			Selection psel = main.we.getSelection(pl);
+			String[] pgroups = main.wg.getGroups(pl);
 			//selection is null, allow player to process command
 			if (psel == null)
 			{
@@ -104,7 +99,7 @@ public class WGCommandProcess implements Listener {
 	{
 		if (config.expandvert)
 		{
-			Selection psel = we.getSelection(pl);
+			Selection psel = main.we.getSelection(pl);
 			if (psel == null)
 			{
 				return;

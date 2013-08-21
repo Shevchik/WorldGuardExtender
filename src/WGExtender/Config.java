@@ -16,6 +16,9 @@ public class Config {
 	public boolean blocklimitsenabled = true;
 	public HashMap<String, Integer> blocklimits = new HashMap<String, Integer>();
 	
+	public boolean blocklavaflow = true;
+	public boolean blockwaterflow = true;
+	
 	public void loadConfig()
 	{
 		loadcfg();
@@ -39,6 +42,10 @@ public class Config {
 				blocklimits.put(group, config.getInt("blocklimits.limits."+group));
 			}
 		}
+		
+		blocklavaflow = config.getBoolean("blockflowtoregion.lava",blocklavaflow);
+		blockwaterflow = config.getBoolean("blockflowtoregion.water",blockwaterflow);
+		
 	}
 	
 	private void savecfg()
@@ -61,6 +68,9 @@ public class Config {
 				config.set("blocklimits.limits."+group, blocklimits.get(group));
 			}
 		}
+		
+		config.set("blockflowtoregion.lava",blocklavaflow);
+		config.set("blockflowtoregion.water",blockwaterflow);
 		
 		try {
 			config.save(new File("plugins/WGExtender/config.yml"));
