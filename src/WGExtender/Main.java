@@ -22,6 +22,7 @@ import org.bukkit.event.HandlerList;
 import org.bukkit.plugin.java.JavaPlugin;
 
 import WGExtender.commands.Commands;
+import WGExtender.regionprotect.IgniteByPlayer;
 import WGExtender.regionprotect.LiquidFlow;
 import WGExtender.wgcommandprocess.WGCommandProcess;
 
@@ -34,6 +35,7 @@ public class Main extends JavaPlugin {
 	private WGCommandProcess cmdprocess;
 	private Commands commands;
 	private LiquidFlow lflow;
+	private IgniteByPlayer ignitebp;
 	
 	public WorldEditPlugin we = null;
 	public WorldGuardPlugin wg = null;
@@ -51,6 +53,8 @@ public class Main extends JavaPlugin {
 		getCommand("wgex").setExecutor(commands);
 		lflow = new LiquidFlow(this,config);
 		getServer().getPluginManager().registerEvents(lflow, this);
+		ignitebp = new IgniteByPlayer(this,config);
+		getServer().getPluginManager().registerEvents(ignitebp, this);
 	}
 	
 	@Override
@@ -59,6 +63,7 @@ public class Main extends JavaPlugin {
 		config = null;
 		cmdprocess = null;
 		lflow = null;
+		ignitebp = null;
 		commands = null;
 		HandlerList.unregisterAll(this);
 		we = null;

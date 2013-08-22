@@ -90,6 +90,8 @@ public class Config {
 		config.set("blockflowtoregion.lava",blocklavaflow);
 		config.set("blockflowtoregion.water",blockwaterflow);
 		
+		config.set("blockigniteotherregionbyplayer.enabled",blockigniteotherregionbyplayer);
+		
 		try {
 			config.save(new File("plugins/WGExtender/config.yml"));
 		} catch (IOException e) {
