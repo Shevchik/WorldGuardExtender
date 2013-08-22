@@ -34,10 +34,9 @@ public class Config {
 	public boolean blockliquidflow = true;
 	public boolean blocklavaflow = true;
 	public boolean blockwaterflow = true;
-	
 	public boolean blockigniteotherregionbyplayer = true;
-	
 	public boolean blockfirespreadtoregion = true;
+	public boolean blockblockburninregion = true;
 	
 	public void loadConfig()
 	{
@@ -64,10 +63,9 @@ public class Config {
 		blockliquidflow = config.getBoolean("blockflowtoregion.enabled",blockliquidflow);
 		blocklavaflow = config.getBoolean("blockflowtoregion.lava",blocklavaflow);
 		blockwaterflow = config.getBoolean("blockflowtoregion.water",blockwaterflow);
-		
 		blockigniteotherregionbyplayer = config.getBoolean("blockigniteotherregionbyplayer.enabled",blockigniteotherregionbyplayer);
-		
 		blockfirespreadtoregion = config.getBoolean("blockfirespreadtoregion.enabled",blockfirespreadtoregion);
+		blockblockburninregion = config.getBoolean("blockblockburninregion.enabled",blockblockburninregion);
 		
 	}
 	
@@ -93,10 +91,9 @@ public class Config {
 		config.set("blockflowtoregion.enabled",blockliquidflow);
 		config.set("blockflowtoregion.lava",blocklavaflow);
 		config.set("blockflowtoregion.water",blockwaterflow);
-		
 		config.set("blockigniteotherregionbyplayer.enabled",blockigniteotherregionbyplayer);
-		
 		config.set("blockfirespreadtoregion.enabled",blockfirespreadtoregion);
+		config.set("blockblockburninregion.enabled",blockblockburninregion);
 		
 		try {
 			config.save(new File("plugins/WGExtender/config.yml"));

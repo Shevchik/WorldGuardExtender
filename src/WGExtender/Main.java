@@ -22,6 +22,7 @@ import org.bukkit.event.HandlerList;
 import org.bukkit.plugin.java.JavaPlugin;
 
 import WGExtender.commands.Commands;
+import WGExtender.regionprotect.BurnInsideRegion;
 import WGExtender.regionprotect.FireSpread;
 import WGExtender.regionprotect.IgniteByPlayer;
 import WGExtender.regionprotect.LiquidFlow;
@@ -38,6 +39,7 @@ public class Main extends JavaPlugin {
 	private LiquidFlow lflow;
 	private IgniteByPlayer ignitebp;
 	private FireSpread fspread;
+	private BurnInsideRegion burnir;
 	
 	public WorldEditPlugin we = null;
 	public WorldGuardPlugin wg = null;
@@ -59,6 +61,8 @@ public class Main extends JavaPlugin {
 		getServer().getPluginManager().registerEvents(ignitebp, this);
 		fspread = new FireSpread(this,config);
 		getServer().getPluginManager().registerEvents(fspread, this);
+		burnir = new BurnInsideRegion(this,config);
+		getServer().getPluginManager().registerEvents(burnir, this);
 	}
 	
 	@Override
@@ -69,6 +73,7 @@ public class Main extends JavaPlugin {
 		lflow = null;
 		ignitebp = null;
 		fspread = null;
+		burnir = null;
 		commands = null;
 		HandlerList.unregisterAll(this);
 		we = null;
