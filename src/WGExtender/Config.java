@@ -38,6 +38,9 @@ public class Config {
 	public boolean blockfirespreadtoregion = true;
 	public boolean blockfirespreadinregion = true;
 	public boolean blockblockburninregion = true;
+	public boolean blockentityexplosionblockdamage = true;
+	public boolean blocktntexplosionblockdmage = true;
+	public boolean blockcreeperexplosionblockdmage = true;
 	
 	public void loadConfig()
 	{
@@ -68,6 +71,9 @@ public class Config {
 		blockfirespreadtoregion = config.getBoolean("blockfirespreadtoregion.enabled",blockfirespreadtoregion);
 		blockfirespreadinregion = config.getBoolean("blockfirespreadinregion.enabled",blockfirespreadinregion);
 		blockblockburninregion = config.getBoolean("blockblockburninregion.enabled",blockblockburninregion);
+		blockentityexplosionblockdamage = config.getBoolean("blockentityexplosionblokdamage.enabled",blockentityexplosionblockdamage);
+		blocktntexplosionblockdmage = config.getBoolean("blockentityexplosionblokdamage.tnt",blocktntexplosionblockdmage);
+		blockcreeperexplosionblockdmage = config.getBoolean("blockentityexplosionblokdamage.creeper",blockcreeperexplosionblockdmage);
 		
 	}
 	
@@ -97,6 +103,9 @@ public class Config {
 		config.set("blockfirespreadtoregion.enabled",blockfirespreadtoregion);
 		config.set("blockfirespreadinregion.enabled",blockfirespreadinregion);
 		config.set("blockblockburninregion.enabled",blockblockburninregion);
+		config.set("blockentityexplosionblokdamage.enabled",blockentityexplosionblockdamage);
+		config.set("blockentityexplosionblokdamage.tnt",blocktntexplosionblockdmage);
+		config.set("blockentityexplosionblokdamage.creeper",blockcreeperexplosionblockdmage);
 		
 		try {
 			config.save(new File("plugins/WGExtender/config.yml"));
