@@ -95,8 +95,8 @@ public class Config {
 		config.set("blockflowtoregion.water",blockwaterflow);
 		config.set("blockigniteotherregionbyplayer.enabled",blockigniteotherregionbyplayer);
 		config.set("blockfirespreadtoregion.enabled",blockfirespreadtoregion);
+		config.set("blockfirespreadinregion.enabled",blockfirespreadinregion);
 		config.set("blockblockburninregion.enabled",blockblockburninregion);
-		config.set("blockfirespreadinregion.enabled", blockfirespreadinregion);
 		
 		try {
 			config.save(new File("plugins/WGExtender/config.yml"));
