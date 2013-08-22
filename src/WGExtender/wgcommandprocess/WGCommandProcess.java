@@ -1,4 +1,4 @@
-package WGExtender;
+package WGExtender.wgcommandprocess;
 
 import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
@@ -7,6 +7,9 @@ import org.bukkit.event.EventHandler;
 import org.bukkit.event.EventPriority;
 import org.bukkit.event.Listener;
 import org.bukkit.event.player.PlayerCommandPreprocessEvent;
+
+import WGExtender.Config;
+import WGExtender.Main;
 
 import com.sk89q.worldedit.bukkit.selections.Selection;
 

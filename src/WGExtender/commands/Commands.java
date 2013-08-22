@@ -1,4 +1,4 @@
-package WGExtender;
+package WGExtender.commands;
 
 import org.bukkit.ChatColor;
 import org.bukkit.command.Command;
@@ -7,6 +7,8 @@ import org.bukkit.command.CommandSender;
 import org.bukkit.command.ConsoleCommandSender;
 import org.bukkit.command.RemoteConsoleCommandSender;
 import org.bukkit.entity.Player;
+
+import WGExtender.Config;
 
 public class Commands implements CommandExecutor {
 

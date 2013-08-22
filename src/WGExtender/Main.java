@@ -4,6 +4,10 @@ import org.bukkit.Bukkit;
 import org.bukkit.event.HandlerList;
 import org.bukkit.plugin.java.JavaPlugin;
 
+import WGExtender.commands.Commands;
+import WGExtender.regionprotect.LiquidFlow;
+import WGExtender.wgcommandprocess.WGCommandProcess;
+
 import com.sk89q.worldedit.bukkit.WorldEditPlugin;
 import com.sk89q.worldguard.bukkit.WorldGuardPlugin;
 
