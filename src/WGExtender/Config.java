@@ -37,6 +37,8 @@ public class Config {
 	
 	public boolean blockigniteotherregionbyplayer = true;
 	
+	public boolean blockfirespreadtoregion = true;
+	
 	public void loadConfig()
 	{
 		loadcfg();
@@ -65,6 +67,8 @@ public class Config {
 		
 		blockigniteotherregionbyplayer = config.getBoolean("blockigniteotherregionbyplayer.enabled",blockigniteotherregionbyplayer);
 		
+		blockfirespreadtoregion = config.getBoolean("blockfirespreadtoregion.enabled",blockfirespreadtoregion);
+		
 	}
 	
 	private void savecfg()
@@ -91,6 +95,8 @@ public class Config {
 		config.set("blockflowtoregion.water",blockwaterflow);
 		
 		config.set("blockigniteotherregionbyplayer.enabled",blockigniteotherregionbyplayer);
+		
+		config.set("blockfirespreadtoregion.enabled",blockfirespreadtoregion);
 		
 		try {
 			config.save(new File("plugins/WGExtender/config.yml"));
