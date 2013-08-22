@@ -68,6 +68,11 @@ public class WGCommandProcess implements Listener {
 	{
 		if (config.blocklimitsenabled)
 		{
+			if (pl.hasPermission("worldguard.region.unlimited")) 
+			{
+				return true;
+			}
+			
 			Selection psel = main.we.getSelection(pl);
 			String[] pgroups = main.wg.getGroups(pl);
 			//selection is null, allow player to process command
