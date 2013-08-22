@@ -1,14 +1,11 @@
 package WGExtender.regionprotect;
 
-import org.bukkit.Material;
 import org.bukkit.block.Block;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.EventPriority;
 import org.bukkit.event.Listener;
 import org.bukkit.event.block.BlockIgniteEvent;
 import org.bukkit.event.block.BlockIgniteEvent.IgniteCause;
-import org.bukkit.event.block.BlockSpreadEvent;
-
 import WGExtender.Config;
 import WGExtender.Main;
 
@@ -25,34 +22,28 @@ public class FireSpread implements Listener {
 	
 	
 	@EventHandler(priority=EventPriority.HIGHEST,ignoreCancelled=true)
-	public void onFireSpread(BlockSpreadEvent e)
-	{
-		if (!config.blockfirespreadtoregion) {return;}
-		
-		if(e.getNewState().getType() == Material.FIRE) 
-		{
-			if (!allowFireSpread(e.getSource(),e.getBlock()))
-			{
-				e.setCancelled(true);
-			}
-		}
-	}
-	
-	@EventHandler(priority=EventPriority.HIGHEST,ignoreCancelled=true)
 	public void onBlockIgnite(BlockIgniteEvent e)
 	{
-		if (!config.blockfirespreadtoregion) {return;}
-		
 		if (e.getCause() == IgniteCause.SPREAD)
 		{
-			if (!allowFireSpread(e.getIgnitingBlock(),e.getBlock()))
-			{
-				e.setCancelled(true);
+			if (config.blockfirespreadtoregion)
+			{//check to region
+				if (!allowFireSpreadToRegion(e.getIgnitingBlock(),e.getBlock()))
+				{
+					e.setCancelled(true);
+				}
+			}
+			if (config.blockfirespreadinregion)
+			{//check in region
+				if (!allowFireSpreadInRegion(e.getIgnitingBlock(),e.getBlock()))
+				{
+					e.setCancelled(true);
+				}
 			}
 		}
 	}
 	
-	private boolean allowFireSpread(Block from, Block to)
+	private boolean allowFireSpreadToRegion(Block from, Block to)
 	{
 		if (WGRPUtils.isInWGRegion(main.wg, to))
 		{
@@ -68,6 +59,18 @@ public class FireSpread implements Listener {
 				{
 					return false;
 				}
+			}
+		}
+		return true;
+	}
+	
+	private boolean allowFireSpreadInRegion(Block from, Block to)
+	{
+		if (WGRPUtils.isInWGRegion(main.wg, to))
+		{
+			if (WGRPUtils.isInTheSameRegion(main.wg, from, to))
+			{
+				return false;
 			}
 		}
 		return true;
