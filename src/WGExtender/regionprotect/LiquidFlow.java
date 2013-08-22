@@ -1,7 +1,5 @@
 package WGExtender.regionprotect;
 
-import java.util.List;
-
 import org.bukkit.Material;
 import org.bukkit.block.Block;
 import org.bukkit.event.EventHandler;
@@ -11,8 +9,6 @@ import org.bukkit.event.block.BlockFromToEvent;
 
 import WGExtender.Config;
 import WGExtender.Main;
-
-import com.sk89q.worldedit.bukkit.BukkitUtil;
 
 public class LiquidFlow implements Listener {
 
@@ -28,6 +24,8 @@ public class LiquidFlow implements Listener {
 	@EventHandler(priority=EventPriority.HIGHEST,ignoreCancelled=true)
 	public void onLiquidFlow(BlockFromToEvent e)
 	{
+		if (!config.blockliquidflow) {return;}
+		
 		Block b = e.getBlock();
 		if (b.isLiquid())
 		{
@@ -51,42 +49,23 @@ public class LiquidFlow implements Listener {
 	
 	private boolean allowLiquidFlow(Block from, Block to)
 	{
-		if (isInWGRegion(to))
+		if (WGRPUtils.isInWGRegion(main.wg, to))
 		{
 			//block flow from unclaimed area
-			if (!isInWGRegion(from))
+			if (!WGRPUtils.isInWGRegion(main.wg, from))
 			{
 				return false;
 			}
 			else
 			//block flow from not the same regions
 			{
-				if (!isInTheSameRegion(from,to))
+				if (!WGRPUtils.isInTheSameRegion(main.wg, from,to))
 				{
 					return false;
 				}
 			}
 		}
 		return true;
-	}
-	
-
-	private boolean isInWGRegion(Block b)
-	{
-		if (main.wg.getRegionManager(b.getWorld()).getApplicableRegions(b.getLocation()).size() > 0) {return true;}
-		return false;
-	}
-	
-	private boolean isInTheSameRegion(Block b1, Block b2)
-	{
-		//plain equals doesn't want to work here :(
-		List<String> ari1 = main.wg.getRegionManager(b1.getWorld()).getApplicableRegionsIDs(BukkitUtil.toVector(b1.getLocation()));
-		List<String> ari2 = main.wg.getRegionManager(b2.getWorld()).getApplicableRegionsIDs(BukkitUtil.toVector(b2.getLocation()));
-		if (ari1.equals(ari2))
-		{
-			return true;
-		}
-		return false;
 	}
 	
 }

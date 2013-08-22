@@ -14,8 +14,11 @@ public class Config {
 	public boolean blocklimitsenabled = true;
 	public HashMap<String, Integer> blocklimits = new HashMap<String, Integer>();
 	
+	public boolean blockliquidflow = true;
 	public boolean blocklavaflow = true;
 	public boolean blockwaterflow = true;
+	
+	public boolean blockigniteotherregionbyplayer = true;
 	
 	public void loadConfig()
 	{
@@ -39,8 +42,11 @@ public class Config {
 			}
 		}
 		
+		blockliquidflow = config.getBoolean("blockflowtoregion.enabled",blockliquidflow);
 		blocklavaflow = config.getBoolean("blockflowtoregion.lava",blocklavaflow);
 		blockwaterflow = config.getBoolean("blockflowtoregion.water",blockwaterflow);
+		
+		blockigniteotherregionbyplayer = config.getBoolean("blockigniteotherregionbyplayer.enabled",blockigniteotherregionbyplayer);
 		
 	}
 	
@@ -63,6 +69,7 @@ public class Config {
 			}
 		}
 		
+		config.set("blockflowtoregion.enabled",blockliquidflow);
 		config.set("blockflowtoregion.lava",blocklavaflow);
 		config.set("blockflowtoregion.water",blockwaterflow);
 		
