@@ -44,18 +44,24 @@ public class FireSpread implements Listener {
 	{
 		if (e.getNewState().getType() == Material.FIRE)
 		{
-			if (config.blockfirespreadtoregion)
-			{//check to region
-				if (!allowFireSpreadToRegion(e.getSource(),e.getBlock()))
+			if (config.blockfirespreadtoregion || config.blockfirespreadinregion)
+			{
+				if (WGRPUtils.isInWGRegion(main.wg, e.getBlock()))
 				{
-					e.setCancelled(true);
-				}
-			}
-			if (config.blockfirespreadinregion)
-			{//check in region
-				if (!allowFireSpreadInRegion(e.getSource(),e.getBlock()))
-				{
-					e.setCancelled(true);
+					if (config.blockfirespreadtoregion)
+					{//check to region
+						if (!allowFireSpreadToRegion(e.getSource(),e.getBlock()))
+						{
+							e.setCancelled(true);
+						}
+					}
+					if (config.blockfirespreadinregion)
+					{//check in region
+						if (!allowFireSpreadInRegion(e.getSource(),e.getBlock()))
+						{
+							e.setCancelled(true);
+						}
+					}
 				}
 			}
 		}
@@ -63,33 +69,25 @@ public class FireSpread implements Listener {
 	
 	private boolean allowFireSpreadToRegion(Block from, Block to)
 	{
-		if (WGRPUtils.isInWGRegion(main.wg, to))
+		//block spread from unclaimed area
+		if (!WGRPUtils.isInWGRegion(main.wg, from))
 		{
-			//block spread from unclaimed area
-			if (!WGRPUtils.isInWGRegion(main.wg, from))
-			{
-				return false;
-			}
-			else
-			//block spread from not the same regions
-			{
-				if (!WGRPUtils.isInTheSameRegion(main.wg, from,to))
-				{
-					return false;
-				}
-			}
+			return false;
+		}
+		else
+		//block spread from not the same regions
+		if (!WGRPUtils.isInTheSameRegion(main.wg, from,to))
+		{
+			return false;
 		}
 		return true;
 	}
 	
 	private boolean allowFireSpreadInRegion(Block from, Block to)
 	{
-		if (WGRPUtils.isInWGRegion(main.wg, to))
+		if (WGRPUtils.isInTheSameRegion(main.wg, from, to))
 		{
-			if (WGRPUtils.isInTheSameRegion(main.wg, from, to))
-			{
-				return false;
-			}
+			return false;
 		}
 		return true;
 	}
