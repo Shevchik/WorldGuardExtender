@@ -17,12 +17,13 @@
 
 package WGExtender.regionprotect;
 
+import org.bukkit.Material;
 import org.bukkit.block.Block;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.EventPriority;
 import org.bukkit.event.Listener;
-import org.bukkit.event.block.BlockIgniteEvent;
-import org.bukkit.event.block.BlockIgniteEvent.IgniteCause;
+import org.bukkit.event.block.BlockSpreadEvent;
+
 import WGExtender.Config;
 import WGExtender.Main;
 
@@ -39,20 +40,20 @@ public class FireSpread implements Listener {
 	
 	
 	@EventHandler(priority=EventPriority.HIGHEST,ignoreCancelled=true)
-	public void onBlockIgnite(BlockIgniteEvent e)
+	public void onBlockIgniteBySpread(BlockSpreadEvent e)
 	{
-		if (e.getCause() == IgniteCause.SPREAD)
+		if (e.getNewState().getType() == Material.FIRE)
 		{
 			if (config.blockfirespreadtoregion)
 			{//check to region
-				if (!allowFireSpreadToRegion(e.getIgnitingBlock(),e.getBlock()))
+				if (!allowFireSpreadToRegion(e.getSource(),e.getBlock()))
 				{
 					e.setCancelled(true);
 				}
 			}
 			if (config.blockfirespreadinregion)
 			{//check in region
-				if (!allowFireSpreadInRegion(e.getIgnitingBlock(),e.getBlock()))
+				if (!allowFireSpreadInRegion(e.getSource(),e.getBlock()))
 				{
 					e.setCancelled(true);
 				}
