@@ -55,7 +55,7 @@ public class Main extends JavaPlugin {
 		wg = (WorldGuardPlugin) Bukkit.getPluginManager().getPlugin("WorldGuard");
 		cmdprocess = new WGCommandProcess(this, config);
 		getServer().getPluginManager().registerEvents(cmdprocess, this);
-		commands = new Commands(config);
+		commands = new Commands(this,config);
 		getCommand("wgex").setExecutor(commands);
 		lflow = new LiquidFlow(this,config);
 		getServer().getPluginManager().registerEvents(lflow, this);

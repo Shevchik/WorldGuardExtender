@@ -17,6 +17,8 @@
 
 package WGExtender.commands;
 
+import java.util.List;
+
 import org.bukkit.ChatColor;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandExecutor;
@@ -26,23 +28,47 @@ import org.bukkit.command.RemoteConsoleCommandSender;
 import org.bukkit.entity.Player;
 
 import WGExtender.Config;
+import WGExtender.Main;
 
 public class Commands implements CommandExecutor {
 
+	private Main main;
 	private Config config;
 	
-	public Commands(Config config)
+	public Commands(Main main, Config config)
 	{
+		this.main = main;
 		this.config = config;
 	}
 	
 	@Override
 	public boolean onCommand(CommandSender sender, Command arg1, String arg2,
-			String[] arg3) {
+			String[] args) {
 		if (canExecute(sender))
 		{
-			config.loadConfig();
-			sender.sendMessage(ChatColor.BLUE+"Конфиг перезагружен");
+			if (args.length == 1 && args[0].equalsIgnoreCase("reload"))
+			{
+				config.loadConfig();
+				sender.sendMessage(ChatColor.BLUE+"Конфиг перезагружен");
+			} else
+			if (args.length == 1 && args[0].equalsIgnoreCase("search"))
+			{
+				if (sender instanceof Player)
+				{
+					List<String> regions = RegionsInAreaSearch.getRegionsInPlayerSelection(main.we,main.wg, (Player) sender);
+					if (regions != null)
+					{
+						if (regions.size() == 0)
+						{
+							sender.sendMessage(ChatColor.BLUE+"Регионов пересекающихся с выделенной зоной не найдено");
+						} else
+						{
+						sender.sendMessage(ChatColor.BLUE+"Найдены регионы пересекающиеся с выделенной зоной: "+regions);
+						}
+					}
+				}
+				return true;
+			}
 			return true;
 		}
 		return false;
