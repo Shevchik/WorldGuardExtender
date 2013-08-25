@@ -26,18 +26,18 @@ import org.bukkit.configuration.file.YamlConfiguration;
 
 public class Config {
 	
-	public boolean expandvert = true;
+	public boolean expandvert = false;
 	
-	public boolean blocklimitsenabled = true;
+	public boolean blocklimitsenabled = false;
 	public HashMap<String, Integer> blocklimits = new HashMap<String, Integer>();
 	
 	public boolean blockliquidflow = true;
 	public boolean blocklavaflow = true;
 	public boolean blockwaterflow = true;
 	public boolean blockigniteotherregionbyplayer = true;
-	public boolean blockfirespreadtoregion = true;
-	public boolean blockfirespreadinregion = true;
-	public boolean blockblockburninregion = true;
+	public boolean blockfirespreadtoregion = false;
+	public boolean blockfirespreadinregion = false;
+	public boolean blockblockburninregion = false;
 	public boolean blockentityexplosionblockdamage = true;
 	public boolean blocktntexplosionblockdmage = true;
 	public boolean blockcreeperexplosionblockdmage = true;
