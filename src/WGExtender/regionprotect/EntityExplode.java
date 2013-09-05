@@ -22,6 +22,7 @@ import java.util.List;
 
 import org.bukkit.block.Block;
 import org.bukkit.entity.Creeper;
+import org.bukkit.entity.Minecart;
 import org.bukkit.entity.TNTPrimed;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.EventPriority;
@@ -46,7 +47,15 @@ public class EntityExplode implements Listener {
 	public void onEntityExplode(EntityExplodeEvent e)
 	{
 		if (!config.blockentityexplosionblockdamage) {return;}
+		
 		if (e.getEntity() instanceof TNTPrimed)
+		{
+			if (config.blocktntexplosionblockdmage)
+			{
+				filterProtectedBlocks(e.blockList());
+			}
+		} else
+		if (e.getEntity() instanceof Minecart)
 		{
 			if (config.blocktntexplosionblockdmage)
 			{
