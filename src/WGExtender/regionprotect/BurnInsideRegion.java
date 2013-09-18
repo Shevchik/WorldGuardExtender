@@ -36,7 +36,7 @@ public class BurnInsideRegion implements Listener {
 		this.config = config;
 	}
 	
-	@EventHandler(priority=EventPriority.HIGHEST,ignoreCancelled=true)
+	@EventHandler(priority=EventPriority.LOWEST,ignoreCancelled=true)
 	public void onBlockBurn(BlockBurnEvent e)
 	{
 		if (!config.blockblockburninregion) {return;}

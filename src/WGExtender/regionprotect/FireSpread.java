@@ -39,7 +39,7 @@ public class FireSpread implements Listener {
 	}
 	
 	
-	@EventHandler(priority=EventPriority.HIGHEST,ignoreCancelled=true)
+	@EventHandler(priority=EventPriority.LOWEST,ignoreCancelled=true)
 	public void onBlockIgniteBySpread(BlockSpreadEvent e)
 	{
 		if (e.getNewState().getType() == Material.FIRE)

@@ -43,7 +43,7 @@ public class EntityExplode implements Listener {
 		this.config = config;
 	}
 	
-	@EventHandler(priority=EventPriority.HIGHEST,ignoreCancelled=true)
+	@EventHandler(priority=EventPriority.LOWEST,ignoreCancelled=true)
 	public void onEntityExplode(EntityExplodeEvent e)
 	{
 		if (!config.blockentityexplosionblockdamage) {return;}

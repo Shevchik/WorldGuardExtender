@@ -38,7 +38,7 @@ public class LiquidFlow implements Listener {
 		this.config = config;
 	}
 	
-	@EventHandler(priority=EventPriority.HIGHEST,ignoreCancelled=true)
+	@EventHandler(priority=EventPriority.LOWEST,ignoreCancelled=true)
 	public void onLiquidFlow(BlockFromToEvent e)
 	{
 		if (!config.blockliquidflow) {return;}
