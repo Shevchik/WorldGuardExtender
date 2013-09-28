@@ -27,6 +27,7 @@ import WGExtender.regionprotect.EntityExplode;
 import WGExtender.regionprotect.FireSpread;
 import WGExtender.regionprotect.IgniteByPlayer;
 import WGExtender.regionprotect.LiquidFlow;
+import WGExtender.wgcommandprocess.RestrictCommandProcess;
 import WGExtender.wgcommandprocess.WGCommandProcess;
 
 import com.sk89q.worldedit.bukkit.WorldEditPlugin;
@@ -36,6 +37,7 @@ public class Main extends JavaPlugin {
 	
 	private Config config;
 	private WGCommandProcess cmdprocess;
+	private RestrictCommandProcess rcmdprocess;
 	private Commands commands;
 	private LiquidFlow lflow;
 	private IgniteByPlayer ignitebp;
@@ -51,12 +53,14 @@ public class Main extends JavaPlugin {
 	{
 		config = new Config();
 		config.loadConfig();
+		commands = new Commands(this,config);
+		getCommand("wgex").setExecutor(commands);
 		we = (WorldEditPlugin) Bukkit.getPluginManager().getPlugin("WorldEdit");
 		wg = (WorldGuardPlugin) Bukkit.getPluginManager().getPlugin("WorldGuard");
 		cmdprocess = new WGCommandProcess(this, config);
 		getServer().getPluginManager().registerEvents(cmdprocess, this);
-		commands = new Commands(this,config);
-		getCommand("wgex").setExecutor(commands);
+		rcmdprocess = new RestrictCommandProcess(this, config);
+		getServer().getPluginManager().registerEvents(rcmdprocess, this);
 		lflow = new LiquidFlow(this,config);
 		getServer().getPluginManager().registerEvents(lflow, this);
 		ignitebp = new IgniteByPlayer(this,config);
@@ -74,6 +78,7 @@ public class Main extends JavaPlugin {
 	{
 		config = null;
 		cmdprocess = null;
+		rcmdprocess = null;
 		lflow = null;
 		ignitebp = null;
 		fspread = null;
