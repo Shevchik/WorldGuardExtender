@@ -21,8 +21,13 @@ import java.io.File;
 import java.io.IOException;
 import java.util.HashMap;
 
+import org.bukkit.configuration.ConfigurationSection;
 import org.bukkit.configuration.file.FileConfiguration;
 import org.bukkit.configuration.file.YamlConfiguration;
+
+import com.sk89q.worldguard.protection.flags.DefaultFlag;
+import com.sk89q.worldguard.protection.flags.Flag;
+import com.sk89q.worldguard.protection.flags.StateFlag.State;
 
 public class Config {
 	
@@ -31,16 +36,19 @@ public class Config {
 	public boolean blocklimitsenabled = false;
 	public HashMap<String, Integer> blocklimits = new HashMap<String, Integer>();
 	
-	public boolean blockliquidflow = true;
-	public boolean blocklavaflow = true;
-	public boolean blockwaterflow = true;
-	public boolean blockigniteotherregionbyplayer = true;
+	public boolean blockliquidflow = false;
+	public boolean blocklavaflow = false;
+	public boolean blockwaterflow = false;
+	public boolean blockigniteotherregionbyplayer = false;
 	public boolean blockfirespreadtoregion = false;
 	public boolean blockfirespreadinregion = false;
 	public boolean blockblockburninregion = false;
-	public boolean blockentityexplosionblockdamage = true;
-	public boolean blocktntexplosionblockdmage = true;
-	public boolean blockcreeperexplosionblockdmage = true;
+	public boolean blockentityexplosionblockdamage = false;
+	public boolean blocktntexplosionblockdmage = false;
+	public boolean blockcreeperexplosionblockdmage = false;
+	
+	public boolean autoflagsenabled = false;
+	public HashMap<Flag<?>,State> autoflags = new HashMap<Flag<?>,State>();
 	
 	public void loadConfig()
 	{
@@ -56,11 +64,12 @@ public class Config {
 		
 		blocklimitsenabled = config.getBoolean("blocklimits.enabled",blocklimitsenabled);
 		blocklimits.clear();
-		if (config.getConfigurationSection("blocklimits.limits") != null)
+		ConfigurationSection blimitscs = config.getConfigurationSection("blocklimits.limits");
+		if (blimitscs != null)
 		{
-			for (String group : config.getConfigurationSection("blocklimits.limits").getKeys(false))
+			for (String group : blimitscs.getKeys(false))
 			{
-				blocklimits.put(group, config.getInt("blocklimits.limits."+group));
+				blocklimits.put(group, blimitscs.getInt(group));
 			}
 		}
 		
@@ -75,6 +84,26 @@ public class Config {
 		blocktntexplosionblockdmage = config.getBoolean("blockentityexplosionblokdamage.tnt",blocktntexplosionblockdmage);
 		blockcreeperexplosionblockdmage = config.getBoolean("blockentityexplosionblokdamage.creeper",blockcreeperexplosionblockdmage);
 		
+		autoflagsenabled = config.getBoolean("autoflags.enabled",autoflagsenabled);
+		autoflags.clear();
+		ConfigurationSection aflagscs = config.getConfigurationSection("autoflags.flags");
+		if (aflagscs != null)
+		{
+			Flag<?>[] flags = DefaultFlag.getFlags(); 
+			for (String sflag : aflagscs.getKeys(false))
+			{
+				for (Flag<?> flag : flags)
+				{
+					if (flag.getName().equalsIgnoreCase(sflag))
+					{
+						try {
+							State state = State.valueOf(aflagscs.getString(sflag).toUpperCase());
+							autoflags.put(flag, state);
+						} catch (Exception e) {}
+					}
+				}
+			}
+		}
 	}
 	
 	private void savecfg()
@@ -106,6 +135,18 @@ public class Config {
 		config.set("blockentityexplosionblokdamage.enabled",blockentityexplosionblockdamage);
 		config.set("blockentityexplosionblokdamage.tnt",blocktntexplosionblockdmage);
 		config.set("blockentityexplosionblokdamage.creeper",blockcreeperexplosionblockdmage);
+		
+		config.set("autoflags.enabled",autoflagsenabled);
+		if (autoflags.isEmpty())
+		{
+			config.createSection("autoflags.flags");
+		} else
+		{
+			for (Flag<?> flag : autoflags.keySet())
+			{
+				config.set("autoflags.flags."+flag.getName(), autoflags.get(flag).toString());
+			}
+		}
 		
 		try {
 			config.save(new File("plugins/WGExtender/config.yml"));
