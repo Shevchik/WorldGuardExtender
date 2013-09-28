@@ -19,7 +19,9 @@ package WGExtender;
 
 import java.io.File;
 import java.io.IOException;
+import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.HashSet;
 
 import org.bukkit.configuration.ConfigurationSection;
 import org.bukkit.configuration.file.FileConfiguration;
@@ -50,6 +52,9 @@ public class Config {
 	public boolean autoflagsenabled = false;
 	@SuppressWarnings("rawtypes")
 	public HashMap<Flag,State> autoflags = new HashMap<Flag,State>();
+	
+	public boolean restrictcommandsinregionsenabled = false;
+	public HashSet<String> restrictedcommands = new HashSet<String>();
 	
 	public void loadConfig()
 	{
@@ -106,6 +111,9 @@ public class Config {
 				}
 			}
 		}
+		
+		restrictcommandsinregionsenabled = config.getBoolean("restrictcommands.enabled",restrictcommandsinregionsenabled);
+		restrictedcommands = new HashSet<String>(config.getStringList("restrictcommands.commands"));
 	}
 	
 	private void savecfg()
@@ -149,6 +157,9 @@ public class Config {
 				config.set("autoflags.flags."+flag.getName(), autoflags.get(flag).toString());
 			}
 		}
+		
+		config.set("restrictcommands.enabled",restrictcommandsinregionsenabled);
+		config.set("restrictcommands.commands",new ArrayList<String>(restrictedcommands));
 		
 		try {
 			config.save(new File("plugins/WGExtender/config.yml"));
