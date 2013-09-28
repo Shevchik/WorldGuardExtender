@@ -48,7 +48,8 @@ public class Config {
 	public boolean blockcreeperexplosionblockdmage = false;
 	
 	public boolean autoflagsenabled = false;
-	public HashMap<Flag<?>,State> autoflags = new HashMap<Flag<?>,State>();
+	@SuppressWarnings("rawtypes")
+	public HashMap<Flag,State> autoflags = new HashMap<Flag,State>();
 	
 	public void loadConfig()
 	{
@@ -89,10 +90,11 @@ public class Config {
 		ConfigurationSection aflagscs = config.getConfigurationSection("autoflags.flags");
 		if (aflagscs != null)
 		{
-			Flag<?>[] flags = DefaultFlag.getFlags(); 
+			@SuppressWarnings("rawtypes")
+			Flag[] flags = DefaultFlag.getFlags(); 
 			for (String sflag : aflagscs.getKeys(false))
 			{
-				for (Flag<?> flag : flags)
+				for (@SuppressWarnings("rawtypes") Flag flag : flags)
 				{
 					if (flag.getName().equalsIgnoreCase(sflag))
 					{
@@ -142,7 +144,7 @@ public class Config {
 			config.createSection("autoflags.flags");
 		} else
 		{
-			for (Flag<?> flag : autoflags.keySet())
+			for (@SuppressWarnings("rawtypes") Flag flag : autoflags.keySet())
 			{
 				config.set("autoflags.flags."+flag.getName(), autoflags.get(flag).toString());
 			}
