@@ -17,6 +17,7 @@
 
 package WGExtender.wgcommandprocess;
 
+import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.EventPriority;
@@ -38,9 +39,9 @@ public class WGCommandProcess implements Listener {
 	}
 
 	@EventHandler(priority=EventPriority.HIGHEST,ignoreCancelled=true)
-	public void ProcessWGCommand(PlayerCommandPreprocessEvent event)
+	public void ProcessWGCommand(final PlayerCommandPreprocessEvent event)
 	{
-		String[] cmds = event.getMessage().split("\\s+");
+		final String[] cmds = event.getMessage().split("\\s+");
 		//we need at least 2 arguments
 		if (cmds.length < 2) {return;}
 		//check only WG region command
@@ -63,6 +64,14 @@ public class WGCommandProcess implements Listener {
 				return;
 			}
 		}
+		//process autoflags
+		Bukkit.getScheduler().scheduleSyncDelayedTask(main, new Runnable()
+		{
+			public void run()
+			{
+				AutoFlags.setFlagsForRegion(config, main.wg, event.getPlayer().getWorld(), cmds[2]);
+			}
+		},20);
 	}
 	
 	
