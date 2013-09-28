@@ -65,13 +65,16 @@ public class WGCommandProcess implements Listener {
 			}
 		}
 		//process autoflags
-		Bukkit.getScheduler().scheduleSyncDelayedTask(main, new Runnable()
+		if (config.autoflagsenabled)
 		{
-			public void run()
+			Bukkit.getScheduler().scheduleSyncDelayedTask(main, new Runnable()
 			{
-				AutoFlags.setFlagsForRegion(config, main.wg, event.getPlayer().getWorld(), cmds[2]);
-			}
-		},20);
+				public void run()
+				{
+					AutoFlags.setFlagsForRegion(config, main.wg, event.getPlayer().getWorld(), cmds[2]);
+				}
+			},20);
+		}
 	}
 	
 	
