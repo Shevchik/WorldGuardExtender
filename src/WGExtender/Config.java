@@ -46,8 +46,6 @@ public class Config {
 	public boolean blockfirespreadinregion = false;
 	public boolean blockblockburninregion = false;
 	public boolean blockentityexplosionblockdamage = false;
-	public boolean blocktntexplosionblockdmage = false;
-	public boolean blockcreeperexplosionblockdmage = false;
 	
 	public boolean autoflagsenabled = false;
 	@SuppressWarnings("rawtypes")
@@ -87,8 +85,6 @@ public class Config {
 		blockfirespreadinregion = config.getBoolean("blockfirespreadinregion.enabled",blockfirespreadinregion);
 		blockblockburninregion = config.getBoolean("blockblockburninregion.enabled",blockblockburninregion);
 		blockentityexplosionblockdamage = config.getBoolean("blockentityexplosionblokdamage.enabled",blockentityexplosionblockdamage);
-		blocktntexplosionblockdmage = config.getBoolean("blockentityexplosionblokdamage.tnt",blocktntexplosionblockdmage);
-		blockcreeperexplosionblockdmage = config.getBoolean("blockentityexplosionblokdamage.creeper",blockcreeperexplosionblockdmage);
 		
 		autoflagsenabled = config.getBoolean("autoflags.enabled",autoflagsenabled);
 		autoflags.clear();
@@ -143,8 +139,6 @@ public class Config {
 		config.set("blockfirespreadinregion.enabled",blockfirespreadinregion);
 		config.set("blockblockburninregion.enabled",blockblockburninregion);
 		config.set("blockentityexplosionblokdamage.enabled",blockentityexplosionblockdamage);
-		config.set("blockentityexplosionblokdamage.tnt",blocktntexplosionblockdmage);
-		config.set("blockentityexplosionblokdamage.creeper",blockcreeperexplosionblockdmage);
 		
 		config.set("autoflags.enabled",autoflagsenabled);
 		if (autoflags.isEmpty())
