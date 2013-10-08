@@ -39,23 +39,23 @@ public class AutoFlags {
 		//ignore setting flags for region if it already exist
 		if (rm.getRegions().containsKey(regionname.toLowerCase())) {return;}
 		//now set flags
-			Bukkit.getScheduler().scheduleSyncDelayedTask(main, new Runnable()
+		Bukkit.getScheduler().scheduleSyncDelayedTask(main, new Runnable()
+		{
+			public void run()
 			{
-				public void run()
+				final ProtectedRegion rg = rm.getRegionExact(regionname);
+				if (rg != null)
 				{
-					final ProtectedRegion rg = rm.getRegionExact(regionname);
-					if (rg != null)
+					for (@SuppressWarnings("rawtypes") Flag flag : config.autoflags.keySet())
 					{
-						for (@SuppressWarnings("rawtypes") Flag flag : config.autoflags.keySet())
-						{
-							rg.setFlag(flag, config.autoflags.get(flag));
-						}
+						rg.setFlag(flag, config.autoflags.get(flag));
 					}
-					try {
-						rm.save();
-					} catch (Exception e) {}
 				}
-			},20);
+				try {
+					rm.save();
+				} catch (Exception e) {}
+			}
+		},20);
 	}
 	
 }
