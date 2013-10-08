@@ -37,7 +37,7 @@ public class AutoFlags {
 		//ignore if rm is null
 		if (rm == null) {return;}		
 		//ignore setting flags for region if it already exist
-		if (rm.getRegions().containsKey(regionname)) {return;}
+		if (rm.getRegions().containsKey(regionname.toLowerCase())) {return;}
 		//now set flags
 			Bukkit.getScheduler().scheduleSyncDelayedTask(main, new Runnable()
 			{
@@ -46,7 +46,6 @@ public class AutoFlags {
 					final ProtectedRegion rg = rm.getRegionExact(regionname);
 					if (rg != null)
 					{
-
 						for (@SuppressWarnings("rawtypes") Flag flag : config.autoflags.keySet())
 						{
 							rg.setFlag(flag, config.autoflags.get(flag));
