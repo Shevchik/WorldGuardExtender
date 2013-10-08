@@ -17,6 +17,7 @@
 
 package WGExtender.wgcommandprocess;
 
+import org.bukkit.Bukkit;
 import org.bukkit.World;
 
 import com.sk89q.worldguard.bukkit.WorldGuardPlugin;
@@ -25,25 +26,37 @@ import com.sk89q.worldguard.protection.managers.RegionManager;
 import com.sk89q.worldguard.protection.regions.ProtectedRegion;
 
 import WGExtender.Config;
+import WGExtender.Main;
 
 public class AutoFlags {
 
 	@SuppressWarnings("unchecked")
-	protected static void setFlagsForRegion(Config config, WorldGuardPlugin wg, World world, String regionname)
+	protected static void setFlagsForRegion(Main main, final Config config, WorldGuardPlugin wg, World world, final String regionname)
 	{
-		try {
-			RegionManager rm = wg.getRegionManager(world);
-			ProtectedRegion rg = rm.getRegionExact(regionname);
-			
-			if (rg != null)
+		final RegionManager rm = wg.getRegionManager(world);
+		//ignore if rm is null
+		if (rm == null) {return;}		
+		//ignore setting flags for region if it already exist
+		if (rm.getRegions().containsKey(regionname)) {return;}
+		//now set flags
+			Bukkit.getScheduler().scheduleSyncDelayedTask(main, new Runnable()
 			{
-				for (@SuppressWarnings("rawtypes") Flag flag : config.autoflags.keySet())
+				public void run()
 				{
-					rg.setFlag(flag, config.autoflags.get(flag));
+					final ProtectedRegion rg = rm.getRegionExact(regionname);
+					if (rg != null)
+					{
+
+						for (@SuppressWarnings("rawtypes") Flag flag : config.autoflags.keySet())
+						{
+							rg.setFlag(flag, config.autoflags.get(flag));
+						}
+					}
+					try {
+						rm.save();
+					} catch (Exception e) {}
 				}
-			}
-			rm.save();
-		} catch (Exception e) {}
+			},20);
 	}
 	
 }

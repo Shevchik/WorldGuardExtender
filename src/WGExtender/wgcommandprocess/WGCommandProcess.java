@@ -17,7 +17,6 @@
 
 package WGExtender.wgcommandprocess;
 
-import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.EventPriority;
@@ -67,13 +66,7 @@ public class WGCommandProcess implements Listener {
 		//process autoflags
 		if (config.autoflagsenabled)
 		{
-			Bukkit.getScheduler().scheduleSyncDelayedTask(main, new Runnable()
-			{
-				public void run()
-				{
-					AutoFlags.setFlagsForRegion(config, main.wg, event.getPlayer().getWorld(), cmds[2]);
-				}
-			},20);
+			AutoFlags.setFlagsForRegion(main, config, main.wg, event.getPlayer().getWorld(), cmds[2]);
 		}
 	}
 	
