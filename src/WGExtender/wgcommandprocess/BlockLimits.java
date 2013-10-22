@@ -55,9 +55,10 @@ public class BlockLimits {
 			int maxblocks = 0;
 			for (String pgroup : pgroups)
 			{
-				int blocks = 0;
-				try {blocks = config.blocklimits.get(pgroup);} catch (Exception e) {}
-				if (blocks > maxblocks) {maxblocks = blocks;}
+				if (config.blocklimits.containsKey(pgroup))
+				{
+					maxblocks = Math.max(maxblocks, config.blocklimits.get(pgroup));
+				}
 			}
 			//if player tried to claim above limit - disallow player to process command
 			if (psel.getArea() > maxblocks)
