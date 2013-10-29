@@ -43,17 +43,19 @@ public class AutoFlags {
 		{
 			public void run()
 			{
-				final ProtectedRegion rg = rm.getRegionExact(regionname);
-				if (rg != null)
-				{
-					for (@SuppressWarnings("rawtypes") Flag flag : config.autoflags.keySet())
-					{
-						rg.setFlag(flag, config.autoflags.get(flag));
-					}
-				}
 				try {
+					final ProtectedRegion rg = rm.getRegionExact(regionname);
+					if (rg != null)
+					{
+						for (@SuppressWarnings("rawtypes") Flag flag : config.autoflags.keySet())
+						{
+							rg.setFlag(flag, config.autoflags.get(flag));
+						}
+					}
 					rm.save();
-				} catch (Exception e) {}
+				} catch (Exception e) {
+					e.printStackTrace();
+				}
 			}
 		},20);
 	}
