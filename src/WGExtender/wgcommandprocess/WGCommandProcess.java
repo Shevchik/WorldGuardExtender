@@ -42,7 +42,7 @@ public class WGCommandProcess implements Listener {
 	{
 		final String[] cmds = event.getMessage().split("\\s+");
 		//we need at least 2 arguments
-		if (cmds.length < 2) {return;}
+		if (cmds.length < 3) {return;}
 		//check only WG region command
 		if (!(cmds[0].equalsIgnoreCase("/rg") || cmds[0].equalsIgnoreCase("/region"))) {return;}
 		//check only claim command
