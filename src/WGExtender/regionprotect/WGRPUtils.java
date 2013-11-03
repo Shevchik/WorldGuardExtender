@@ -20,6 +20,7 @@ package WGExtender.regionprotect;
 import java.util.List;
 
 import org.bukkit.block.Block;
+import org.bukkit.entity.Entity;
 import org.bukkit.entity.Player;
 
 import com.sk89q.worldedit.bukkit.BukkitUtil;
@@ -34,6 +35,15 @@ public class WGRPUtils {
 		try {
 			if (wg.getRegionManager(b.getWorld()).getApplicableRegions(b.getLocation()).size() > 0) {return true;}
 		} catch (Exception e) {
+			//if we caught an exception here it means that regions for world are disabled
+		}
+		return false;
+	}
+	protected static boolean isInWGRegion(WorldGuardPlugin wg, Entity e)
+	{
+		try {
+			if (wg.getRegionManager(e.getWorld()).getApplicableRegions(e.getLocation()).size() > 0) {return true;}
+		} catch (Exception ex) {
 			//if we caught an exception here it means that regions for world are disabled
 		}
 		return false;

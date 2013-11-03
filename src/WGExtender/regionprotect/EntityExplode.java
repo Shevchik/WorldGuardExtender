@@ -20,9 +20,12 @@ package WGExtender.regionprotect;
 import java.util.Iterator;
 
 import org.bukkit.block.Block;
+import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.EventPriority;
 import org.bukkit.event.Listener;
+import org.bukkit.event.entity.EntityDamageByEntityEvent;
+import org.bukkit.event.entity.EntityDamageEvent.DamageCause;
 import org.bukkit.event.entity.EntityExplodeEvent;
 
 import WGExtender.Config;
@@ -49,6 +52,21 @@ public class EntityExplode implements Listener {
 			if (WGRPUtils.isInWGRegion(main.wg, it.next()))
 			{
 				it.remove();
+			}
+		}
+	}
+	
+	@EventHandler(priority=EventPriority.HIGH,ignoreCancelled=true)
+	public void onEntityDamageByExplosion(EntityDamageByEntityEvent e)
+	{
+		if (e.getCause() == DamageCause.BLOCK_EXPLOSION || e.getCause() == DamageCause.ENTITY_EXPLOSION)
+		{
+			if (!(e.getEntity() instanceof Player))
+			{
+				if (WGRPUtils.isInWGRegion(main.wg, e.getEntity()))
+				{
+					e.setCancelled(true);
+				}
 			}
 		}
 	}
