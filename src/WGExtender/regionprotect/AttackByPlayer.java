@@ -9,15 +9,23 @@ import org.bukkit.event.EventPriority;
 import org.bukkit.event.Listener;
 import org.bukkit.event.entity.EntityDamageByEntityEvent;
 
+import WGExtender.Config;
 import WGExtender.Main;
 
 public class AttackByPlayer implements Listener {
 	
 	private Main main;
-	
+	private Config config;
+	public AttackByPlayer(Main main, Config config) {
+		this.main = main;
+		this.config = config;
+	}
+
 	@EventHandler(priority=EventPriority.HIGH,ignoreCancelled=true)
 	public void onEntityDamage(EntityDamageByEntityEvent e)
 	{
+		if (!config.blockentitydamagebyplayer) {return;}
+		
 		Entity entity = e.getEntity();
 		if (entity instanceof Animals && WGRPUtils.isInWGRegion(main.wg, entity.getLocation()))
 		{

@@ -46,7 +46,7 @@ public class Config {
 	public boolean blockblockburninregion = false;
 	public boolean blockentityexplosionblockdamage = false;
 	public boolean blockentitydamagebyexplosion = false;
-	public boolean protectanimals = false;
+	public boolean blockentitydamagebyplayer = false;
 	
 	public boolean autoflagsenabled = false;
 	@SuppressWarnings("rawtypes")
@@ -86,6 +86,7 @@ public class Config {
 		blockblockburninregion = config.getBoolean("regionprotect.fire.burn.enabled",blockblockburninregion);
 		blockentityexplosionblockdamage = config.getBoolean("regionprotect.explosion.block.enabled",blockentityexplosionblockdamage);
 		blockentitydamagebyexplosion = config.getBoolean("regionprotect.explosion.entity.enabled",blockentitydamagebyexplosion);
+		blockentitydamagebyplayer = config.getBoolean("regionprotect.animalsdamage.enabled",blockentitydamagebyplayer);
 		
 		autoflagsenabled = config.getBoolean("autoflags.enabled",autoflagsenabled);
 		autoflags.clear();
@@ -140,6 +141,7 @@ public class Config {
 		config.set("regionprotect.fire.burn.enabled",blockblockburninregion);
 		config.set("regionprotect.explosion.block.enabled",blockentityexplosionblockdamage);
 		config.set("regionprotect.explosion.entity.enabled",blockentitydamagebyexplosion);
+		config.set("regionprotect.animalsdamage.enabled",blockentitydamagebyplayer);
 		
 		config.set("autoflags.enabled",autoflagsenabled);
 		if (autoflags.isEmpty())

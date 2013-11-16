@@ -45,7 +45,7 @@ public class Main extends JavaPlugin {
 	private FireSpread fspread;
 	private BlockBurn bburn;
 	private EntityExplode eexplode;
-
+	private AttackByPlayer attackbp;
 	
 	public WorldEditPlugin we = null;
 	public WorldGuardPlugin wg = null;
@@ -73,11 +73,14 @@ public class Main extends JavaPlugin {
 		getServer().getPluginManager().registerEvents(bburn, this);
 		eexplode = new EntityExplode(this,config);
 		getServer().getPluginManager().registerEvents(eexplode, this);
+		attackbp = new AttackByPlayer(this,config);
+		getServer().getPluginManager().registerEvents(attackbp, this);
 	}
 	
 	@Override
 	public void onDisable()
 	{
+		HandlerList.unregisterAll(this);
 		config = null;
 		cmdprocess = null;
 		rcmdprocess = null;
@@ -87,7 +90,7 @@ public class Main extends JavaPlugin {
 		bburn = null;
 		eexplode = null;
 		commands = null;
-		HandlerList.unregisterAll(this);
+		attackbp = null;
 		we = null;
 		wg = null;
 	}
