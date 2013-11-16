@@ -22,6 +22,7 @@ import org.bukkit.event.HandlerList;
 import org.bukkit.plugin.java.JavaPlugin;
 
 import WGExtender.commands.Commands;
+import WGExtender.regionprotect.AttackByPlayer;
 import WGExtender.regionprotect.BlockBurn;
 import WGExtender.regionprotect.EntityExplode;
 import WGExtender.regionprotect.FireSpread;
@@ -42,8 +43,9 @@ public class Main extends JavaPlugin {
 	private LiquidFlow lflow;
 	private IgniteByPlayer ignitebp;
 	private FireSpread fspread;
-	private BlockBurn burnir;
+	private BlockBurn bburn;
 	private EntityExplode eexplode;
+
 	
 	public WorldEditPlugin we = null;
 	public WorldGuardPlugin wg = null;
@@ -67,8 +69,8 @@ public class Main extends JavaPlugin {
 		getServer().getPluginManager().registerEvents(ignitebp, this);
 		fspread = new FireSpread(this,config);
 		getServer().getPluginManager().registerEvents(fspread, this);
-		burnir = new BlockBurn(this,config);
-		getServer().getPluginManager().registerEvents(burnir, this);
+		bburn = new BlockBurn(this,config);
+		getServer().getPluginManager().registerEvents(bburn, this);
 		eexplode = new EntityExplode(this,config);
 		getServer().getPluginManager().registerEvents(eexplode, this);
 	}
@@ -82,7 +84,7 @@ public class Main extends JavaPlugin {
 		lflow = null;
 		ignitebp = null;
 		fspread = null;
-		burnir = null;
+		bburn = null;
 		eexplode = null;
 		commands = null;
 		HandlerList.unregisterAll(this);

@@ -37,7 +37,10 @@ public class AttackByPlayer implements Listener {
 			}
 			if (damagerplayer != null)
 			{
-				
+				if (!WGRPUtils.isOwnerOrMember(main.wg, damagerplayer, entity.getLocation()))
+				{
+					e.setCancelled(true);
+				}
 			}
 		}
 	}
