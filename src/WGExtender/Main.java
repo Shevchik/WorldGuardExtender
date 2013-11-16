@@ -28,6 +28,7 @@ import WGExtender.regionprotect.EntityExplode;
 import WGExtender.regionprotect.FireSpread;
 import WGExtender.regionprotect.IgniteByPlayer;
 import WGExtender.regionprotect.LiquidFlow;
+import WGExtender.regionprotect.Pistons;
 import WGExtender.wgcommandprocess.RestrictCommandProcess;
 import WGExtender.wgcommandprocess.WGCommandProcess;
 
@@ -46,6 +47,7 @@ public class Main extends JavaPlugin {
 	private BlockBurn bburn;
 	private EntityExplode eexplode;
 	private AttackByPlayer attackbp;
+	private Pistons pistons;
 	
 	public WorldEditPlugin we = null;
 	public WorldGuardPlugin wg = null;
@@ -75,6 +77,8 @@ public class Main extends JavaPlugin {
 		getServer().getPluginManager().registerEvents(eexplode, this);
 		attackbp = new AttackByPlayer(this,config);
 		getServer().getPluginManager().registerEvents(attackbp, this);
+		pistons = new Pistons(this,config);
+		getServer().getPluginManager().registerEvents(pistons, this);
 	}
 	
 	@Override
