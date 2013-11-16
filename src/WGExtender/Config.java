@@ -37,8 +37,7 @@ public class Config {
 	
 	public boolean blocklimitsenabled = false;
 	public HashMap<String, Integer> blocklimits = new HashMap<String, Integer>();
-	
-	public boolean blockliquidflow = false;
+
 	public boolean blocklavaflow = false;
 	public boolean blockwaterflow = false;
 	public boolean blockigniteotherregionbyplayer = false;
@@ -47,6 +46,7 @@ public class Config {
 	public boolean blockblockburninregion = false;
 	public boolean blockentityexplosionblockdamage = false;
 	public boolean blockentitydamagebyexplosion = false;
+	public boolean protectanimals = false;
 	
 	public boolean autoflagsenabled = false;
 	@SuppressWarnings("rawtypes")
@@ -65,11 +65,11 @@ public class Config {
 	{
 		FileConfiguration config = YamlConfiguration.loadConfiguration(new File("plugins/WGExtender/config.yml"));
 		
-		expandvert = config.getBoolean("vertexpand.enabled",expandvert);
+		expandvert = config.getBoolean("claim.vertexpand.enabled",expandvert);
 		
-		blocklimitsenabled = config.getBoolean("blocklimits.enabled",blocklimitsenabled);
+		blocklimitsenabled = config.getBoolean("claim.blocklimits.enabled",blocklimitsenabled);
 		blocklimits.clear();
-		ConfigurationSection blimitscs = config.getConfigurationSection("blocklimits.limits");
+		ConfigurationSection blimitscs = config.getConfigurationSection("claim.blocklimits.limits");
 		if (blimitscs != null)
 		{
 			for (String group : blimitscs.getKeys(false))
@@ -77,16 +77,15 @@ public class Config {
 				blocklimits.put(group, blimitscs.getInt(group));
 			}
 		}
-		
-		blockliquidflow = config.getBoolean("blockflowtoregion.enabled",blockliquidflow);
-		blocklavaflow = config.getBoolean("blockflowtoregion.lava",blocklavaflow);
-		blockwaterflow = config.getBoolean("blockflowtoregion.water",blockwaterflow);
-		blockigniteotherregionbyplayer = config.getBoolean("blockigniteotherregionbyplayer.enabled",blockigniteotherregionbyplayer);
-		blockfirespreadtoregion = config.getBoolean("blockfirespreadtoregion.enabled",blockfirespreadtoregion);
-		blockfirespreadinregion = config.getBoolean("blockfirespreadinregion.enabled",blockfirespreadinregion);
-		blockblockburninregion = config.getBoolean("blockblockburninregion.enabled",blockblockburninregion);
-		blockentityexplosionblockdamage = config.getBoolean("blockentityexplosionblokdamage.enabled",blockentityexplosionblockdamage);
-		blockentitydamagebyexplosion = config.getBoolean("blockentitydamagebyexplosion.enabled",blockentitydamagebyexplosion);
+
+		blocklavaflow = config.getBoolean("regionprotect.flow.lava.enabled",blocklavaflow);
+		blockwaterflow = config.getBoolean("regionprotect.flow.water.enabled",blockwaterflow);
+		blockigniteotherregionbyplayer = config.getBoolean("regionprotect.ignitebyplayer.enabled",blockigniteotherregionbyplayer);
+		blockfirespreadtoregion = config.getBoolean("regionprotect.fire.spread.toregion.enabled",blockfirespreadtoregion);
+		blockfirespreadinregion = config.getBoolean("regionprotect.fire.spread.inregion.enabled",blockfirespreadinregion);
+		blockblockburninregion = config.getBoolean("regionprotect.fire.burn.enabled",blockblockburninregion);
+		blockentityexplosionblockdamage = config.getBoolean("regionprotect.explosion.block.enabled",blockentityexplosionblockdamage);
+		blockentitydamagebyexplosion = config.getBoolean("regionprotect.explosion.entity.enabled",blockentitydamagebyexplosion);
 		
 		autoflagsenabled = config.getBoolean("autoflags.enabled",autoflagsenabled);
 		autoflags.clear();
@@ -118,30 +117,29 @@ public class Config {
 	{
 		FileConfiguration config = new YamlConfiguration();
 		
-		config.set("vertexpand.enabled",expandvert);
+		config.set("claim.vertexpand.enabled",expandvert);
 		
-		config.set("blocklimits.enabled",blocklimitsenabled);
+		config.set("claim.blocklimits.enabled",blocklimitsenabled);
 		if (blocklimits.isEmpty())
 		{
-			config.createSection("blocklimits.limits");
+			config.createSection("claim.blocklimits.limits");
 		}
 		else
 		{
 			for (String group : blocklimits.keySet())
 			{
-				config.set("blocklimits.limits."+group, blocklimits.get(group));
+				config.set("claim.blocklimits.limits."+group, blocklimits.get(group));
 			}
 		}
-		
-		config.set("blockflowtoregion.enabled",blockliquidflow);
-		config.set("blockflowtoregion.lava",blocklavaflow);
-		config.set("blockflowtoregion.water",blockwaterflow);
-		config.set("blockigniteotherregionbyplayer.enabled",blockigniteotherregionbyplayer);
-		config.set("blockfirespreadtoregion.enabled",blockfirespreadtoregion);
-		config.set("blockfirespreadinregion.enabled",blockfirespreadinregion);
-		config.set("blockblockburninregion.enabled",blockblockburninregion);
-		config.set("blockentityexplosionblokdamage.enabled",blockentityexplosionblockdamage);
-		config.set("blockentitydamagebyexplosion.enabled",blockentitydamagebyexplosion);
+
+		config.set("regionprotect.flow.lava.enabled",blocklavaflow);
+		config.set("regionprotect.flow.water.enabled",blockwaterflow);
+		config.set("regionprotect.ignitebyplayer.enabled",blockigniteotherregionbyplayer);
+		config.set("regionprotect.fire.spread.toregion.enabled",blockfirespreadtoregion);
+		config.set("regionprotect.fire.spread.inregion.enabled",blockfirespreadinregion);
+		config.set("regionprotect.fire.burn.enabled",blockblockburninregion);
+		config.set("regionprotect.explosion.block.enabled",blockentityexplosionblockdamage);
+		config.set("regionprotect.explosion.entity.enabled",blockentitydamagebyexplosion);
 		
 		config.set("autoflags.enabled",autoflagsenabled);
 		if (autoflags.isEmpty())

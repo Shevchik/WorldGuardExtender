@@ -41,24 +41,19 @@ public class LiquidFlow implements Listener {
 	@EventHandler(priority=EventPriority.LOWEST,ignoreCancelled=true)
 	public void onLiquidFlow(BlockFromToEvent e)
 	{
-		if (!config.blockliquidflow) {return;}
-		
 		Block b = e.getBlock();
-		if (b.isLiquid())
+		if (b.getType() == Material.LAVA || b.getType() == Material.STATIONARY_LAVA)
 		{
-			if (b.getType() == Material.LAVA || b.getType() == Material.STATIONARY_LAVA)
+			if (config.blocklavaflow)
 			{
-				if (config.blocklavaflow)
-				{
-					if (!allowLiquidFlow(b,e.getToBlock())) {e.setCancelled(true);}
-				}
-			} else
-			if (b.getType() == Material.WATER || b.getType() == Material.STATIONARY_WATER)
+				if (!allowLiquidFlow(b,e.getToBlock())) {e.setCancelled(true);}
+			}
+		} else
+		if (b.getType() == Material.WATER || b.getType() == Material.STATIONARY_WATER)
+		{
+			if (config.blockwaterflow)
 			{
-				if (config.blockwaterflow)
-				{
-					if (!allowLiquidFlow(b,e.getToBlock())) {e.setCancelled(true);}
-				}
+				if (!allowLiquidFlow(b,e.getToBlock())) {e.setCancelled(true);}
 			}
 		}
 	}
