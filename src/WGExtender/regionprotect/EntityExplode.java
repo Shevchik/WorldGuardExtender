@@ -49,7 +49,7 @@ public class EntityExplode implements Listener {
 		Iterator<Block> it = e.blockList().iterator();
 		while (it.hasNext())
 		{
-			if (WGRPUtils.isInWGRegion(main.wg, it.next()))
+			if (WGRPUtils.isInWGRegion(main.wg, it.next().getLocation()))
 			{
 				it.remove();
 			}
@@ -63,7 +63,7 @@ public class EntityExplode implements Listener {
 		{
 			if (!(e.getEntity() instanceof Player))
 			{
-				if (WGRPUtils.isInWGRegion(main.wg, e.getEntity()))
+				if (WGRPUtils.isInWGRegion(main.wg, e.getEntity().getLocation()))
 				{
 					e.setCancelled(true);
 				}

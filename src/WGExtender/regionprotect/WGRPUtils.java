@@ -19,8 +19,7 @@ package WGExtender.regionprotect;
 
 import java.util.List;
 
-import org.bukkit.block.Block;
-import org.bukkit.entity.Entity;
+import org.bukkit.Location;
 import org.bukkit.entity.Player;
 
 import com.sk89q.worldedit.bukkit.BukkitUtil;
@@ -30,31 +29,22 @@ import com.sk89q.worldguard.protection.ApplicableRegionSet;
 public class WGRPUtils {
 
 
-	protected static boolean isInWGRegion(WorldGuardPlugin wg, Block b)
+	protected static boolean isInWGRegion(WorldGuardPlugin wg, Location l)
 	{
 		try {
-			if (wg.getRegionManager(b.getWorld()).getApplicableRegions(b.getLocation()).size() > 0) {return true;}
+			if (wg.getRegionManager(l.getWorld()).getApplicableRegions(l).size() > 0) {return true;}
 		} catch (Exception e) {
 			//if we caught an exception here it means that regions for world are disabled
 		}
 		return false;
 	}
-	protected static boolean isInWGRegion(WorldGuardPlugin wg, Entity e)
-	{
-		try {
-			if (wg.getRegionManager(e.getWorld()).getApplicableRegions(e.getLocation()).size() > 0) {return true;}
-		} catch (Exception ex) {
-			//if we caught an exception here it means that regions for world are disabled
-		}
-		return false;
-	}
 	
-	protected static boolean isInTheSameRegion(WorldGuardPlugin wg, Block b1, Block b2)
+	protected static boolean isInTheSameRegion(WorldGuardPlugin wg, Location l1, Location l2)
 	{
 		try {
 			//plain equals doesn't want to work here :(
-			List<String> ari1 = wg.getRegionManager(b1.getWorld()).getApplicableRegionsIDs(BukkitUtil.toVector(b1.getLocation()));
-			List<String> ari2 = wg.getRegionManager(b2.getWorld()).getApplicableRegionsIDs(BukkitUtil.toVector(b2.getLocation()));
+			List<String> ari1 = wg.getRegionManager(l1.getWorld()).getApplicableRegionsIDs(BukkitUtil.toVector(l1));
+			List<String> ari2 = wg.getRegionManager(l2.getWorld()).getApplicableRegionsIDs(BukkitUtil.toVector(l2));
 			if (ari1.equals(ari2))
 			{
 				return true;
@@ -66,10 +56,10 @@ public class WGRPUtils {
 	}
 	
 	
-	protected static boolean isOwnerOrMember(WorldGuardPlugin wg, Player p, Block b)
+	protected static boolean isOwnerOrMember(WorldGuardPlugin wg, Player p, Location l)
 	{
 		try {
-			ApplicableRegionSet ars = wg.getRegionManager(b.getWorld()).getApplicableRegions(b.getLocation());
+			ApplicableRegionSet ars = wg.getRegionManager(l.getWorld()).getApplicableRegions(l);
 			if (ars.isOwnerOfAll(wg.wrapPlayer(p)) || ars.isMemberOfAll(wg.wrapPlayer(p))) 
 			{
 				return true;

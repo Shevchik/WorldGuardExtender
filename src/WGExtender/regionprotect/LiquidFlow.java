@@ -61,17 +61,17 @@ public class LiquidFlow implements Listener {
 	
 	private boolean allowLiquidFlow(Block from, Block to)
 	{
-		if (WGRPUtils.isInWGRegion(main.wg, to))
+		if (WGRPUtils.isInWGRegion(main.wg, to.getLocation()))
 		{
 			//block flow from unclaimed area
-			if (!WGRPUtils.isInWGRegion(main.wg, from))
+			if (!WGRPUtils.isInWGRegion(main.wg, from.getLocation()))
 			{
 				return false;
 			}
 			else
 			//block flow from not the same regions
 			{
-				if (!WGRPUtils.isInTheSameRegion(main.wg, from,to))
+				if (!WGRPUtils.isInTheSameRegion(main.wg, from.getLocation(), to.getLocation()))
 				{
 					return false;
 				}

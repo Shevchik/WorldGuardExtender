@@ -41,7 +41,7 @@ public class BurnInsideRegion implements Listener {
 	{
 		if (!config.blockblockburninregion) {return;}
 		
-		if (WGRPUtils.isInWGRegion(main.wg, e.getBlock()))
+		if (WGRPUtils.isInWGRegion(main.wg, e.getBlock().getLocation()))
 		{
 			e.setCancelled(true);
 		}

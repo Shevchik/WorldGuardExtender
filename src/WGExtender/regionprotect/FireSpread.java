@@ -46,7 +46,7 @@ public class FireSpread implements Listener {
 		{
 			if (config.blockfirespreadtoregion || config.blockfirespreadinregion)
 			{
-				if (WGRPUtils.isInWGRegion(main.wg, e.getBlock()))
+				if (WGRPUtils.isInWGRegion(main.wg, e.getBlock().getLocation()))
 				{
 					if (config.blockfirespreadtoregion)
 					{//check to region
@@ -70,13 +70,13 @@ public class FireSpread implements Listener {
 	private boolean allowFireSpreadToRegion(Block from, Block to)
 	{
 		//block spread from unclaimed area
-		if (!WGRPUtils.isInWGRegion(main.wg, from))
+		if (!WGRPUtils.isInWGRegion(main.wg, from.getLocation()))
 		{
 			return false;
 		}
 		else
 		//block spread from not the same regions
-		if (!WGRPUtils.isInTheSameRegion(main.wg, from,to))
+		if (!WGRPUtils.isInTheSameRegion(main.wg, from.getLocation(), to.getLocation()))
 		{
 			return false;
 		}
@@ -85,7 +85,7 @@ public class FireSpread implements Listener {
 	
 	private boolean allowFireSpreadInRegion(Block from, Block to)
 	{
-		if (WGRPUtils.isInTheSameRegion(main.wg, from, to))
+		if (WGRPUtils.isInTheSameRegion(main.wg, from.getLocation(), to.getLocation()))
 		{
 			return false;
 		}

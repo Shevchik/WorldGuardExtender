@@ -46,7 +46,7 @@ public class IgniteByPlayer implements Listener {
 		Player player = e.getPlayer();
 		if (player != null)
 		{
-			if (!WGRPUtils.isOwnerOrMember(main.wg, player, e.getBlock()))
+			if (!WGRPUtils.isOwnerOrMember(main.wg, player, e.getBlock().getLocation()))
 			{
 				player.sendMessage(ChatColor.RED+"Вы не можете поджечь блок в чужом регионе");
 				e.setCancelled(true);
