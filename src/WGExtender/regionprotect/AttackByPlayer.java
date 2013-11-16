@@ -11,7 +11,7 @@ import org.bukkit.event.entity.EntityDamageByEntityEvent;
 
 import WGExtender.Main;
 
-public class EntityDamage implements Listener {
+public class AttackByPlayer implements Listener {
 	
 	private Main main;
 	

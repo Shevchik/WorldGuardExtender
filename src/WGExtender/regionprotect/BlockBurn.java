@@ -25,13 +25,13 @@ import org.bukkit.event.block.BlockBurnEvent;
 import WGExtender.Config;
 import WGExtender.Main;
 
-public class BurnInsideRegion implements Listener {
+public class BlockBurn implements Listener {
 
 	private Main main;
 	private Config config;
 
 	
-	public BurnInsideRegion(Main main, Config config) {
+	public BlockBurn(Main main, Config config) {
 		this.main = main;
 		this.config = config;
 	}
