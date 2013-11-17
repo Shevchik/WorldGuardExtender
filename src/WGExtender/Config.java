@@ -22,6 +22,8 @@ import java.io.IOException;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.HashSet;
+import java.util.Map;
+import java.util.Set;
 
 import org.bukkit.configuration.ConfigurationSection;
 import org.bukkit.configuration.file.FileConfiguration;
@@ -36,7 +38,7 @@ public class Config {
 	public boolean expandvert = false;
 	
 	public boolean blocklimitsenabled = false;
-	public HashMap<String, Integer> blocklimits = new HashMap<String, Integer>();
+	public Map<String, Integer> blocklimits = new HashMap<String, Integer>();
 
 	public boolean blocklavaflow = false;
 	public boolean blockwaterflow = false;
@@ -50,11 +52,10 @@ public class Config {
 	public boolean blockpistonmoveblock = false;
 	
 	public boolean autoflagsenabled = false;
-	@SuppressWarnings("rawtypes")
-	public HashMap<Flag,State> autoflags = new HashMap<Flag,State>();
+	public Map<Flag<?>, Object> autoflags = new HashMap<Flag<?>,Object>();
 	
 	public boolean restrictcommandsinregionsenabled = false;
-	public HashSet<String> restrictedcommands = new HashSet<String>();
+	public Set<String> restrictedcommands = new HashSet<String>();
 	
 	public void loadConfig()
 	{

@@ -21,7 +21,6 @@ import org.bukkit.Bukkit;
 import org.bukkit.World;
 
 import com.sk89q.worldguard.bukkit.WorldGuardPlugin;
-import com.sk89q.worldguard.protection.flags.Flag;
 import com.sk89q.worldguard.protection.managers.RegionManager;
 import com.sk89q.worldguard.protection.regions.ProtectedRegion;
 
@@ -30,15 +29,14 @@ import WGExtender.Main;
 
 public class AutoFlags {
 
-	@SuppressWarnings("unchecked")
 	protected static void setFlagsForRegion(Main main, final Config config, WorldGuardPlugin wg, World world, final String regionname)
 	{
 		final RegionManager rm = wg.getRegionManager(world);
 		//ignore if rm is null
-		if (rm == null) {return;}		
-		//ignore setting flags for region if it already exist
-		if (rm.getRegions().containsKey(regionname.toLowerCase())) {return;}
-		//now set flags
+		if (rm == null) {return;}	
+		//ignore setting flags for region if it exists before the command is handled by worldedit
+		if (rm.hasRegion(regionname)) {return;}
+		//now schedule a task that will set flags after 1 second
 		Bukkit.getScheduler().scheduleSyncDelayedTask(main, new Runnable()
 		{
 			public void run()
@@ -47,12 +45,9 @@ public class AutoFlags {
 					final ProtectedRegion rg = rm.getRegionExact(regionname);
 					if (rg != null)
 					{
-						for (@SuppressWarnings("rawtypes") Flag flag : config.autoflags.keySet())
-						{
-							rg.setFlag(flag, config.autoflags.get(flag));
-						}
+						rg.setFlags(config.autoflags);
+						rm.save();
 					}
-					rm.save();
 				} catch (Exception e) {
 					e.printStackTrace();
 				}
