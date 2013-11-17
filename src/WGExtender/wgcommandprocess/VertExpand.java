@@ -17,24 +17,37 @@
 
 package WGExtender.wgcommandprocess;
 
-import org.bukkit.Bukkit;
 import org.bukkit.entity.Player;
 
+import com.sk89q.worldedit.LocalPlayer;
+import com.sk89q.worldedit.LocalSession;
+import com.sk89q.worldedit.Vector;
 import com.sk89q.worldedit.bukkit.WorldEditPlugin;
-import com.sk89q.worldedit.bukkit.selections.Selection;
+import com.sk89q.worldedit.regions.Region;
 
 public class VertExpand {
 
-	protected static void expand(WorldEditPlugin we, Player pl)
+	protected static void expand(WorldEditPlugin we, Player player)
 	{
-		Selection psel = we.getSelection(pl);
-		if (psel == null)
+		if (we.getSelection(player) == null)
 		{
 			return;
 		}
 		else
 		{
-			Bukkit.dispatchCommand(pl, "/expand vert");
+			try {
+				LocalPlayer localplayer = we.wrapPlayer(player);
+				LocalSession session = we.getSession(player);
+				Region region = session.getSelection(localplayer.getWorld());
+				region.expand(
+						new Vector(0, (localplayer.getWorld().getMaxY() + 1), 0),
+						new Vector(0, -(localplayer.getWorld().getMaxY() + 1), 0)
+						);
+				session.getRegionSelector(localplayer.getWorld()).learnChanges();;
+                session.getRegionSelector(localplayer.getWorld()).explainRegionAdjust(localplayer, session);
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
 		}
 	}
 	
