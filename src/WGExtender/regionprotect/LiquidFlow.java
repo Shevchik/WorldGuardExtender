@@ -46,38 +46,22 @@ public class LiquidFlow implements Listener {
 		{
 			if (config.blocklavaflow)
 			{
-				if (!allowLiquidFlow(b,e.getToBlock())) {e.setCancelled(true);}
+				if (!WGRPUtils.isInTheSameRegion(main.wg, b.getLocation(), e.getToBlock().getLocation()))
+				{
+					e.setCancelled(true);
+				}
 			}
 		} else
 		if (b.getType() == Material.WATER || b.getType() == Material.STATIONARY_WATER)
 		{
 			if (config.blockwaterflow)
 			{
-				if (!allowLiquidFlow(b,e.getToBlock())) {e.setCancelled(true);}
-			}
-		}
-	}
-	
-	
-	private boolean allowLiquidFlow(Block from, Block to)
-	{
-		if (WGRPUtils.isInWGRegion(main.wg, to.getLocation()))
-		{
-			//block flow from unclaimed area
-			if (!WGRPUtils.isInWGRegion(main.wg, from.getLocation()))
-			{
-				return false;
-			}
-			else
-			//block flow from not the same regions
-			{
-				if (!WGRPUtils.isInTheSameRegion(main.wg, from.getLocation(), to.getLocation()))
+				if (!WGRPUtils.isInTheSameRegion(main.wg, b.getLocation(), e.getToBlock().getLocation()))
 				{
-					return false;
+					e.setCancelled(true);
 				}
 			}
 		}
-		return true;
 	}
 	
 }

@@ -18,7 +18,6 @@
 package WGExtender.regionprotect;
 
 import org.bukkit.Material;
-import org.bukkit.block.Block;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.EventPriority;
 import org.bukkit.event.Listener;
@@ -44,52 +43,21 @@ public class FireSpread implements Listener {
 	{
 		if (e.getNewState().getType() == Material.FIRE)
 		{
-			if (config.blockfirespreadtoregion || config.blockfirespreadinregion)
-			{
-				if (WGRPUtils.isInWGRegion(main.wg, e.getBlock().getLocation()))
+			if (config.blockfirespreadtoregion)
+			{//check to region
+				if (!WGRPUtils.isInTheSameRegion(main.wg, e.getSource().getLocation(), e.getBlock().getLocation()))
 				{
-					if (config.blockfirespreadtoregion)
-					{//check to region
-						if (!allowFireSpreadToRegion(e.getSource(),e.getBlock()))
-						{
-							e.setCancelled(true);
-						}
-					}
-					if (config.blockfirespreadinregion)
-					{//check in region
-						if (!allowFireSpreadInRegion(e.getSource(),e.getBlock()))
-						{
-							e.setCancelled(true);
-						}
-					}
+					e.setCancelled(true);
+				}
+			}
+			if (config.blockfirespreadinregion)
+			{//check in region
+				if (WGRPUtils.isInWGRegion(main.wg, e.getSource().getLocation()) && WGRPUtils.isInTheSameRegion(main.wg, e.getSource().getLocation(), e.getBlock().getLocation()))
+				{
+					e.setCancelled(true);
 				}
 			}
 		}
 	}
-	
-	private boolean allowFireSpreadToRegion(Block from, Block to)
-	{
-		//block spread from unclaimed area
-		if (!WGRPUtils.isInWGRegion(main.wg, from.getLocation()))
-		{
-			return false;
-		}
-		else
-		//block spread from not the same regions
-		if (!WGRPUtils.isInTheSameRegion(main.wg, from.getLocation(), to.getLocation()))
-		{
-			return false;
-		}
-		return true;
-	}
-	
-	private boolean allowFireSpreadInRegion(Block from, Block to)
-	{
-		if (WGRPUtils.isInTheSameRegion(main.wg, from.getLocation(), to.getLocation()))
-		{
-			return false;
-		}
-		return true;
-	}
-	
+
 }
