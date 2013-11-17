@@ -43,7 +43,7 @@ public class VertExpand {
 						new Vector(0, (localplayer.getWorld().getMaxY() + 1), 0),
 						new Vector(0, -(localplayer.getWorld().getMaxY() + 1), 0)
 						);
-				session.getRegionSelector(localplayer.getWorld()).learnChanges();;
+				session.getRegionSelector(localplayer.getWorld()).learnChanges();
                 session.getRegionSelector(localplayer.getWorld()).explainRegionAdjust(localplayer, session);
             } catch (Exception e) {
                 e.printStackTrace();
