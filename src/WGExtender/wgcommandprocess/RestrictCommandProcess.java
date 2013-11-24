@@ -49,7 +49,7 @@ public class RestrictCommandProcess implements Listener {
 		if (isInWGRegion(player))
 		{
 			String message = event.getMessage();
-			message = message.replaceFirst("/", "");
+			message = message.replaceFirst("/", "").toLowerCase();
 			for (String rcommand : config.restrictedcommands)
 			{
 				if (message.startsWith(rcommand) && !isOwnerOrMemberOfRegionsAtLocation(player))
