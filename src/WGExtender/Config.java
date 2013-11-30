@@ -48,7 +48,6 @@ public class Config {
 	public boolean blockblockburninregion = false;
 	public boolean blockentityexplosionblockdamage = false;
 	public boolean blockentitydamagebyexplosion = false;
-	public boolean blockentitydamagebyplayer = false;
 	public boolean blockpistonmoveblock = false;
 	
 	public boolean autoflagsenabled = false;
@@ -88,7 +87,6 @@ public class Config {
 		blockblockburninregion = config.getBoolean("regionprotect.fire.burn.enabled",blockblockburninregion);
 		blockentityexplosionblockdamage = config.getBoolean("regionprotect.explosion.block.enabled",blockentityexplosionblockdamage);
 		blockentitydamagebyexplosion = config.getBoolean("regionprotect.explosion.entity.enabled",blockentitydamagebyexplosion);
-		blockentitydamagebyplayer = config.getBoolean("regionprotect.animalsdamage.enabled",blockentitydamagebyplayer);
 		blockpistonmoveblock = config.getBoolean("regionprotect.pistonmove.enabled",blockpistonmoveblock);
 		
 		autoflagsenabled = config.getBoolean("autoflags.enabled",autoflagsenabled);
@@ -144,7 +142,6 @@ public class Config {
 		config.set("regionprotect.fire.burn.enabled",blockblockburninregion);
 		config.set("regionprotect.explosion.block.enabled",blockentityexplosionblockdamage);
 		config.set("regionprotect.explosion.entity.enabled",blockentitydamagebyexplosion);
-		config.set("regionprotect.animalsdamage.enabled",blockentitydamagebyplayer);
 		config.set("regionprotect.pistonmove.enabled",blockpistonmoveblock);
 		
 		config.set("autoflags.enabled",autoflagsenabled);

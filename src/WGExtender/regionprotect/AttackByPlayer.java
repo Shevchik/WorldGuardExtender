@@ -26,8 +26,6 @@ public class AttackByPlayer implements Listener {
 	@EventHandler(priority=EventPriority.HIGH,ignoreCancelled=true)
 	public void onEntityDamage(EntityDamageByEntityEvent e)
 	{
-		if (!config.blockentitydamagebyplayer) {return;}
-		
 		Entity entity = e.getEntity();
 		if (entity instanceof Animals && WGRegionUtils.isInWGRegion(main.wg, entity.getLocation()))
 		{
