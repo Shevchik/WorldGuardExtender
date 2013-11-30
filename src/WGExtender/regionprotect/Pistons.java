@@ -12,6 +12,7 @@ import org.bukkit.event.block.BlockPistonRetractEvent;
 
 import WGExtender.Config;
 import WGExtender.Main;
+import WGExtender.utils.WGRegionUtils;
 
 public class Pistons implements Listener {
 	
@@ -35,7 +36,7 @@ public class Pistons implements Listener {
 		while (bit.hasNext())
 		{
 			mblock = bit.next();
-			if (!WGRPUtils.isInTheSameRegion(main.wg, pistonlocation, mblock.getLocation()))
+			if (!WGRegionUtils.isInTheSameRegion(main.wg, pistonlocation, mblock.getLocation()))
 			{
 				e.setCancelled(true);
 				break;
@@ -44,7 +45,7 @@ public class Pistons implements Listener {
 		if (mblock != null)
 		{
 			mblock = mblock.getRelative(e.getDirection());
-			if (!WGRPUtils.isInTheSameRegion(main.wg, pistonlocation, mblock.getLocation()))
+			if (!WGRegionUtils.isInTheSameRegion(main.wg, pistonlocation, mblock.getLocation()))
 			{
 				e.setCancelled(true);
 			}	
@@ -60,7 +61,7 @@ public class Pistons implements Listener {
 		{
 			Location pistonlocation = e.getBlock().getLocation();
 			Location retractblocklocation = e.getRetractLocation();
-			if (!WGRPUtils.isInTheSameRegion(main.wg, pistonlocation, retractblocklocation))
+			if (!WGRegionUtils.isInTheSameRegion(main.wg, pistonlocation, retractblocklocation))
 			{
 				e.setCancelled(true);
 			}

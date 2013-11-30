@@ -29,6 +29,7 @@ import WGExtender.regionprotect.FireSpread;
 import WGExtender.regionprotect.IgniteByPlayer;
 import WGExtender.regionprotect.LiquidFlow;
 import WGExtender.regionprotect.Pistons;
+import WGExtender.utils.AnimalProtectFlag;
 import WGExtender.wgcommandprocess.RestrictCommandProcess;
 import WGExtender.wgcommandprocess.WGCommandProcess;
 
@@ -55,6 +56,7 @@ public class Main extends JavaPlugin {
 	@Override
 	public void onEnable()
 	{
+		AnimalProtectFlag.injectFlag();
 		config = new Config();
 		config.loadConfig();
 		commands = new Commands(this,config);

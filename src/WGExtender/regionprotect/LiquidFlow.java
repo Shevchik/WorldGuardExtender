@@ -26,6 +26,7 @@ import org.bukkit.event.block.BlockFromToEvent;
 
 import WGExtender.Config;
 import WGExtender.Main;
+import WGExtender.utils.WGRegionUtils;
 
 public class LiquidFlow implements Listener {
 
@@ -46,7 +47,7 @@ public class LiquidFlow implements Listener {
 		{
 			if (config.blocklavaflow)
 			{
-				if (!WGRPUtils.isInTheSameRegion(main.wg, b.getLocation(), e.getToBlock().getLocation()))
+				if (!WGRegionUtils.isInTheSameRegion(main.wg, b.getLocation(), e.getToBlock().getLocation()))
 				{
 					e.setCancelled(true);
 				}
@@ -56,7 +57,7 @@ public class LiquidFlow implements Listener {
 		{
 			if (config.blockwaterflow)
 			{
-				if (!WGRPUtils.isInTheSameRegion(main.wg, b.getLocation(), e.getToBlock().getLocation()))
+				if (!WGRegionUtils.isInTheSameRegion(main.wg, b.getLocation(), e.getToBlock().getLocation()))
 				{
 					e.setCancelled(true);
 				}

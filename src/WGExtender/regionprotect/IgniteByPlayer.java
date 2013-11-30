@@ -26,6 +26,7 @@ import org.bukkit.event.block.BlockIgniteEvent;
 
 import WGExtender.Config;
 import WGExtender.Main;
+import WGExtender.utils.WGRegionUtils;
 
 public class IgniteByPlayer implements Listener {
 
@@ -46,7 +47,7 @@ public class IgniteByPlayer implements Listener {
 		Player player = e.getPlayer();
 		if (player != null)
 		{
-			if (!WGRPUtils.isOwnerOrMember(main.wg, player, e.getBlock().getLocation()))
+			if (!WGRegionUtils.isOwnerOrMember(main.wg, player, e.getBlock().getLocation()))
 			{
 				player.sendMessage(ChatColor.RED+"Вы не можете поджечь блок в чужом регионе");
 				e.setCancelled(true);

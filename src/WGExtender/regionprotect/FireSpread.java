@@ -25,6 +25,7 @@ import org.bukkit.event.block.BlockSpreadEvent;
 
 import WGExtender.Config;
 import WGExtender.Main;
+import WGExtender.utils.WGRegionUtils;
 
 public class FireSpread implements Listener {
 
@@ -45,14 +46,14 @@ public class FireSpread implements Listener {
 		{
 			if (config.blockfirespreadtoregion)
 			{//check to region
-				if (!WGRPUtils.isInTheSameRegion(main.wg, e.getSource().getLocation(), e.getBlock().getLocation()))
+				if (!WGRegionUtils.isInTheSameRegion(main.wg, e.getSource().getLocation(), e.getBlock().getLocation()))
 				{
 					e.setCancelled(true);
 				}
 			}
 			if (config.blockfirespreadinregion)
 			{//check in region
-				if (WGRPUtils.isInWGRegion(main.wg, e.getSource().getLocation()) && WGRPUtils.isInTheSameRegion(main.wg, e.getSource().getLocation(), e.getBlock().getLocation()))
+				if (WGRegionUtils.isInWGRegion(main.wg, e.getSource().getLocation()) && WGRegionUtils.isInTheSameRegion(main.wg, e.getSource().getLocation(), e.getBlock().getLocation()))
 				{
 					e.setCancelled(true);
 				}
