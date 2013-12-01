@@ -51,6 +51,12 @@ public class Commands implements CommandExecutor {
 			String[] args) {
 		if (canExecute(sender))
 		{
+			if (args.length == 1 && args[0].equalsIgnoreCase("help"))
+			{
+				sender.sendMessage(ChatColor.BLUE+"[SENDER:ANY] wgex reload - перезагрузить конфиг");
+				sender.sendMessage(ChatColor.BLUE+"[SENDER:PLAYER] wgex search - ищет регионы в выделенной области");
+				sender.sendMessage(ChatColor.BLUE+"[SENDER:ANY] wgex setflag {flag} {value} {world} - устанавливает флаг {flag} со значением {value} на все регоны в мире {world}");
+			} else
 			if (args.length == 1 && args[0].equalsIgnoreCase("reload"))
 			{
 				config.loadConfig();
