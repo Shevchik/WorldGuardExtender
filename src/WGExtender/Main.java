@@ -77,7 +77,7 @@ public class Main extends JavaPlugin {
 		getServer().getPluginManager().registerEvents(bburn, this);
 		eexplode = new EntityExplode(this,config);
 		getServer().getPluginManager().registerEvents(eexplode, this);
-		attackbp = new AttackByPlayer(this,config);
+		attackbp = new AttackByPlayer(this);
 		getServer().getPluginManager().registerEvents(attackbp, this);
 		pistons = new Pistons(this,config);
 		getServer().getPluginManager().registerEvents(pistons, this);

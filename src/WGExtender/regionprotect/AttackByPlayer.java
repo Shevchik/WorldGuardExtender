@@ -9,7 +9,6 @@ import org.bukkit.event.EventPriority;
 import org.bukkit.event.Listener;
 import org.bukkit.event.entity.EntityDamageByEntityEvent;
 
-import WGExtender.Config;
 import WGExtender.Main;
 import WGExtender.utils.AnimalProtectFlag;
 import WGExtender.utils.WGRegionUtils;
@@ -17,10 +16,8 @@ import WGExtender.utils.WGRegionUtils;
 public class AttackByPlayer implements Listener {
 	
 	private Main main;
-	private Config config;
-	public AttackByPlayer(Main main, Config config) {
+	public AttackByPlayer(Main main) {
 		this.main = main;
-		this.config = config;
 	}
 
 	@EventHandler(priority=EventPriority.HIGH,ignoreCancelled=true)
