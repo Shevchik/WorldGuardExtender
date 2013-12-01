@@ -52,7 +52,7 @@ public class WGCommandProcess implements Listener {
 		if (config.expandvert)
 		{
 			VertExpand.expand(main.we,event.getPlayer());
-			event.getPlayer().sendMessage(ChatColor.DARK_PURPLE+"Регион автоматически расширен по вертикали");
+			event.getPlayer().sendMessage(ChatColor.LIGHT_PURPLE+"Регион автоматически расширен по вертикали");
 		}
 		//process group block limits
 		if (config.blocklimitsenabled)
