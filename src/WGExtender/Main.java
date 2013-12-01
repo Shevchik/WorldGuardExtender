@@ -57,7 +57,7 @@ public class Main extends JavaPlugin {
 	public void onEnable()
 	{
 		AnimalProtectFlag.injectFlag();
-		config = new Config();
+		config = new Config(this);
 		config.loadConfig();
 		commands = new Commands(this,config);
 		getCommand("wgex").setExecutor(commands);

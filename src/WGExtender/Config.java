@@ -25,15 +25,21 @@ import java.util.HashSet;
 import java.util.Map;
 import java.util.Set;
 
+import org.bukkit.Bukkit;
 import org.bukkit.configuration.ConfigurationSection;
 import org.bukkit.configuration.file.FileConfiguration;
 import org.bukkit.configuration.file.YamlConfiguration;
 
 import com.sk89q.worldguard.protection.flags.DefaultFlag;
 import com.sk89q.worldguard.protection.flags.Flag;
-import com.sk89q.worldguard.protection.flags.StateFlag.State;
 
 public class Config {
+	
+	private Main main;
+	public Config(Main main)
+	{
+		this.main = main;
+	}
 	
 	public boolean expandvert = false;
 	
@@ -102,8 +108,8 @@ public class Config {
 					if (flag.getName().equalsIgnoreCase(sflag))
 					{
 						try {
-							State state = State.valueOf(aflagscs.getString(sflag).toUpperCase());
-							autoflags.put(flag, state);
+							Object value = flag.parseInput(main.wg, Bukkit.getConsoleSender(), aflagscs.getString(sflag));
+							autoflags.put(flag, value);
 						} catch (Exception e) {}
 					}
 				}
