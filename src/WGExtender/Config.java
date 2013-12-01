@@ -155,7 +155,7 @@ public class Config {
 			config.createSection("autoflags.flags");
 		} else
 		{
-			for (@SuppressWarnings("rawtypes") Flag flag : autoflags.keySet())
+			for (Flag<?> flag : autoflags.keySet())
 			{
 				config.set("autoflags.flags."+flag.getName(), autoflags.get(flag).toString());
 			}
