@@ -94,11 +94,10 @@ public class Config {
 		ConfigurationSection aflagscs = config.getConfigurationSection("autoflags.flags");
 		if (aflagscs != null)
 		{
-			@SuppressWarnings("rawtypes")
-			Flag[] flags = DefaultFlag.getFlags(); 
+			Flag<?>[] flags = DefaultFlag.getFlags(); 
 			for (String sflag : aflagscs.getKeys(false))
 			{
-				for (@SuppressWarnings("rawtypes") Flag flag : flags)
+				for (Flag<?> flag : flags)
 				{
 					if (flag.getName().equalsIgnoreCase(sflag))
 					{

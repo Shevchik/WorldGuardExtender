@@ -19,13 +19,18 @@ package WGExtender.commands;
 
 import java.util.List;
 
+import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
+import org.bukkit.World;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandExecutor;
 import org.bukkit.command.CommandSender;
 import org.bukkit.command.ConsoleCommandSender;
 import org.bukkit.command.RemoteConsoleCommandSender;
 import org.bukkit.entity.Player;
+
+import com.sk89q.worldguard.protection.flags.DefaultFlag;
+import com.sk89q.worldguard.protection.flags.Flag;
 
 import WGExtender.Config;
 import WGExtender.Main;
@@ -56,17 +61,40 @@ public class Commands implements CommandExecutor {
 				if (sender instanceof Player)
 				{
 					List<String> regions = RegionsInAreaSearch.getRegionsInPlayerSelection(main.we,main.wg, (Player) sender);
-					if (regions != null)
+					if (regions != null && regions.size() != 0)
 					{
-						if (regions.size() == 0)
-						{
-							sender.sendMessage(ChatColor.BLUE+"Регионов пересекающихся с выделенной зоной не найдено");
-						} else
-						{
+						sender.sendMessage(ChatColor.BLUE+"Регионов пересекающихся с выделенной зоной не найдено");
+					} else
+					{
 						sender.sendMessage(ChatColor.BLUE+"Найдены регионы пересекающиеся с выделенной зоной: "+regions);
+					}
+				}
+				return true;
+			} else
+			if (args.length == 4 && args[0].equalsIgnoreCase("setflag"))
+			{
+				for (Flag<?> flag : DefaultFlag.getFlags())
+				{
+					if (flag.getName().equalsIgnoreCase(args[1]))
+					{
+						try {
+							World world = Bukkit.getWorld(args[3]);
+							if (world != null)
+							{
+								SetFlags.setFlags(main.wg, flag, args[2], world);
+								sender.sendMessage(ChatColor.BLUE+"Флаги установлены");
+							} else
+							{
+								sender.sendMessage(ChatColor.BLUE+"Мир не найден");
+							}
+							return true;
+						} catch (Exception e) {
+							sender.sendMessage(ChatColor.BLUE+"Ошибка при обработке флага");
+							return true;
 						}
 					}
 				}
+				sender.sendMessage(ChatColor.BLUE+"Флаг не найден");
 				return true;
 			}
 			return true;
