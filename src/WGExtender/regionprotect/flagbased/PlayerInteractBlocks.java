@@ -24,8 +24,10 @@ import org.bukkit.event.EventPriority;
 import org.bukkit.event.Listener;
 import org.bukkit.event.player.PlayerInteractEvent;
 
+import com.sk89q.worldguard.protection.ApplicableRegionSet;
+
 import WGExtender.WGExtender;
-import WGExtender.flags.AnimalProtectFlag;
+import WGExtender.flags.BlockInteractRestrictFlag;
 import WGExtender.utils.WGRegionUtils;
 
 public class PlayerInteractBlocks implements Listener {
@@ -40,7 +42,7 @@ public class PlayerInteractBlocks implements Listener {
 	{
 		Player player = e.getPlayer();
 		Block block = e.getClickedBlock();
-		if (!WGRegionUtils.isFlagAllows(main.wg, player, block.getLocation(), AnimalProtectFlag.instance))
+		if (!WGRegionUtils.isFlagAllows(main.wg, player, block.getLocation(), BlockInteractRestrictFlag.instance))
 		{
 			e.setCancelled(true);
 		}
