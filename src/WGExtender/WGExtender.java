@@ -26,7 +26,7 @@ import org.bukkit.plugin.java.JavaPlugin;
 
 import WGExtender.commands.Commands;
 import WGExtender.flags.AnimalProtectFlag;
-import WGExtender.flags.InteractRestrictFlag;
+import WGExtender.flags.BlockInteractRestrictFlag;
 import WGExtender.regionprotect.flagbased.AttackByPlayer;
 import WGExtender.regionprotect.flagbased.PlayerInteractBlocks;
 import WGExtender.regionprotect.ownormembased.IgniteByPlayer;
@@ -66,7 +66,7 @@ public class WGExtender extends JavaPlugin {
 	{
 		log = this.getLogger();
 		AnimalProtectFlag.injectFlag();
-		InteractRestrictFlag.injectFlag();
+		BlockInteractRestrictFlag.injectFlag();
 		config = new Config(this);
 		config.loadConfig();
 		commands = new Commands(this,config);
