@@ -33,14 +33,14 @@ import com.sk89q.worldguard.protection.flags.DefaultFlag;
 import com.sk89q.worldguard.protection.flags.Flag;
 
 import WGExtender.Config;
-import WGExtender.Main;
+import WGExtender.WGExtender;
 
 public class Commands implements CommandExecutor {
 
-	private Main main;
+	private WGExtender main;
 	private Config config;
 	
-	public Commands(Main main, Config config)
+	public Commands(WGExtender main, Config config)
 	{
 		this.main = main;
 		this.config = config;

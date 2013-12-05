@@ -1,4 +1,4 @@
-package WGExtender.regionprotect;
+package WGExtender.regionprotect.regionbased;
 
 import java.util.Iterator;
 
@@ -11,16 +11,16 @@ import org.bukkit.event.block.BlockPistonExtendEvent;
 import org.bukkit.event.block.BlockPistonRetractEvent;
 
 import WGExtender.Config;
-import WGExtender.Main;
+import WGExtender.WGExtender;
 import WGExtender.utils.WGRegionUtils;
 
 public class Pistons implements Listener {
 	
-	private Main main;
+	private WGExtender main;
 	private Config config;
 	
 	
-	public Pistons(Main main, Config config) {
+	public Pistons(WGExtender main, Config config) {
 		this.main = main;
 		this.config = config;
 	}

@@ -1,4 +1,4 @@
-package WGExtender.regionprotect;
+package WGExtender.regionprotect.flagbased;
 
 import org.bukkit.entity.Animals;
 import org.bukkit.entity.Arrow;
@@ -9,14 +9,14 @@ import org.bukkit.event.EventPriority;
 import org.bukkit.event.Listener;
 import org.bukkit.event.entity.EntityDamageByEntityEvent;
 
-import WGExtender.Main;
-import WGExtender.utils.AnimalProtectFlag;
+import WGExtender.WGExtender;
+import WGExtender.flags.AnimalProtectFlag;
 import WGExtender.utils.WGRegionUtils;
 
 public class AttackByPlayer implements Listener {
 	
-	private Main main;
-	public AttackByPlayer(Main main) {
+	private WGExtender main;
+	public AttackByPlayer(WGExtender main) {
 		this.main = main;
 	}
 

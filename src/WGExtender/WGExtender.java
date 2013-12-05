@@ -17,26 +17,33 @@
 
 package WGExtender;
 
+import java.util.logging.Level;
+import java.util.logging.Logger;
+
 import org.bukkit.Bukkit;
 import org.bukkit.event.HandlerList;
 import org.bukkit.plugin.java.JavaPlugin;
 
 import WGExtender.commands.Commands;
-import WGExtender.regionprotect.AttackByPlayer;
-import WGExtender.regionprotect.BlockBurn;
-import WGExtender.regionprotect.EntityExplode;
-import WGExtender.regionprotect.FireSpread;
-import WGExtender.regionprotect.IgniteByPlayer;
-import WGExtender.regionprotect.LiquidFlow;
-import WGExtender.regionprotect.Pistons;
-import WGExtender.utils.AnimalProtectFlag;
+import WGExtender.flags.AnimalProtectFlag;
+import WGExtender.flags.InteractRestrictFlag;
+import WGExtender.regionprotect.flagbased.AttackByPlayer;
+import WGExtender.regionprotect.flagbased.PlayerInteractBlocks;
+import WGExtender.regionprotect.ownormembased.IgniteByPlayer;
+import WGExtender.regionprotect.regionbased.BlockBurn;
+import WGExtender.regionprotect.regionbased.EntityExplode;
+import WGExtender.regionprotect.regionbased.FireSpread;
+import WGExtender.regionprotect.regionbased.LiquidFlow;
+import WGExtender.regionprotect.regionbased.Pistons;
 import WGExtender.wgcommandprocess.RestrictCommandProcess;
 import WGExtender.wgcommandprocess.WGCommandProcess;
 
 import com.sk89q.worldedit.bukkit.WorldEditPlugin;
 import com.sk89q.worldguard.bukkit.WorldGuardPlugin;
 
-public class Main extends JavaPlugin {
+public class WGExtender extends JavaPlugin {
+	
+	private static Logger log;
 	
 	private Config config;
 	private WGCommandProcess cmdprocess;
@@ -48,6 +55,7 @@ public class Main extends JavaPlugin {
 	private BlockBurn bburn;
 	private EntityExplode eexplode;
 	private AttackByPlayer attackbp;
+	private PlayerInteractBlocks pinteractb;
 	private Pistons pistons;
 	
 	public WorldEditPlugin we = null;
@@ -56,7 +64,9 @@ public class Main extends JavaPlugin {
 	@Override
 	public void onEnable()
 	{
+		log = this.getLogger();
 		AnimalProtectFlag.injectFlag();
+		InteractRestrictFlag.injectFlag();
 		config = new Config(this);
 		config.loadConfig();
 		commands = new Commands(this,config);
@@ -79,6 +89,8 @@ public class Main extends JavaPlugin {
 		getServer().getPluginManager().registerEvents(eexplode, this);
 		attackbp = new AttackByPlayer(this);
 		getServer().getPluginManager().registerEvents(attackbp, this);
+		pinteractb = new PlayerInteractBlocks(this);
+		getServer().getPluginManager().registerEvents(pinteractb, this);
 		pistons = new Pistons(this,config);
 		getServer().getPluginManager().registerEvents(pistons, this);
 	}
@@ -101,5 +113,11 @@ public class Main extends JavaPlugin {
 		wg = null;
 	}
 
-	
+	public static void log(Level level, String message)
+	{
+		if (log != null)
+		{
+			log.log(Level.SEVERE, message);
+		}
+	}
 }

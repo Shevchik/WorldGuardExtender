@@ -28,14 +28,14 @@ import com.sk89q.worldguard.LocalPlayer;
 import com.sk89q.worldguard.protection.ApplicableRegionSet;
 
 import WGExtender.Config;
-import WGExtender.Main;
+import WGExtender.WGExtender;
 
 public class RestrictCommandProcess implements Listener {
 
-	private Main main;
+	private WGExtender main;
 	private Config config;
 
-	public RestrictCommandProcess(Main main, Config config) {
+	public RestrictCommandProcess(WGExtender main, Config config) {
 		this.main = main;
 		this.config = config;
 	}

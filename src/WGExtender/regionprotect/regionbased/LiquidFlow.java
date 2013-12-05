@@ -15,56 +15,49 @@
  * 
  */
 
-package WGExtender.regionprotect;
+package WGExtender.regionprotect.regionbased;
 
-import java.util.Iterator;
-
+import org.bukkit.Material;
 import org.bukkit.block.Block;
-import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.EventPriority;
 import org.bukkit.event.Listener;
-import org.bukkit.event.entity.EntityDamageByEntityEvent;
-import org.bukkit.event.entity.EntityDamageEvent.DamageCause;
-import org.bukkit.event.entity.EntityExplodeEvent;
+import org.bukkit.event.block.BlockFromToEvent;
 
 import WGExtender.Config;
-import WGExtender.Main;
+import WGExtender.WGExtender;
 import WGExtender.utils.WGRegionUtils;
 
-public class EntityExplode implements Listener {
+public class LiquidFlow implements Listener {
 
-	private Main main;
+	private WGExtender main;
 	private Config config;
 
 	
-	public EntityExplode(Main main, Config config) {
+	public LiquidFlow(WGExtender main, Config config) {
 		this.main = main;
 		this.config = config;
 	}
 	
-	@EventHandler(priority=EventPriority.HIGH,ignoreCancelled=true)
-	public void onEntityExplode(EntityExplodeEvent e)
+	@EventHandler(priority=EventPriority.LOWEST,ignoreCancelled=true)
+	public void onLiquidFlow(BlockFromToEvent e)
 	{
-		if (!config.blockentityexplosionblockdamage) {return;}
-		Iterator<Block> it = e.blockList().iterator();
-		while (it.hasNext())
+		Block b = e.getBlock();
+		if (b.getType() == Material.LAVA || b.getType() == Material.STATIONARY_LAVA)
 		{
-			if (WGRegionUtils.isInWGRegion(main.wg, it.next().getLocation()))
+			if (config.blocklavaflow)
 			{
-				it.remove();
+				if (!WGRegionUtils.isInTheSameRegion(main.wg, b.getLocation(), e.getToBlock().getLocation()))
+				{
+					e.setCancelled(true);
+				}
 			}
-		}
-	}
-	
-	@EventHandler(priority=EventPriority.HIGH,ignoreCancelled=true)
-	public void onEntityDamageByExplosion(EntityDamageByEntityEvent e)
-	{
-		if (e.getCause() == DamageCause.BLOCK_EXPLOSION || e.getCause() == DamageCause.ENTITY_EXPLOSION)
+		} else
+		if (b.getType() == Material.WATER || b.getType() == Material.STATIONARY_WATER)
 		{
-			if (!(e.getEntity() instanceof Player))
+			if (config.blockwaterflow)
 			{
-				if (WGRegionUtils.isInWGRegion(main.wg, e.getEntity().getLocation()))
+				if (!WGRegionUtils.isInTheSameRegion(main.wg, b.getLocation(), e.getToBlock().getLocation()))
 				{
 					e.setCancelled(true);
 				}

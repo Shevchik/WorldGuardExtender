@@ -15,7 +15,7 @@
  * 
  */
 
-package WGExtender.regionprotect;
+package WGExtender.regionprotect.regionbased;
 
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.EventPriority;
@@ -23,16 +23,16 @@ import org.bukkit.event.Listener;
 import org.bukkit.event.block.BlockBurnEvent;
 
 import WGExtender.Config;
-import WGExtender.Main;
+import WGExtender.WGExtender;
 import WGExtender.utils.WGRegionUtils;
 
 public class BlockBurn implements Listener {
 
-	private Main main;
+	private WGExtender main;
 	private Config config;
 
 	
-	public BlockBurn(Main main, Config config) {
+	public BlockBurn(WGExtender main, Config config) {
 		this.main = main;
 		this.config = config;
 	}

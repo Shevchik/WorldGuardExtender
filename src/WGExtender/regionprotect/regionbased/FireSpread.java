@@ -15,54 +15,50 @@
  * 
  */
 
-package WGExtender.regionprotect;
+package WGExtender.regionprotect.regionbased;
 
 import org.bukkit.Material;
-import org.bukkit.block.Block;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.EventPriority;
 import org.bukkit.event.Listener;
-import org.bukkit.event.block.BlockFromToEvent;
+import org.bukkit.event.block.BlockSpreadEvent;
 
 import WGExtender.Config;
-import WGExtender.Main;
+import WGExtender.WGExtender;
 import WGExtender.utils.WGRegionUtils;
 
-public class LiquidFlow implements Listener {
+public class FireSpread implements Listener {
 
-	private Main main;
+	private WGExtender main;
 	private Config config;
 
 	
-	public LiquidFlow(Main main, Config config) {
+	public FireSpread(WGExtender main, Config config) {
 		this.main = main;
 		this.config = config;
 	}
 	
+	
 	@EventHandler(priority=EventPriority.LOWEST,ignoreCancelled=true)
-	public void onLiquidFlow(BlockFromToEvent e)
+	public void onBlockIgniteBySpread(BlockSpreadEvent e)
 	{
-		Block b = e.getBlock();
-		if (b.getType() == Material.LAVA || b.getType() == Material.STATIONARY_LAVA)
+		if (e.getNewState().getType() == Material.FIRE)
 		{
-			if (config.blocklavaflow)
-			{
-				if (!WGRegionUtils.isInTheSameRegion(main.wg, b.getLocation(), e.getToBlock().getLocation()))
+			if (config.blockfirespreadtoregion)
+			{//check to region
+				if (!WGRegionUtils.isInTheSameRegion(main.wg, e.getSource().getLocation(), e.getBlock().getLocation()))
 				{
 					e.setCancelled(true);
 				}
 			}
-		} else
-		if (b.getType() == Material.WATER || b.getType() == Material.STATIONARY_WATER)
-		{
-			if (config.blockwaterflow)
-			{
-				if (!WGRegionUtils.isInTheSameRegion(main.wg, b.getLocation(), e.getToBlock().getLocation()))
+			if (config.blockfirespreadinregion)
+			{//check in region
+				if (WGRegionUtils.isInWGRegion(main.wg, e.getSource().getLocation()) && WGRegionUtils.isInTheSameRegion(main.wg, e.getSource().getLocation(), e.getBlock().getLocation()))
 				{
 					e.setCancelled(true);
 				}
 			}
 		}
 	}
-	
+
 }

@@ -24,15 +24,15 @@ import org.bukkit.event.Listener;
 import org.bukkit.event.player.PlayerCommandPreprocessEvent;
 
 import WGExtender.Config;
-import WGExtender.Main;
+import WGExtender.WGExtender;
 
 public class WGCommandProcess implements Listener {
 
-	private Main main;
+	private WGExtender main;
 	private Config config;
 
 	
-	public WGCommandProcess(Main main, Config config) {
+	public WGCommandProcess(WGExtender main, Config config) {
 		this.main = main;
 		this.config = config;
 	}

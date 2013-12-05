@@ -35,8 +35,8 @@ import com.sk89q.worldguard.protection.flags.Flag;
 
 public class Config {
 	
-	private Main main;
-	public Config(Main main)
+	private WGExtender main;
+	public Config(WGExtender main)
 	{
 		this.main = main;
 	}

@@ -25,11 +25,11 @@ import com.sk89q.worldguard.protection.managers.RegionManager;
 import com.sk89q.worldguard.protection.regions.ProtectedRegion;
 
 import WGExtender.Config;
-import WGExtender.Main;
+import WGExtender.WGExtender;
 
 public class AutoFlags {
 
-	protected static void setFlagsForRegion(Main main, final Config config, WorldGuardPlugin wg, World world, final String regionname)
+	protected static void setFlagsForRegion(WGExtender main, final Config config, WorldGuardPlugin wg, World world, final String regionname)
 	{
 		final RegionManager rm = wg.getRegionManager(world);
 		//ignore if rm is null

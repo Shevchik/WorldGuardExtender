@@ -15,7 +15,7 @@
  * 
  */
 
-package WGExtender.regionprotect;
+package WGExtender.regionprotect.ownormembased;
 
 import org.bukkit.ChatColor;
 import org.bukkit.entity.Player;
@@ -25,16 +25,16 @@ import org.bukkit.event.Listener;
 import org.bukkit.event.block.BlockIgniteEvent;
 
 import WGExtender.Config;
-import WGExtender.Main;
+import WGExtender.WGExtender;
 import WGExtender.utils.WGRegionUtils;
 
 public class IgniteByPlayer implements Listener {
 
-	private Main main;
+	private WGExtender main;
 	private Config config;
 
 	
-	public IgniteByPlayer(Main main, Config config) {
+	public IgniteByPlayer(WGExtender main, Config config) {
 		this.main = main;
 		this.config = config;
 	}

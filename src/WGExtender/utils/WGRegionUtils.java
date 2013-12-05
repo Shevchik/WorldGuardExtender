@@ -65,13 +65,13 @@ public class WGRegionUtils {
 		return false;
 	}
 	
-	public static boolean isFlagAllows(WorldGuardPlugin wg, Player p, Location l, StateFlag flag)
+	public static boolean isFlagAllows(WorldGuardPlugin wg, Player player, Location location, StateFlag flag)
 	{
 		try {
-			ApplicableRegionSet ars = wg.getRegionManager(l.getWorld()).getApplicableRegions(l);
-			return (ars.allows(AnimalProtectFlag.instance));
+			ApplicableRegionSet ars = wg.getRegionManager(location.getWorld()).getApplicableRegions(location);
+			return (ars.allows(flag, wg.wrapPlayer(player)));
 		} catch (Exception e) {
-			//if we caught an exception here it means that regions for world are disabled
+			//if we caught an exception here it means that regions for world are disabled or flag failed to initialize
 		}
 		return true;
 	}
