@@ -17,10 +17,15 @@
 
 package WGExtender.utils;
 
+import java.util.HashSet;
 import java.util.List;
 
 import org.bukkit.Location;
+import org.bukkit.Material;
 import org.bukkit.entity.Player;
+
+import WGExtender.flags.BlockInteractRestrictFlag;
+import WGExtender.flags.BlockInteractRestrictWhitelistFlag;
 
 import com.sk89q.worldedit.bukkit.BukkitUtil;
 import com.sk89q.worldguard.bukkit.WorldGuardPlugin;
@@ -69,11 +74,22 @@ public class WGRegionUtils {
 	{
 		try {
 			ApplicableRegionSet ars = wg.getRegionManager(location.getWorld()).getApplicableRegions(location);
+
+			if (flag instanceof BlockInteractRestrictFlag)
+			{
+				HashSet<Material> whitelisted = ars.getFlag(BlockInteractRestrictWhitelistFlag.instance);
+				if (whitelisted.contains(location.getBlock().getType()))
+				{
+					return true;
+				}
+			}
+			
 			return (ars.allows(flag, wg.wrapPlayer(player)));
 		} catch (Exception e) {
 			//if we caught an exception here it means that regions for world are disabled or flag failed to initialize
 		}
 		return true;
 	}
+
 
 }

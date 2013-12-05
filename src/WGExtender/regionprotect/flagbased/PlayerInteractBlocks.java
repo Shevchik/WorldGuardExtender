@@ -24,8 +24,6 @@ import org.bukkit.event.EventPriority;
 import org.bukkit.event.Listener;
 import org.bukkit.event.player.PlayerInteractEvent;
 
-import com.sk89q.worldguard.protection.ApplicableRegionSet;
-
 import WGExtender.WGExtender;
 import WGExtender.flags.BlockInteractRestrictFlag;
 import WGExtender.utils.WGRegionUtils;
