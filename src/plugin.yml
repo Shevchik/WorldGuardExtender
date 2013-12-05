@@ -1,6 +1,6 @@
 name: WGExtender
-main: WGExtender.Main
-version: 0.1-dev
+main: WGExtender.WGExtender
+version: 0.1.dev
 author: Shevchik
 depend: [WorldGuard, WorldEdit]
 load: STARTUP
