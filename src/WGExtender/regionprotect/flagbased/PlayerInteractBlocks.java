@@ -36,7 +36,7 @@ public class PlayerInteractBlocks implements Listener {
 	}
 
 	@EventHandler(priority=EventPriority.HIGH,ignoreCancelled=true)
-	public void onEntityDamage(PlayerInteractEvent e)
+	public void onPlayerInteract(PlayerInteractEvent e)
 	{
 		Player player = e.getPlayer();
 		Block block = e.getClickedBlock();
