@@ -17,11 +17,9 @@
 
 package WGExtender.utils;
 
-import java.util.HashSet;
 import java.util.List;
 
 import org.bukkit.Location;
-import org.bukkit.Material;
 import org.bukkit.entity.Player;
 
 import WGExtender.flags.BlockInteractRestrictFlag;
@@ -77,8 +75,8 @@ public class WGRegionUtils {
 
 			if (flag instanceof BlockInteractRestrictFlag)
 			{
-				HashSet<Material> whitelisted = ars.getFlag(BlockInteractRestrictWhitelistFlag.instance);
-				if (whitelisted != null && whitelisted.contains(location.getBlock().getType()))
+				String whitelisted = ars.getFlag(BlockInteractRestrictWhitelistFlag.instance);
+				if (whitelisted != null && whitelisted.contains(location.getBlock().getType().toString()))
 				{
 					return true;
 				}

@@ -17,16 +17,13 @@
 
 package WGExtender.flags;
 
-import java.util.HashSet;
-
-import org.bukkit.Material;
 import org.bukkit.command.CommandSender;
 
 import com.sk89q.worldguard.bukkit.WorldGuardPlugin;
 import com.sk89q.worldguard.protection.flags.Flag;
 import com.sk89q.worldguard.protection.flags.InvalidFlagFormat;
 
-public class BlockInteractRestrictWhitelistFlag extends Flag<HashSet<Material>> {
+public class BlockInteractRestrictWhitelistFlag extends Flag<String> {
 
 	public static BlockInteractRestrictWhitelistFlag instance = null;
 	
@@ -40,31 +37,19 @@ public class BlockInteractRestrictWhitelistFlag extends Flag<HashSet<Material>> 
 	}
 
 	@Override
-	public Object marshal(HashSet<Material> set) {
+	public Object marshal(String set) {
 		return set;
 	}
 
 	@Override
-	public HashSet<Material> parseInput(WorldGuardPlugin wg, CommandSender sender, String args) throws InvalidFlagFormat {
-		String[] materials = args.split("\\s+");
-		HashSet<Material> allowedmaterials = new HashSet<Material>();
-		for (String materialname : materials)
-		{
-			Material material = Material.getMaterial(materialname);
-			if (material != null)
-			{
-				allowedmaterials.add(material);
-			}
-		}
-		return allowedmaterials;
+	public String parseInput(WorldGuardPlugin wg, CommandSender sender, String args) throws InvalidFlagFormat {
+		return args;
 	}
 
-
-	@SuppressWarnings("unchecked")
 	@Override
-	public HashSet<Material> unmarshal(Object obj) {
-        if (obj instanceof HashSet<?>) {
-            return (HashSet<Material>) obj;
+	public String unmarshal(Object obj) {
+        if (obj instanceof String) {
+            return (String) obj;
         } else {
             return null;
         }
