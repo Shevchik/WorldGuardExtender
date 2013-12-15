@@ -23,6 +23,7 @@ import org.bukkit.event.EventHandler;
 import org.bukkit.event.EventPriority;
 import org.bukkit.event.Listener;
 import org.bukkit.event.block.BlockIgniteEvent;
+import org.bukkit.event.block.BlockIgniteEvent.IgniteCause;
 
 import WGExtender.Config;
 import WGExtender.WGExtender;
@@ -51,6 +52,16 @@ public class IgniteByPlayer implements Listener {
 			{
 				player.sendMessage(ChatColor.RED+"Вы не можете поджечь блок в чужом регионе");
 				e.setCancelled(true);
+				return;
+			}
+		}
+		
+		if (e.getCause() == IgniteCause.FIREBALL)
+		{
+			if (WGRegionUtils.isInWGRegion(main.wg, e.getBlock().getLocation()))
+			{
+				e.setCancelled(true);
+				return;
 			}
 		}
 	}
