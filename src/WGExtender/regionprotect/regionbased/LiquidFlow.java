@@ -22,7 +22,10 @@ import org.bukkit.block.Block;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.EventPriority;
 import org.bukkit.event.Listener;
+import org.bukkit.event.block.BlockDispenseEvent;
 import org.bukkit.event.block.BlockFromToEvent;
+import org.bukkit.inventory.ItemStack;
+import org.bukkit.material.DirectionalContainer;
 
 import WGExtender.Config;
 import WGExtender.WGExtender;
@@ -58,6 +61,34 @@ public class LiquidFlow implements Listener {
 			if (config.blockwaterflow)
 			{
 				if (!WGRegionUtils.isInTheSameRegion(main.wg, b.getLocation(), e.getToBlock().getLocation()))
+				{
+					e.setCancelled(true);
+				}
+			}
+		}
+	}
+	
+	@EventHandler(priority=EventPriority.LOWEST,ignoreCancelled=true)
+	public void onDispenserDispense(BlockDispenseEvent e)
+	{
+		ItemStack item = e.getItem();
+		Block b = e.getBlock();
+		Block nextBlock = b.getRelative(DirectionalContainer.class.cast(b.getState().getData()).getFacing());
+		if (item.getType() == Material.LAVA_BUCKET)
+		{
+			if (config.blocklavaflow)
+			{
+				if (!WGRegionUtils.isInTheSameRegion(main.wg, b.getLocation(), nextBlock.getLocation()))
+				{
+					e.setCancelled(true);
+				}
+			}
+		} else
+		if (item.getType() == Material.WATER_BUCKET)
+		{
+			if (config.blockwaterflow)
+			{
+				if (!WGRegionUtils.isInTheSameRegion(main.wg, b.getLocation(), nextBlock.getLocation()))
 				{
 					e.setCancelled(true);
 				}
