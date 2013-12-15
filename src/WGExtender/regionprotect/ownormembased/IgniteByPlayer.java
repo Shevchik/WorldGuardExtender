@@ -52,16 +52,13 @@ public class IgniteByPlayer implements Listener {
 			{
 				player.sendMessage(ChatColor.RED+"Вы не можете поджечь блок в чужом регионе");
 				e.setCancelled(true);
-				return;
 			}
-		}
-		
+		} else
 		if (e.getCause() == IgniteCause.FIREBALL)
 		{
 			if (WGRegionUtils.isInWGRegion(main.wg, e.getBlock().getLocation()))
 			{
 				e.setCancelled(true);
-				return;
 			}
 		}
 	}
