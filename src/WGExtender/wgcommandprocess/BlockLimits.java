@@ -21,11 +21,8 @@ import org.bukkit.entity.Player;
 
 import WGExtender.Config;
 
-import com.sk89q.worldedit.LocalPlayer;
-import com.sk89q.worldedit.LocalSession;
-import com.sk89q.worldedit.LocalWorld;
 import com.sk89q.worldedit.bukkit.WorldEditPlugin;
-import com.sk89q.worldedit.regions.Region;
+import com.sk89q.worldedit.bukkit.selections.Selection;
 import com.sk89q.worldguard.bukkit.WorldGuardPlugin;
 
 public class BlockLimits {
@@ -38,24 +35,13 @@ public class BlockLimits {
 			return true;
 		}
 		
-		LocalPlayer localplayer = we.wrapPlayer(player);
-		LocalWorld localworld = localplayer.getWorld();
-		LocalSession session = we.getSession(player);
-		String[] pgroups = 	localplayer.getGroups();
-		//no groups, allow player to process command
-		if (pgroups.length == 0)
+		Selection psel = we.getSelection(player);
+		String[] pgroups = wg.getGroups(player);
+		if (psel == null)
 		{
 			return true;
 		}
-		Region region = null;
-		try {
-			region = session.getSelection(localworld);
-		} catch (Exception e) {
-			//if selection is not completed allow player to process command
-			return true;
-		}
-		//region is null, llow player to process command
-		if (region == null)
+		if (pgroups.length == 0)
 		{
 			return true;
 		}
@@ -70,7 +56,7 @@ public class BlockLimits {
 			}
 		}
 		//if player tried to claim above limit - disallow player to process command
-		if (region.getArea() > maxblocks)
+		if (psel.getArea() > maxblocks)
 		{
 			return false;
 		}
