@@ -27,6 +27,10 @@ public class AnimalProtectFlag extends StateFlag {
 		instance = new AnimalProtectFlag();
 		FlagInjector.injectFlag(instance);
     }
+	
+	public static void uninjectFlag() {
+		FlagInjector.uninjectFlag(instance);
+	}
 
 	public AnimalProtectFlag() {
 		super("damage-animals", true);

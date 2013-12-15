@@ -21,7 +21,6 @@ import java.util.logging.Level;
 import java.util.logging.Logger;
 
 import org.bukkit.Bukkit;
-import org.bukkit.event.HandlerList;
 import org.bukkit.plugin.java.JavaPlugin;
 
 import WGExtender.commands.Commands;
@@ -100,7 +99,9 @@ public class WGExtender extends JavaPlugin {
 	@Override
 	public void onDisable()
 	{
-		HandlerList.unregisterAll(this);
+		AnimalProtectFlag.uninjectFlag();
+		BlockInteractRestrictFlag.uninjectFlag();
+		BlockInteractRestrictWhitelistFlag.uninjectFlag();
 		config = null;
 		cmdprocess = null;
 		rcmdprocess = null;

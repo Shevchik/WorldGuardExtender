@@ -32,6 +32,10 @@ public class BlockInteractRestrictWhitelistFlag extends Flag<String> {
 		FlagInjector.injectFlag(instance);
     }
 	
+	public static void uninjectFlag() {
+		FlagInjector.uninjectFlag(instance);
+	}
+	
 	public BlockInteractRestrictWhitelistFlag() {
 		super("block-interact-whitelist");
 	}
