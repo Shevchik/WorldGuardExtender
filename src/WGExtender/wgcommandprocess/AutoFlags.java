@@ -17,10 +17,14 @@
 
 package WGExtender.wgcommandprocess;
 
+import java.util.HashMap;
+import java.util.Map;
+
 import org.bukkit.Bukkit;
 import org.bukkit.World;
 
 import com.sk89q.worldguard.bukkit.WorldGuardPlugin;
+import com.sk89q.worldguard.protection.flags.Flag;
 import com.sk89q.worldguard.protection.managers.RegionManager;
 import com.sk89q.worldguard.protection.regions.ProtectedRegion;
 
@@ -45,7 +49,8 @@ public class AutoFlags {
 					final ProtectedRegion rg = rm.getRegionExact(regionname);
 					if (rg != null)
 					{
-						rg.setFlags(config.autoflags);
+						Map<Flag<?>, Object> flags = new HashMap<Flag<?>,Object>(config.autoflags);
+						rg.setFlags(flags);
 						rm.save();
 					}
 				} catch (Exception e) {
