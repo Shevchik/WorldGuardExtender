@@ -23,7 +23,6 @@ import org.bukkit.Bukkit;
 import org.bukkit.World;
 
 import com.sk89q.worldguard.bukkit.WorldGuardPlugin;
-import com.sk89q.worldguard.protection.flags.DefaultFlag;
 import com.sk89q.worldguard.protection.flags.Flag;
 import com.sk89q.worldguard.protection.managers.RegionManager;
 import com.sk89q.worldguard.protection.regions.ProtectedRegion;
@@ -50,16 +49,10 @@ public class AutoFlags {
 					final ProtectedRegion rg = rm.getRegionExact(regionname);
 					if (rg != null)
 					{
-						for (Entry<String,String> entry : config.autoflags.entrySet())
+						for (Entry<Flag<?>, String> entry : config.autoflags.entrySet())
 						{
-							Flag<?>[] flags = DefaultFlag.getFlags();
-							for (Flag flag : flags)
-							{
-								if (flag.getName().equalsIgnoreCase(entry.getKey()))
-								{
-									rg.setFlag(flag, flag.parseInput(wg, Bukkit.getConsoleSender(), entry.getValue()));
-								}
-							}
+							Flag flag = entry.getKey();
+							rg.setFlag(flag, flag.parseInput(wg, Bukkit.getConsoleSender(), entry.getValue()));
 						}
 						rm.save();
 					}

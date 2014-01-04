@@ -29,6 +29,9 @@ import org.bukkit.configuration.ConfigurationSection;
 import org.bukkit.configuration.file.FileConfiguration;
 import org.bukkit.configuration.file.YamlConfiguration;
 
+import com.sk89q.worldguard.protection.flags.DefaultFlag;
+import com.sk89q.worldguard.protection.flags.Flag;
+
 public class Config {
 	
 	public boolean expandvert = false;
@@ -47,7 +50,7 @@ public class Config {
 	public boolean blockpistonmoveblock = false;
 	
 	public boolean autoflagsenabled = false;
-	public Map<String, String> autoflags = new HashMap<String,String>();
+	public Map<Flag<?>, String> autoflags = new HashMap<Flag<?>,String>();
 	
 	public boolean restrictcommandsinregionsenabled = false;
 	public Set<String> restrictedcommands = new HashSet<String>();
@@ -93,7 +96,14 @@ public class Config {
 			Set<String> flagkeys = aflagscs.getKeys(false);
 			for (String sflag : flagkeys)
 			{
-				autoflags.put(sflag, aflagscs.getString(sflag));
+				Flag<?>[] flags = DefaultFlag.getFlags();
+				for (Flag<?> flag : flags)
+				{
+					if (flag.getName().equalsIgnoreCase(sflag))
+					{
+						autoflags.put(flag, aflagscs.getString(sflag));
+					}
+				}
 			}
 
 		}
@@ -137,9 +147,9 @@ public class Config {
 			config.createSection("autoflags.flags");
 		} else
 		{
-			for (String flag : autoflags.keySet())
+			for (Flag<?> flag : autoflags.keySet())
 			{
-				config.set("autoflags.flags."+flag, autoflags.get(flag));
+				config.set("autoflags.flags."+flag.getName(), autoflags.get(flag));
 			}
 		}
 		
