@@ -23,7 +23,9 @@ import org.bukkit.Bukkit;
 import org.bukkit.World;
 
 import com.sk89q.worldguard.bukkit.WorldGuardPlugin;
+import com.sk89q.worldguard.protection.databases.ProtectionDatabaseException;
 import com.sk89q.worldguard.protection.flags.Flag;
+import com.sk89q.worldguard.protection.flags.InvalidFlagFormat;
 import com.sk89q.worldguard.protection.managers.RegionManager;
 import com.sk89q.worldguard.protection.regions.ProtectedRegion;
 
@@ -45,19 +47,23 @@ public class AutoFlags {
 			@SuppressWarnings({ "unchecked", "rawtypes" })
 			public void run()
 			{
-				try {
-					final ProtectedRegion rg = rm.getRegionExact(regionname);
-					if (rg != null)
+				final ProtectedRegion rg = rm.getRegionExact(regionname);
+				if (rg != null)
+				{
+					for (Entry<Flag<?>, String> entry : config.autoflags.entrySet())
 					{
-						for (Entry<Flag<?>, String> entry : config.autoflags.entrySet())
-						{
+						try {
 							Flag flag = entry.getKey();
 							rg.setFlag(flag, flag.parseInput(wg, Bukkit.getConsoleSender(), entry.getValue()));
+						} catch (InvalidFlagFormat e) {
+							e.printStackTrace();
 						}
-						rm.save();
 					}
-				} catch (Exception e) {
-					e.printStackTrace();
+					try {
+						rm.save();
+					} catch (ProtectionDatabaseException e) {
+						e.printStackTrace();
+					}
 				}
 			}
 		},20);
