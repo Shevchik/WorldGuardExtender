@@ -93,11 +93,9 @@ public class Config {
 		ConfigurationSection aflagscs = config.getConfigurationSection("autoflags.flags");
 		if (aflagscs != null)
 		{
-			Set<String> flagkeys = aflagscs.getKeys(false);
-			for (String sflag : flagkeys)
+			for (String sflag : aflagscs.getKeys(false))
 			{
-				Flag<?>[] flags = DefaultFlag.getFlags();
-				for (Flag<?> flag : flags)
+				for (Flag<?> flag : DefaultFlag.getFlags())
 				{
 					if (flag.getName().equalsIgnoreCase(sflag))
 					{
@@ -105,7 +103,6 @@ public class Config {
 					}
 				}
 			}
-
 		}
 		
 		restrictcommandsinregionsenabled = config.getBoolean("restrictcommands.enabled",restrictcommandsinregionsenabled);
