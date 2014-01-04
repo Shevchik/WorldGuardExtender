@@ -89,6 +89,7 @@ public class WGRegionUtils {
 					}
 				}
 			}
+			
 			return (ars.allows(flag, wg.wrapPlayer(player)));
 		} catch (Exception e) {
 			//if we caught an exception here it means that regions for world are disabled or flag failed to initialize
