@@ -25,21 +25,11 @@ import java.util.HashSet;
 import java.util.Map;
 import java.util.Set;
 
-import org.bukkit.Bukkit;
 import org.bukkit.configuration.ConfigurationSection;
 import org.bukkit.configuration.file.FileConfiguration;
 import org.bukkit.configuration.file.YamlConfiguration;
 
-import com.sk89q.worldguard.protection.flags.DefaultFlag;
-import com.sk89q.worldguard.protection.flags.Flag;
-
 public class Config {
-	
-	private WGExtender main;
-	public Config(WGExtender main)
-	{
-		this.main = main;
-	}
 	
 	public boolean expandvert = false;
 	
@@ -57,7 +47,7 @@ public class Config {
 	public boolean blockpistonmoveblock = false;
 	
 	public boolean autoflagsenabled = false;
-	public Map<Flag<?>, Object> autoflags = new HashMap<Flag<?>,Object>();
+	public Map<String, String> autoflags = new HashMap<String,String>();
 	
 	public boolean restrictcommandsinregionsenabled = false;
 	public Set<String> restrictedcommands = new HashSet<String>();
@@ -100,20 +90,12 @@ public class Config {
 		ConfigurationSection aflagscs = config.getConfigurationSection("autoflags.flags");
 		if (aflagscs != null)
 		{
-			Flag<?>[] flags = DefaultFlag.getFlags(); 
-			for (String sflag : aflagscs.getKeys(false))
+			Set<String> flagkeys = aflagscs.getKeys(false);
+			for (String sflag : flagkeys)
 			{
-				for (Flag<?> flag : flags)
-				{
-					if (flag.getName().equalsIgnoreCase(sflag))
-					{
-						try {
-							Object value = flag.parseInput(main.wg, Bukkit.getConsoleSender(), aflagscs.getString(sflag));
-							autoflags.put(flag, value);
-						} catch (Exception e) {}
-					}
-				}
+				autoflags.put(sflag, aflagscs.getString(sflag));
 			}
+
 		}
 		
 		restrictcommandsinregionsenabled = config.getBoolean("restrictcommands.enabled",restrictcommandsinregionsenabled);
@@ -155,9 +137,9 @@ public class Config {
 			config.createSection("autoflags.flags");
 		} else
 		{
-			for (Flag<?> flag : autoflags.keySet())
+			for (String flag : autoflags.keySet())
 			{
-				config.set("autoflags.flags."+flag.getName(), autoflags.get(flag).toString());
+				config.set("autoflags.flags."+flag, autoflags.get(flag));
 			}
 		}
 		

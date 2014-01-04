@@ -68,7 +68,7 @@ public class WGExtender extends JavaPlugin {
 		AnimalProtectFlag.injectFlag();
 		BlockInteractRestrictFlag.injectFlag();
 		BlockInteractRestrictWhitelistFlag.injectFlag();
-		config = new Config(this);
+		config = new Config();
 		config.loadConfig();
 		commands = new Commands(this,config);
 		getCommand("wgex").setExecutor(commands);

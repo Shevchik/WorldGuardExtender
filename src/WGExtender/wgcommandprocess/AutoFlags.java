@@ -17,13 +17,13 @@
 
 package WGExtender.wgcommandprocess;
 
-import java.util.HashMap;
-import java.util.Map;
+import java.util.Map.Entry;
 
 import org.bukkit.Bukkit;
 import org.bukkit.World;
 
 import com.sk89q.worldguard.bukkit.WorldGuardPlugin;
+import com.sk89q.worldguard.protection.flags.DefaultFlag;
 import com.sk89q.worldguard.protection.flags.Flag;
 import com.sk89q.worldguard.protection.managers.RegionManager;
 import com.sk89q.worldguard.protection.regions.ProtectedRegion;
@@ -33,7 +33,7 @@ import WGExtender.WGExtender;
 
 public class AutoFlags {
 
-	protected static void setFlagsForRegion(WGExtender main, final Config config, WorldGuardPlugin wg, World world, final String regionname)
+	protected static void setFlagsForRegion(WGExtender main, final Config config, final WorldGuardPlugin wg, World world, final String regionname)
 	{
 		final RegionManager rm = wg.getRegionManager(world);
 		//ignore if rm is null
@@ -43,14 +43,24 @@ public class AutoFlags {
 		//now schedule a task that will set flags after 1 second
 		Bukkit.getScheduler().scheduleSyncDelayedTask(main, new Runnable()
 		{
+			@SuppressWarnings({ "unchecked", "rawtypes" })
 			public void run()
 			{
 				try {
 					final ProtectedRegion rg = rm.getRegionExact(regionname);
 					if (rg != null)
 					{
-						Map<Flag<?>, Object> flags = new HashMap<Flag<?>,Object>(config.autoflags);
-						rg.setFlags(flags);
+						for (Entry<String,String> entry : config.autoflags.entrySet())
+						{
+							Flag<?>[] flags = DefaultFlag.getFlags();
+							for (Flag flag : flags)
+							{
+								if (flag.getName().equalsIgnoreCase(entry.getKey()))
+								{
+									rg.setFlag(flag, flag.parseInput(wg, Bukkit.getConsoleSender(), entry.getValue()));
+								}
+							}
+						}
 						rm.save();
 					}
 				} catch (Exception e) {
