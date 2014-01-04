@@ -75,10 +75,18 @@ public class WGRegionUtils {
 
 			if (flag instanceof BlockInteractRestrictFlag)
 			{
-				String whitelisted = ars.getFlag(BlockInteractRestrictWhitelistFlag.instance);
-				if (whitelisted != null && whitelisted.contains(location.getBlock().getType().toString()))
+				String blockmaterialname = location.getBlock().getType().toString();
+				String allowedstring = ars.getFlag(BlockInteractRestrictWhitelistFlag.instance);
+				if (allowedstring !=  null)
 				{
-					return true;
+					String[] whitelistedmaterialnames = allowedstring.split("\\s+");
+					for (String whitelistedmaterialname : whitelistedmaterialnames)
+					{
+						if (whitelistedmaterialname.equalsIgnoreCase(blockmaterialname))
+						{
+							return true;
+						}
+					}
 				}
 			}
 			return (ars.allows(flag, wg.wrapPlayer(player)));
