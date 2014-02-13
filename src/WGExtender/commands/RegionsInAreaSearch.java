@@ -26,6 +26,7 @@ import org.bukkit.entity.Player;
 
 import com.sk89q.worldedit.bukkit.WorldEditPlugin;
 import com.sk89q.worldedit.bukkit.selections.Selection;
+import com.sk89q.worldguard.bukkit.BukkitUtil;
 import com.sk89q.worldguard.bukkit.WorldGuardPlugin;
 import com.sk89q.worldguard.protection.ApplicableRegionSet;
 import com.sk89q.worldguard.protection.regions.ProtectedCuboidRegion;
@@ -43,7 +44,7 @@ public class RegionsInAreaSearch {
 		} else
 		{
 			List<String> regions = new ArrayList<String>();
-			ProtectedRegion fakerg = new ProtectedCuboidRegion("wgexfakerg",psel.getNativeMinimumPoint().toBlockVector(),psel.getNativeMaximumPoint().toBlockVector());
+			ProtectedRegion fakerg = new ProtectedCuboidRegion("wgexfakerg", BukkitUtil.toVector(psel.getMinimumPoint()).toBlockVector(), BukkitUtil.toVector(psel.getMaximumPoint()).toBlockVector());
 			ApplicableRegionSet ars = wg.getRegionManager(psel.getWorld()).getApplicableRegions(fakerg);
 			Iterator<ProtectedRegion> it = ars.iterator();
 			while (it.hasNext())

@@ -17,6 +17,7 @@
 
 package WGExtender.commands;
 
+import java.util.Arrays;
 import java.util.List;
 
 import org.bukkit.Bukkit;
@@ -55,7 +56,7 @@ public class Commands implements CommandExecutor {
 			{
 				sender.sendMessage(ChatColor.BLUE+"[SENDER:ANY] wgex reload - перезагрузить конфиг");
 				sender.sendMessage(ChatColor.BLUE+"[SENDER:PLAYER] wgex search - ищет регионы в выделенной области");
-				sender.sendMessage(ChatColor.BLUE+"[SENDER:ANY] wgex setflag {flag} {value} {world} - устанавливает флаг {flag} со значением {value} на все регоны в мире {world}");
+				sender.sendMessage(ChatColor.BLUE+"[SENDER:ANY] wgex setflag {world} {flag} {value}  - устанавливает флаг {flag} со значением {value} на все регионы в мире {world}");
 			} else
 			if (args.length == 1 && args[0].equalsIgnoreCase("reload"))
 			{
@@ -77,28 +78,29 @@ public class Commands implements CommandExecutor {
 				}
 				return true;
 			} else
-			if (args.length == 4 && args[0].equalsIgnoreCase("setflag"))
+			if (args.length >= 4 && args[0].equalsIgnoreCase("setflag"))
 			{
-				for (Flag<?> flag : DefaultFlag.getFlags())
+				World world = Bukkit.getWorld(args[1]);
+				if (world != null)
 				{
-					if (flag.getName().equalsIgnoreCase(args[1]))
+					for (Flag<?> flag : DefaultFlag.getFlags())
 					{
-						try {
-							World world = Bukkit.getWorld(args[3]);
-							if (world != null)
-							{
-								SetFlags.setFlags(main.wg, flag, args[2], world);
-								sender.sendMessage(ChatColor.BLUE+"Флаги установлены");
-							} else
-							{
-								sender.sendMessage(ChatColor.BLUE+"Мир не найден");
-							}
+						if (flag.getName().equalsIgnoreCase(args[2]))
+						{
+							try {
+							String value = join(Arrays.copyOfRange(args, 3, args.length), " ");
+							SetFlags.setFlags(main.wg, flag, value, world);
+							sender.sendMessage(ChatColor.BLUE+"Флаги установлены");
 							return true;
 						} catch (Exception e) {
 							sender.sendMessage(ChatColor.BLUE+"Ошибка при обработке флага");
 							return true;
 						}
 					}
+				}
+				} else
+				{
+					sender.sendMessage(ChatColor.BLUE+"Мир не найден");
 				}
 				sender.sendMessage(ChatColor.BLUE+"Флаг не найден");
 				return true;
@@ -124,6 +126,20 @@ public class Commands implements CommandExecutor {
 		}
 		return can;
 		
+	}
+	
+	private String join(String[] args, String delimiter)
+	{
+		if (args.length == 0) {return "";};
+		if (args.length == 1) {return args[0];};
+		StringBuilder builder = new StringBuilder();
+		builder.append(args[0]);
+		for (int i = 1; i<args.length; i++)
+		{
+			builder.append(delimiter);
+			builder.append(args[i]);
+		}
+		return builder.toString();
 	}
 
 }
