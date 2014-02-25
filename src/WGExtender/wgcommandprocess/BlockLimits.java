@@ -50,6 +50,7 @@ public class BlockLimits {
 		int maxblocks = 0;
 		for (String pgroup : pgroups)
 		{
+			pgroup = pgroup.toLowerCase();
 			if (config.blocklimits.containsKey(pgroup))
 			{
 				maxblocks = Math.max(maxblocks, config.blocklimits.get(pgroup));

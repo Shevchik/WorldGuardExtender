@@ -74,7 +74,7 @@ public class Config {
 		{
 			for (String group : blimitscs.getKeys(false))
 			{
-				blocklimits.put(group, blimitscs.getInt(group));
+				blocklimits.put(group.toLowerCase(), blimitscs.getInt(group));
 			}
 		}
 
