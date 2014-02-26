@@ -24,6 +24,7 @@ import org.bukkit.event.EventPriority;
 import org.bukkit.event.Listener;
 import org.bukkit.event.player.PlayerInteractEvent;
 
+import WGExtender.Config;
 import WGExtender.WGExtender;
 import WGExtender.flags.BlockInteractRestrictFlag;
 import WGExtender.utils.WGRegionUtils;
@@ -31,13 +32,18 @@ import WGExtender.utils.WGRegionUtils;
 public class PlayerInteractBlocks implements Listener {
 
 	private WGExtender main;
+	private Config config;
 
-	public PlayerInteractBlocks(WGExtender main) {
+	public PlayerInteractBlocks(WGExtender main, Config config) {
 		this.main = main;
+		this.config = config;
 	}
 
 	@EventHandler(priority = EventPriority.HIGH, ignoreCancelled = true)
 	public void onPlayerInteract(PlayerInteractEvent e) {
+		if (!config.blockrestrictflag) {
+			return;
+		}
 		Player player = e.getPlayer();
 		Block block = e.getClickedBlock();
 		if (!WGRegionUtils.canBypassProtection(player)) {

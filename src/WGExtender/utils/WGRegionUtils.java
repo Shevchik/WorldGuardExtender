@@ -51,7 +51,7 @@ public class WGRegionUtils {
 		}
 		return false;
 	}
-	
+
 	public static boolean isInWGRegion(WorldGuardPlugin wg, Location l) {
 		try {
 			return wg.getRegionManager(l.getWorld()).getApplicableRegions(l).size() > 0;

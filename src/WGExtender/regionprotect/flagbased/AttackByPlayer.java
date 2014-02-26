@@ -26,6 +26,7 @@ import org.bukkit.event.EventPriority;
 import org.bukkit.event.Listener;
 import org.bukkit.event.entity.EntityDamageByEntityEvent;
 
+import WGExtender.Config;
 import WGExtender.WGExtender;
 import WGExtender.flags.AnimalProtectFlag;
 import WGExtender.utils.WGRegionUtils;
@@ -33,13 +34,18 @@ import WGExtender.utils.WGRegionUtils;
 public class AttackByPlayer implements Listener {
 
 	private WGExtender main;
+	private Config config;
 
-	public AttackByPlayer(WGExtender main) {
+	public AttackByPlayer(WGExtender main, Config config) {
 		this.main = main;
+		this.config = config;
 	}
 
 	@EventHandler(priority = EventPriority.HIGH, ignoreCancelled = true)
 	public void onEntityDamage(EntityDamageByEntityEvent e) {
+		if (!config.animalprotectflag) {
+			return;
+		}
 		Entity entity = e.getEntity();
 		if (entity instanceof Animals && WGRegionUtils.isInWGRegion(main.getWorldGuard(), entity.getLocation())) {
 			Player damagerplayer = null;

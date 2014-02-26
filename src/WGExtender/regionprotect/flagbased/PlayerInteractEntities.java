@@ -24,6 +24,7 @@ import org.bukkit.event.EventPriority;
 import org.bukkit.event.Listener;
 import org.bukkit.event.player.PlayerInteractEntityEvent;
 
+import WGExtender.Config;
 import WGExtender.WGExtender;
 import WGExtender.flags.EntityInteractRestrictFlag;
 import WGExtender.utils.WGRegionUtils;
@@ -31,13 +32,18 @@ import WGExtender.utils.WGRegionUtils;
 public class PlayerInteractEntities implements Listener {
 
 	private WGExtender main;
+	private Config config;
 
-	public PlayerInteractEntities(WGExtender main) {
+	public PlayerInteractEntities(WGExtender main, Config config) {
 		this.main = main;
+		this.config = config;
 	}
 
 	@EventHandler(priority = EventPriority.HIGH, ignoreCancelled = true)
 	public void onPlayerInteract(PlayerInteractEntityEvent event) {
+		if (!config.entityrestrictflag) {
+			return;
+		}
 		Player player = event.getPlayer();
 		Entity entity = event.getRightClicked();
 		if (!WGRegionUtils.canBypassProtection(player)) {

@@ -101,11 +101,11 @@ public class WGExtender extends JavaPlugin {
 		getServer().getPluginManager().registerEvents(pistons, this);
 		eexplode = new EntityExplode(this, config);
 		getServer().getPluginManager().registerEvents(eexplode, this);
-		attackbp = new AttackByPlayer(this);
+		attackbp = new AttackByPlayer(this, config);
 		getServer().getPluginManager().registerEvents(attackbp, this);
-		pinteractb = new PlayerInteractBlocks(this);
+		pinteractb = new PlayerInteractBlocks(this, config);
 		getServer().getPluginManager().registerEvents(pinteractb, this);
-		pinteracte = new PlayerInteractEntities(this);
+		pinteracte = new PlayerInteractEntities(this, config);
 		getServer().getPluginManager().registerEvents(pinteracte, this);
 	}
 
