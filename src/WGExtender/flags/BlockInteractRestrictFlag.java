@@ -29,7 +29,10 @@ public class BlockInteractRestrictFlag extends StateFlag {
 	}
 
 	public static void uninjectFlag() {
-		FlagInjector.uninjectFlag(instance);
+		if (instance != null) {
+			FlagInjector.uninjectFlag(instance);
+			instance = null;
+		}
 	}
 
 	public BlockInteractRestrictFlag() {
