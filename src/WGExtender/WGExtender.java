@@ -80,23 +80,23 @@ public class WGExtender extends JavaPlugin {
 		cmdprocess = new WGCommandProcess(this, config);
 		getServer().getPluginManager().registerEvents(cmdprocess, this);
 		rcmdprocess = new RestrictCommandProcess(this, config);
-		getServer().getPluginManager().registerEvents(rcmdprocess, this);
-		lflow = new LiquidFlow(this, config);
 		getServer().getPluginManager().registerEvents(lflow, this);
 		ignitebp = new IgniteByPlayer(this, config);
+		getServer().getPluginManager().registerEvents(rcmdprocess, this);
+		lflow = new LiquidFlow(this, config);
 		getServer().getPluginManager().registerEvents(ignitebp, this);
 		fspread = new FireSpread(this, config);
 		getServer().getPluginManager().registerEvents(fspread, this);
 		bburn = new BlockBurn(this, config);
 		getServer().getPluginManager().registerEvents(bburn, this);
+		pistons = new Pistons(this, config);
+		getServer().getPluginManager().registerEvents(pistons, this);
 		eexplode = new EntityExplode(this, config);
 		getServer().getPluginManager().registerEvents(eexplode, this);
 		attackbp = new AttackByPlayer(this);
 		getServer().getPluginManager().registerEvents(attackbp, this);
 		pinteractb = new PlayerInteractBlocks(this);
 		getServer().getPluginManager().registerEvents(pinteractb, this);
-		pistons = new Pistons(this, config);
-		getServer().getPluginManager().registerEvents(pistons, this);
 	}
 
 	@Override
