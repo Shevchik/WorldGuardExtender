@@ -40,7 +40,7 @@ public class PlayerInteractBlocks implements Listener {
 	{
 		Player player = e.getPlayer();
 		Block block = e.getClickedBlock();
-		if (!WGRegionUtils.isFlagAllows(main.wg, player, block.getLocation(), BlockInteractRestrictFlag.instance))
+		if (!WGRegionUtils.isFlagAllows(main.wg, player, block, BlockInteractRestrictFlag.instance))
 		{
 			if (!player.hasPermission("worldguard.region.bypass."+player.getWorld().getName()))
 			{

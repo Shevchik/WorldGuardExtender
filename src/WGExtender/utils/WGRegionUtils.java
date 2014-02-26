@@ -20,6 +20,8 @@ package WGExtender.utils;
 import java.util.List;
 
 import org.bukkit.Location;
+import org.bukkit.block.Block;
+import org.bukkit.entity.Entity;
 import org.bukkit.entity.Player;
 
 import WGExtender.flags.BlockInteractRestrictFlag;
@@ -68,14 +70,13 @@ public class WGRegionUtils {
 		return false;
 	}
 	
-	public static boolean isFlagAllows(WorldGuardPlugin wg, Player player, Location location, StateFlag flag)
+	public static boolean isFlagAllows(WorldGuardPlugin wg, Player player, Block block, StateFlag flag)
 	{
 		try {
-			ApplicableRegionSet ars = wg.getRegionManager(location.getWorld()).getApplicableRegions(location);
-
+			ApplicableRegionSet ars = wg.getRegionManager(block.getLocation().getWorld()).getApplicableRegions(block.getLocation());
 			if (flag instanceof BlockInteractRestrictFlag)
 			{
-				String blockmaterialname = location.getBlock().getType().toString();
+				String blockmaterialname = block.getType().toString();
 				String allowedstring = ars.getFlag(BlockInteractRestrictWhitelistFlag.instance);
 				if (allowedstring !=  null)
 				{
@@ -89,7 +90,17 @@ public class WGRegionUtils {
 					}
 				}
 			}
-			
+			return (ars.allows(flag, wg.wrapPlayer(player)));
+		} catch (Exception e) {
+			//if we caught an exception here it means that regions for world are disabled or flag failed to initialize
+		}
+		return true;
+	}
+	
+	public static boolean isFlagAllows(WorldGuardPlugin wg, Player player, Entity entity, StateFlag flag)
+	{
+		try {
+			ApplicableRegionSet ars = wg.getRegionManager(entity.getLocation().getWorld()).getApplicableRegions(entity.getLocation());
 			return (ars.allows(flag, wg.wrapPlayer(player)));
 		} catch (Exception e) {
 			//if we caught an exception here it means that regions for world are disabled or flag failed to initialize
