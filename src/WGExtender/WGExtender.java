@@ -27,6 +27,8 @@ import WGExtender.commands.Commands;
 import WGExtender.flags.AnimalProtectFlag;
 import WGExtender.flags.BlockInteractRestrictFlag;
 import WGExtender.flags.BlockInteractRestrictWhitelistFlag;
+import WGExtender.flags.EntityInteractRestrictFlag;
+import WGExtender.flags.EntityInteractRestrictWhitelistFlag;
 import WGExtender.regionprotect.flagbased.AttackByPlayer;
 import WGExtender.regionprotect.flagbased.PlayerInteractBlocks;
 import WGExtender.regionprotect.ownormembased.IgniteByPlayer;
@@ -67,13 +69,14 @@ public class WGExtender extends JavaPlugin {
 		AnimalProtectFlag.injectFlag();
 		BlockInteractRestrictFlag.injectFlag();
 		BlockInteractRestrictWhitelistFlag.injectFlag();
+		EntityInteractRestrictFlag.injectFlag();
+		EntityInteractRestrictWhitelistFlag.injectFlag();
 		config = new Config(this);
 		config.loadConfig();
 		commands = new Commands(this, config);
 		getCommand("wgex").setExecutor(commands);
 		we = (WorldEditPlugin) Bukkit.getPluginManager().getPlugin("WorldEdit");
-		wg = (WorldGuardPlugin) Bukkit.getPluginManager().getPlugin(
-				"WorldGuard");
+		wg = (WorldGuardPlugin) Bukkit.getPluginManager().getPlugin("WorldGuard");
 		cmdprocess = new WGCommandProcess(this, config);
 		getServer().getPluginManager().registerEvents(cmdprocess, this);
 		rcmdprocess = new RestrictCommandProcess(this, config);
