@@ -104,6 +104,8 @@ public class WGExtender extends JavaPlugin {
 		AnimalProtectFlag.uninjectFlag();
 		BlockInteractRestrictFlag.uninjectFlag();
 		BlockInteractRestrictWhitelistFlag.uninjectFlag();
+		EntityInteractRestrictFlag.uninjectFlag();
+		EntityInteractRestrictWhitelistFlag.uninjectFlag();
 		config = null;
 		cmdprocess = null;
 		rcmdprocess = null;
