@@ -26,6 +26,8 @@ import org.bukkit.entity.Player;
 
 import WGExtender.flags.BlockInteractRestrictFlag;
 import WGExtender.flags.BlockInteractRestrictWhitelistFlag;
+import WGExtender.flags.EntityInteractRestrictFlag;
+import WGExtender.flags.EntityInteractRestrictWhitelistFlag;
 
 import com.sk89q.worldedit.bukkit.BukkitUtil;
 import com.sk89q.worldguard.bukkit.WorldGuardPlugin;
@@ -101,6 +103,18 @@ public class WGRegionUtils {
 	public static boolean isFlagAllows(WorldGuardPlugin wg, Player player, Entity entity, StateFlag flag) {
 		try {
 			ApplicableRegionSet ars = wg.getRegionManager(entity.getLocation().getWorld()).getApplicableRegions(entity.getLocation());
+			if (flag instanceof EntityInteractRestrictFlag) {
+				String entitytypename = entity.getType().getName();
+				String allowedstring = ars.getFlag(EntityInteractRestrictWhitelistFlag.instance);
+				if (allowedstring != null) {
+					String[] whitelistedentitytypenames = allowedstring.split("\\s+");
+					for (String whitelistedentitytypename : whitelistedentitytypenames) {
+						if (whitelistedentitytypename.equalsIgnoreCase(entitytypename)) {
+							return true;
+						}
+					}
+				}
+			}
 			return (ars.allows(flag, wg.wrapPlayer(player)));
 		} catch (Exception e) {
 		}
