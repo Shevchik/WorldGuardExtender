@@ -34,7 +34,7 @@ import com.sk89q.worldguard.protection.flags.StateFlag;
 
 public class WGRegionUtils {
 
-	public static boolean canBypass(Player p) {
+	public static boolean canBypassProtection(Player p) {
 		if (p.hasPermission("worldguard.*")) {
 			return true;
 		}
