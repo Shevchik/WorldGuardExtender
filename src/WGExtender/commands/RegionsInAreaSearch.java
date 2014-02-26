@@ -3,16 +3,16 @@
  * modify it under the terms of the GNU General Public License
  * as published by the Free Software Foundation; either version 3
  * of the License, or (at your option) any later version.
- * 
+ *
  * This program is distributed in the hope that it will be useful,
  * but WITHOUT ANY WARRANTY; without even the implied warranty of
  * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
  * GNU General Public License for more details.
- * 
+ *
  * You should have received a copy of the GNU General Public License
  * along with this program; if not, write to the Free Software
  * Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
- * 
+ *
  */
 
 package WGExtender.commands;
@@ -34,25 +34,21 @@ import com.sk89q.worldguard.protection.regions.ProtectedRegion;
 
 public class RegionsInAreaSearch {
 
-	protected static List<String> getRegionsInPlayerSelection(WorldEditPlugin we, WorldGuardPlugin wg, Player player)
-	{
+	protected static List<String> getRegionsInPlayerSelection(WorldEditPlugin we, WorldGuardPlugin wg, Player player) {
 		Selection psel = we.getSelection(player);
-		if (psel == null)
-		{
-			player.sendMessage(ChatColor.BLUE+"Сначала выделите зону поиска");
+		if (psel == null) {
+			player.sendMessage(ChatColor.BLUE + "Сначала выделите зону поиска");
 			return null;
-		} else
-		{
+		} else {
 			List<String> regions = new ArrayList<String>();
 			ProtectedRegion fakerg = new ProtectedCuboidRegion("wgexfakerg", BukkitUtil.toVector(psel.getMinimumPoint()).toBlockVector(), BukkitUtil.toVector(psel.getMaximumPoint()).toBlockVector());
 			ApplicableRegionSet ars = wg.getRegionManager(psel.getWorld()).getApplicableRegions(fakerg);
 			Iterator<ProtectedRegion> it = ars.iterator();
-			while (it.hasNext())
-			{
+			while (it.hasNext()) {
 				regions.add(it.next().getId());
 			}
 			return regions;
 		}
 	}
-	
+
 }
