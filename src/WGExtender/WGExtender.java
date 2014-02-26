@@ -88,10 +88,10 @@ public class WGExtender extends JavaPlugin {
 		cmdprocess = new WGCommandProcess(this, config);
 		getServer().getPluginManager().registerEvents(cmdprocess, this);
 		rcmdprocess = new RestrictCommandProcess(this, config);
-		getServer().getPluginManager().registerEvents(lflow, this);
-		ignitebp = new IgniteByPlayer(this, config);
 		getServer().getPluginManager().registerEvents(rcmdprocess, this);
 		lflow = new LiquidFlow(this, config);
+		getServer().getPluginManager().registerEvents(lflow, this);
+		ignitebp = new IgniteByPlayer(this, config);
 		getServer().getPluginManager().registerEvents(ignitebp, this);
 		fspread = new FireSpread(this, config);
 		getServer().getPluginManager().registerEvents(fspread, this);
