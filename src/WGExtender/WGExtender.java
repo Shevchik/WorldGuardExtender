@@ -48,17 +48,17 @@ public class WGExtender extends JavaPlugin {
 	private static Logger log;
 
 	private Config config;
+	private Commands commands;
 	private WGCommandProcess cmdprocess;
 	private RestrictCommandProcess rcmdprocess;
-	private Commands commands;
-	private LiquidFlow lflow;
 	private IgniteByPlayer ignitebp;
+	private LiquidFlow lflow;
 	private FireSpread fspread;
 	private BlockBurn bburn;
 	private EntityExplode eexplode;
+	private Pistons pistons;
 	private AttackByPlayer attackbp;
 	private PlayerInteractBlocks pinteractb;
-	private Pistons pistons;
 
 	public WorldEditPlugin we = null;
 	public WorldGuardPlugin wg = null;
