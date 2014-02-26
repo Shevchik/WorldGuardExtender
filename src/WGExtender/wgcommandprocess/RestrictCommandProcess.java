@@ -44,6 +44,9 @@ public class RestrictCommandProcess implements Listener {
 			return;
 		}
 		Player player = event.getPlayer();
+		if (WGRegionUtils.canBypassProtection(player)) {
+			return;
+		}
 		if (WGRegionUtils.isInWGRegion(main.getWorldGuard(), player.getLocation())) {
 			String message = event.getMessage();
 			message = message.replaceFirst("/", "").toLowerCase();
