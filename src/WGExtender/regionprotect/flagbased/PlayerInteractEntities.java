@@ -17,12 +17,16 @@
 
 package WGExtender.regionprotect.flagbased;
 
+import org.bukkit.entity.Entity;
+import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.EventPriority;
 import org.bukkit.event.Listener;
 import org.bukkit.event.player.PlayerInteractEntityEvent;
 
 import WGExtender.WGExtender;
+import WGExtender.flags.EntityInteractRestrictFlag;
+import WGExtender.utils.WGRegionUtils;
 
 public class PlayerInteractEntities implements Listener {
 
@@ -34,7 +38,13 @@ public class PlayerInteractEntities implements Listener {
 
 	@EventHandler(priority = EventPriority.HIGH, ignoreCancelled = true)
 	public void onPlayerInteract(PlayerInteractEntityEvent event) {
-
+		Player player = event.getPlayer();
+		Entity entity = event.getRightClicked();
+		if (!WGRegionUtils.canBypassProtection(player)) {
+			if (!WGRegionUtils.isFlagAllows(main.getWorldGuard(), player, entity, EntityInteractRestrictFlag.instance)) {
+				event.setCancelled(true);
+			}
+		}
 	}
 
 }
