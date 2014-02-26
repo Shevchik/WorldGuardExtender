@@ -34,6 +34,22 @@ import com.sk89q.worldguard.protection.flags.StateFlag;
 
 public class WGRegionUtils {
 
+	public static boolean canBypass(Player p) {
+		if (p.hasPermission("worldguard.*")) {
+			return true;
+		}
+		if (p.hasPermission("worldguard.region.*")) {
+			return true;
+		}
+		if (p.hasPermission("worldguard.region.bypass.*")) {
+			return true;
+		}
+		if (p.hasPermission("worldguard.region.bypass." + p.getWorld().getName())) {
+			return true;
+		}
+		return false;
+	}
+	
 	public static boolean isInWGRegion(WorldGuardPlugin wg, Location l) {
 		try {
 			return wg.getRegionManager(l.getWorld()).getApplicableRegions(l).size() > 0;
