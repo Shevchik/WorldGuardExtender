@@ -31,6 +31,7 @@ import WGExtender.flags.EntityInteractRestrictFlag;
 import WGExtender.flags.EntityInteractRestrictWhitelistFlag;
 import WGExtender.regionprotect.flagbased.AttackByPlayer;
 import WGExtender.regionprotect.flagbased.PlayerInteractBlocks;
+import WGExtender.regionprotect.flagbased.PlayerInteractEntities;
 import WGExtender.regionprotect.ownormembased.IgniteByPlayer;
 import WGExtender.regionprotect.regionbased.BlockBurn;
 import WGExtender.regionprotect.regionbased.EntityExplode;
@@ -59,6 +60,7 @@ public class WGExtender extends JavaPlugin {
 	private Pistons pistons;
 	private AttackByPlayer attackbp;
 	private PlayerInteractBlocks pinteractb;
+	private PlayerInteractEntities pinteracte;
 
 	public WorldEditPlugin we = null;
 	public WorldGuardPlugin wg = null;
@@ -97,6 +99,8 @@ public class WGExtender extends JavaPlugin {
 		getServer().getPluginManager().registerEvents(attackbp, this);
 		pinteractb = new PlayerInteractBlocks(this);
 		getServer().getPluginManager().registerEvents(pinteractb, this);
+		pinteracte = new PlayerInteractEntities(this);
+		getServer().getPluginManager().registerEvents(pinteracte, this);
 	}
 
 	@Override
