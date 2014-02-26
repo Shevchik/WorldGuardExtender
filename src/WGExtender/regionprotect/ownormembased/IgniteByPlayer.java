@@ -46,14 +46,14 @@ public class IgniteByPlayer implements Listener {
 		}
 		Player player = e.getPlayer();
 		if (player != null) {
-			if (!WGRegionUtils.isOwnerOrMember(main.wg, player, e.getBlock().getLocation())) {
+			if (!WGRegionUtils.isOwnerOrMember(main.getWorldGuard(), player, e.getBlock().getLocation())) {
 				if (!player.hasPermission("worldguard.region.bypass." + player.getWorld().getName())) {
 					player.sendMessage(ChatColor.RED + "Вы не можете поджечь блок в чужом регионе");
 					e.setCancelled(true);
 				}
 			}
 		} else if (e.getCause() == IgniteCause.FIREBALL) {
-			if (WGRegionUtils.isInWGRegion(main.wg, e.getBlock().getLocation())) {
+			if (WGRegionUtils.isInWGRegion(main.getWorldGuard(), e.getBlock().getLocation())) {
 				e.setCancelled(true);
 			}
 		}

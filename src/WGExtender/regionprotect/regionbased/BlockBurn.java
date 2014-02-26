@@ -41,7 +41,7 @@ public class BlockBurn implements Listener {
 		if (!config.blockblockburninregion) {
 			return;
 		}
-		if (WGRegionUtils.isInWGRegion(main.wg, e.getBlock().getLocation())) {
+		if (WGRegionUtils.isInWGRegion(main.getWorldGuard(), e.getBlock().getLocation())) {
 			e.setCancelled(true);
 		}
 	}

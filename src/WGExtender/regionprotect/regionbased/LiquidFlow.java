@@ -46,13 +46,13 @@ public class LiquidFlow implements Listener {
 		Block b = e.getBlock();
 		if (b.getType() == Material.LAVA || b.getType() == Material.STATIONARY_LAVA) {
 			if (config.blocklavaflow) {
-				if (!WGRegionUtils.isInTheSameRegion(main.wg, b.getLocation(), e.getToBlock().getLocation())) {
+				if (!WGRegionUtils.isInTheSameRegion(main.getWorldGuard(), b.getLocation(), e.getToBlock().getLocation())) {
 					e.setCancelled(true);
 				}
 			}
 		} else if (b.getType() == Material.WATER || b.getType() == Material.STATIONARY_WATER) {
 			if (config.blockwaterflow) {
-				if (!WGRegionUtils.isInTheSameRegion(main.wg, b.getLocation(), e.getToBlock().getLocation())) {
+				if (!WGRegionUtils.isInTheSameRegion(main.getWorldGuard(), b.getLocation(), e.getToBlock().getLocation())) {
 					e.setCancelled(true);
 				}
 			}
@@ -66,13 +66,13 @@ public class LiquidFlow implements Listener {
 		Block nextBlock = b.getRelative(DirectionalContainer.class.cast(b.getState().getData()).getFacing());
 		if (item.getType() == Material.LAVA_BUCKET) {
 			if (config.blocklavaflow) {
-				if (!WGRegionUtils.isInTheSameRegion(main.wg, b.getLocation(), nextBlock.getLocation())) {
+				if (!WGRegionUtils.isInTheSameRegion(main.getWorldGuard(), b.getLocation(), nextBlock.getLocation())) {
 					e.setCancelled(true);
 				}
 			}
 		} else if (item.getType() == Material.WATER_BUCKET) {
 			if (config.blockwaterflow) {
-				if (!WGRegionUtils.isInTheSameRegion(main.wg, b.getLocation(), nextBlock.getLocation())) {
+				if (!WGRegionUtils.isInTheSameRegion(main.getWorldGuard(), b.getLocation(), nextBlock.getLocation())) {
 					e.setCancelled(true);
 				}
 			}

@@ -49,18 +49,18 @@ public class WGCommandProcess implements Listener {
 			return;
 		}
 		if (config.expandvert) {
-			VertExpand.expand(main.we, event.getPlayer());
+			VertExpand.expand(main.getWorldEdit(), event.getPlayer());
 			event.getPlayer().sendMessage(ChatColor.LIGHT_PURPLE + "Регион автоматически расширен по вертикали");
 		}
 		if (config.blocklimitsenabled) {
-			if (!BlockLimits.allowClaim(config, main.we, main.wg, event.getPlayer())) {
+			if (!BlockLimits.allowClaim(config, main.getWorldEdit(), main.getWorldGuard(), event.getPlayer())) {
 				event.getPlayer().sendMessage(ChatColor.RED + "Вы не можете заприватить такой большой регион");
 				event.setCancelled(true);
 				return;
 			}
 		}
 		if (config.autoflagsenabled) {
-			AutoFlags.setFlagsForRegion(main, config, main.wg, event.getPlayer().getWorld(), cmds[2]);
+			AutoFlags.setFlagsForRegion(main, config, main.getWorldGuard(), event.getPlayer().getWorld(), cmds[2]);
 		}
 	}
 

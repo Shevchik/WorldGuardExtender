@@ -63,7 +63,7 @@ public class Commands implements CommandExecutor {
 			return true;
 		} else if (args.length == 1 && args[0].equalsIgnoreCase("search")) {
 			if (sender instanceof Player) {
-				List<String> regions = RegionsInAreaSearch.getRegionsInPlayerSelection(main.we, main.wg, (Player) sender);
+				List<String> regions = RegionsInAreaSearch.getRegionsInPlayerSelection(main.getWorldEdit(), main.getWorldGuard(), (Player) sender);
 				if (regions != null && regions.size() != 0) {
 					sender.sendMessage(ChatColor.BLUE + "Регионов пересекающихся с выделенной зоной не найдено");
 					return true;
@@ -79,7 +79,7 @@ public class Commands implements CommandExecutor {
 					if (flag.getName().equalsIgnoreCase(args[2])) {
 						try {
 							String value = joinString(Arrays.copyOfRange(args, 3, args.length), " ");
-							SetFlags.setFlags(main.wg, flag, value, world);
+							SetFlags.setFlags(main.getWorldGuard(), flag, value, world);
 							sender.sendMessage(ChatColor.BLUE + "Флаги установлены");
 							return true;
 						} catch (Exception e) {

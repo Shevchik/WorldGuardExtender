@@ -49,7 +49,7 @@ public class EntityExplode implements Listener {
 		}
 		Iterator<Block> it = e.blockList().iterator();
 		while (it.hasNext()) {
-			if (WGRegionUtils.isInWGRegion(main.wg, it.next().getLocation())) {
+			if (WGRegionUtils.isInWGRegion(main.getWorldGuard(), it.next().getLocation())) {
 				it.remove();
 			}
 		}
@@ -59,7 +59,7 @@ public class EntityExplode implements Listener {
 	public void onEntityDamageByExplosion(EntityDamageByEntityEvent e) {
 		if (e.getCause() == DamageCause.BLOCK_EXPLOSION || e.getCause() == DamageCause.ENTITY_EXPLOSION) {
 			if (!(e.getEntity() instanceof Player)) {
-				if (WGRegionUtils.isInWGRegion(main.wg, e.getEntity().getLocation())) {
+				if (WGRegionUtils.isInWGRegion(main.getWorldGuard(), e.getEntity().getLocation())) {
 					e.setCancelled(true);
 				}
 			}

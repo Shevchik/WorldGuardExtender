@@ -51,14 +51,14 @@ public class Pistons implements Listener {
 		Block mblock = null;
 		while (bit.hasNext()) {
 			mblock = bit.next();
-			if (!WGRegionUtils.isInTheSameRegion(main.wg, pistonlocation, mblock.getLocation())) {
+			if (!WGRegionUtils.isInTheSameRegion(main.getWorldGuard(), pistonlocation, mblock.getLocation())) {
 				e.setCancelled(true);
 				break;
 			}
 		}
 		if (mblock != null) {
 			mblock = mblock.getRelative(e.getDirection());
-			if (!WGRegionUtils.isInTheSameRegion(main.wg, pistonlocation, mblock.getLocation())) {
+			if (!WGRegionUtils.isInTheSameRegion(main.getWorldGuard(), pistonlocation, mblock.getLocation())) {
 				e.setCancelled(true);
 			}
 		}
@@ -72,7 +72,7 @@ public class Pistons implements Listener {
 		if (e.isSticky()) {
 			Location pistonlocation = e.getBlock().getLocation();
 			Location retractblocklocation = e.getRetractLocation();
-			if (!WGRegionUtils.isInTheSameRegion(main.wg, pistonlocation, retractblocklocation)) {
+			if (!WGRegionUtils.isInTheSameRegion(main.getWorldGuard(), pistonlocation, retractblocklocation)) {
 				e.setCancelled(true);
 			}
 		}

@@ -41,7 +41,7 @@ public class AttackByPlayer implements Listener {
 	@EventHandler(priority = EventPriority.HIGH, ignoreCancelled = true)
 	public void onEntityDamage(EntityDamageByEntityEvent e) {
 		Entity entity = e.getEntity();
-		if (entity instanceof Animals && WGRegionUtils.isInWGRegion(main.wg, entity.getLocation())) {
+		if (entity instanceof Animals && WGRegionUtils.isInWGRegion(main.getWorldGuard(), entity.getLocation())) {
 			Player damagerplayer = null;
 			Entity edamager = e.getDamager();
 			if (edamager instanceof Player) {
@@ -53,7 +53,7 @@ public class AttackByPlayer implements Listener {
 				}
 			}
 			if (damagerplayer != null) {
-				if (!WGRegionUtils.isFlagAllows(main.wg, damagerplayer, entity, AnimalProtectFlag.instance)) {
+				if (!WGRegionUtils.isFlagAllows(main.getWorldGuard(), damagerplayer, entity, AnimalProtectFlag.instance)) {
 					if (!damagerplayer.hasPermission("worldguard.region.bypass."+ damagerplayer.getWorld().getName())) {
 						e.setCancelled(true);
 					}

@@ -62,8 +62,14 @@ public class WGExtender extends JavaPlugin {
 	private PlayerInteractBlocks pinteractb;
 	private PlayerInteractEntities pinteracte;
 
-	public WorldEditPlugin we = null;
-	public WorldGuardPlugin wg = null;
+	private WorldEditPlugin we = null;
+	public WorldEditPlugin getWorldEdit() {
+		return we;
+	}
+	private WorldGuardPlugin wg = null;
+	public WorldGuardPlugin getWorldGuard() {
+		return wg;
+	}
 
 	@Override
 	public void onEnable() {
@@ -113,13 +119,15 @@ public class WGExtender extends JavaPlugin {
 		config = null;
 		cmdprocess = null;
 		rcmdprocess = null;
-		lflow = null;
 		ignitebp = null;
+		lflow = null;
 		fspread = null;
 		bburn = null;
 		eexplode = null;
 		commands = null;
 		attackbp = null;
+		pinteractb = null;
+		pinteracte = null;
 		we = null;
 		wg = null;
 	}
