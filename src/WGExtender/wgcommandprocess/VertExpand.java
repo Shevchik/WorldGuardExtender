@@ -19,31 +19,12 @@ package WGExtender.wgcommandprocess;
 
 import org.bukkit.entity.Player;
 
-import com.sk89q.worldedit.LocalPlayer;
-import com.sk89q.worldedit.LocalSession;
-import com.sk89q.worldedit.LocalWorld;
-import com.sk89q.worldedit.Vector;
 import com.sk89q.worldedit.bukkit.WorldEditPlugin;
-import com.sk89q.worldedit.regions.Region;
 
 public class VertExpand {
 
 	protected static void expand(WorldEditPlugin we, Player player) {
-		if (we.getSelection(player) == null) {
-			return;
-		} else {
-			try {
-				LocalPlayer localplayer = we.wrapPlayer(player);
-				LocalWorld localworld = localplayer.getWorld();
-				LocalSession session = we.getSession(player);
-				Region region = session.getSelection(localworld);
-				region.expand(new Vector(0, (localworld.getMaxY() + 1), 0), new Vector(0, -(localworld.getMaxY() + 1), 0));
-				session.getRegionSelector(localworld).learnChanges();
-				session.getRegionSelector(localworld).explainRegionAdjust(localplayer, session);
-			} catch (Exception e) {
-				e.printStackTrace();
-			}
-		}
+		player.chat("//expand vert");
 	}
 
 }
