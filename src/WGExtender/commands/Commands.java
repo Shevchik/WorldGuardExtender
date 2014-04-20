@@ -64,7 +64,7 @@ public class Commands implements CommandExecutor {
 		} else if (args.length == 1 && args[0].equalsIgnoreCase("search")) {
 			if (sender instanceof Player) {
 				List<String> regions = RegionsInAreaSearch.getRegionsInPlayerSelection(main.getWorldEdit(), main.getWorldGuard(), (Player) sender);
-				if (regions != null && regions.size() != 0) {
+				if (regions == null || regions.size() == 0) {
 					sender.sendMessage(ChatColor.BLUE + "Регионов пересекающихся с выделенной зоной не найдено");
 					return true;
 				} else {
