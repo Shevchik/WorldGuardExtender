@@ -56,7 +56,9 @@ public class AutoFlags {
 							e.printStackTrace();
 						}
 					}
-					try {rm.save();} catch (ProtectionDatabaseException e) {}
+					if (config.autoflagssaverm) {
+						try {rm.save();} catch (ProtectionDatabaseException e) {}
+					}
 				}
 			}
 		}, 20);
