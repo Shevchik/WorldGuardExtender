@@ -116,7 +116,7 @@ public class WGExtender extends JavaPlugin {
 		BlockInteractRestrictWhitelistFlag.uninjectFlag();
 		EntityInteractRestrictFlag.uninjectFlag();
 		EntityInteractRestrictWhitelistFlag.uninjectFlag();
-		config = null;
+		cmdprocess.saveRegionManagers();
 		cmdprocess = null;
 		rcmdprocess = null;
 		ignitebp = null;
@@ -128,6 +128,7 @@ public class WGExtender extends JavaPlugin {
 		attackbp = null;
 		pinteractb = null;
 		pinteracte = null;
+		config = null;
 		we = null;
 		wg = null;
 	}

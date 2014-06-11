@@ -17,7 +17,11 @@
 
 package WGExtender.wgcommandprocess;
 
+import java.util.HashSet;
+
+import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
+import org.bukkit.World;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.EventPriority;
 import org.bukkit.event.Listener;
@@ -34,6 +38,20 @@ public class WGCommandProcess implements Listener {
 	public WGCommandProcess(WGExtender main, Config config) {
 		this.main = main;
 		this.config = config;
+	}
+
+	private HashSet<String> regionManagersToSave = new HashSet<String>();
+
+	public void saveRegionManagers() {
+		for (String worldname : regionManagersToSave) {
+			World world = Bukkit.getWorld(worldname);
+			if (world != null) {
+				try {
+					main.getWorldGuard().getRegionManager(world).save();
+				} catch (Exception e) {
+				}
+			}
+		}
 	}
 
 	@EventHandler(priority = EventPriority.HIGHEST, ignoreCancelled = true)
@@ -61,6 +79,7 @@ public class WGCommandProcess implements Listener {
 		}
 		if (config.autoflagsenabled) {
 			AutoFlags.setFlagsForRegion(main, config, main.getWorldGuard(), event.getPlayer().getWorld(), cmds[2]);
+			regionManagersToSave.add(event.getPlayer().getWorld().getName());
 		}
 	}
 
