@@ -111,12 +111,12 @@ public class WGExtender extends JavaPlugin {
 
 	@Override
 	public void onDisable() {
+		cmdprocess.saveRegionManagers();
 		AnimalProtectFlag.uninjectFlag();
 		BlockInteractRestrictFlag.uninjectFlag();
 		BlockInteractRestrictWhitelistFlag.uninjectFlag();
 		EntityInteractRestrictFlag.uninjectFlag();
 		EntityInteractRestrictWhitelistFlag.uninjectFlag();
-		cmdprocess.saveRegionManagers();
 		cmdprocess = null;
 		rcmdprocess = null;
 		ignitebp = null;
