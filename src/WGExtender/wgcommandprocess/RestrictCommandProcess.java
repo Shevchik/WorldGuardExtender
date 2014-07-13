@@ -51,7 +51,7 @@ public class RestrictCommandProcess implements Listener {
 			String message = event.getMessage();
 			message = message.replaceFirst("/", "").toLowerCase();
 			for (String rcommand : config.restrictedcommands) {
-				if (message.startsWith(rcommand) && !WGRegionUtils.isOwnerOrMember(main.getWorldGuard(), player, player.getLocation())) {
+				if (message.startsWith(rcommand) && !WGRegionUtils.canBuild(main.getWorldGuard(), player, player.getLocation())) {
 					event.setCancelled(true);
 					player.sendMessage(ChatColor.RED + "Вы не можете использовать эту команду на чужом регионе");
 					return;

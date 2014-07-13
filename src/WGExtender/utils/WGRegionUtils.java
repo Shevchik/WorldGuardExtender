@@ -70,10 +70,9 @@ public class WGRegionUtils {
 		return true;
 	}
 
-	public static boolean isOwnerOrMember(WorldGuardPlugin wg, Player p, Location l) {
+	public static boolean canBuild(WorldGuardPlugin wg, Player player, Location l) {
 		try {
-			ApplicableRegionSet ars = wg.getRegionManager(l.getWorld()).getApplicableRegions(l);
-			return ars.isOwnerOfAll(wg.wrapPlayer(p)) || ars.isMemberOfAll(wg.wrapPlayer(p));
+			return wg.getRegionManager(l.getWorld()).getApplicableRegions(l).canBuild(wg.wrapPlayer(player));
 		} catch (Exception e) {
 		}
 		return false;
