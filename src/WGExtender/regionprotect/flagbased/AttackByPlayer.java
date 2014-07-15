@@ -21,6 +21,7 @@ import org.bukkit.entity.Animals;
 import org.bukkit.entity.Arrow;
 import org.bukkit.entity.Entity;
 import org.bukkit.entity.Player;
+import org.bukkit.entity.Villager;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.EventPriority;
 import org.bukkit.event.Listener;
@@ -47,7 +48,7 @@ public class AttackByPlayer implements Listener {
 			return;
 		}
 		Entity entity = e.getEntity();
-		if (entity instanceof Animals && WGRegionUtils.isInWGRegion(main.getWorldGuard(), entity.getLocation())) {
+		if ((entity instanceof Animals || entity instanceof Villager) && WGRegionUtils.isInWGRegion(main.getWorldGuard(), entity.getLocation())) {
 			Player damagerplayer = null;
 			Entity edamager = e.getDamager();
 			if (edamager instanceof Player) {
