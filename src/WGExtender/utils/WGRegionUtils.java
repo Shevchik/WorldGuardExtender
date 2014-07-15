@@ -18,6 +18,7 @@
 package WGExtender.utils;
 
 import java.util.List;
+import java.util.regex.Pattern;
 
 import org.bukkit.Location;
 import org.bukkit.block.Block;
@@ -78,17 +79,30 @@ public class WGRegionUtils {
 		return false;
 	}
 
+	private static Pattern splitWhiteSpace = Pattern.compile("\\s+");
+	private static Pattern splitVertLine = Pattern.compile("[|]");
+	private static Pattern splitColon = Pattern.compile("[:]");
 	public static boolean isFlagAllows(WorldGuardPlugin wg, Player player, Block block, StateFlag flag) {
 		try {
 			ApplicableRegionSet ars = wg.getRegionManager(block.getLocation().getWorld()).getApplicableRegions(block.getLocation());
 			if (flag instanceof BlockInteractRestrictFlag) {
-				String blockmaterialname = block.getType().toString();
-				String allowedstring = ars.getFlag(BlockInteractRestrictWhitelistFlag.instance);
-				if (allowedstring != null) {
-					String[] whitelistedmaterialnames = allowedstring.split("\\s+");
-					for (String whitelistedmaterialname : whitelistedmaterialnames) {
-						if (whitelistedmaterialname.equalsIgnoreCase(blockmaterialname)) {
-							return true;
+				String blockName = block.getType().toString();
+				String allowed = ars.getFlag(BlockInteractRestrictWhitelistFlag.instance);
+				if (allowed != null) {
+					String[] allowedNames = splitWhiteSpace.split(allowed);
+					for (String allowedName : allowedNames) {
+						String[] allowedNameSplit = splitVertLine.split(allowedName);
+						if (allowedNameSplit[0].equals(blockName)) {
+							if (allowedNameSplit.length == 2) {
+								String[] allowedHandNames = splitColon.split(allowedNameSplit[1]);
+								for (String allowedHandName : allowedHandNames) {
+									if (allowedHandName.equalsIgnoreCase(player.getItemInHand().getType().toString())) {
+										return true;
+									}
+								}
+							} else {
+								return true;
+							}
 						}
 					}
 				}
@@ -103,12 +117,12 @@ public class WGRegionUtils {
 		try {
 			ApplicableRegionSet ars = wg.getRegionManager(entity.getLocation().getWorld()).getApplicableRegions(entity.getLocation());
 			if (flag instanceof EntityInteractRestrictFlag) {
-				String entitytypename = entity.getType().getName();
-				String allowedstring = ars.getFlag(EntityInteractRestrictWhitelistFlag.instance);
-				if (allowedstring != null) {
-					String[] whitelistedentitytypenames = allowedstring.split("\\s+");
-					for (String whitelistedentitytypename : whitelistedentitytypenames) {
-						if (whitelistedentitytypename.equalsIgnoreCase(entitytypename)) {
+				String entityName = entity.getType().getName();
+				String allowedNames = ars.getFlag(EntityInteractRestrictWhitelistFlag.instance);
+				if (allowedNames != null) {
+					String[] allowedNamesSplit = allowedNames.split("\\s+");
+					for (String allowedName : allowedNamesSplit) {
+						if (allowedName.equals(entityName)) {
 							return true;
 						}
 					}
