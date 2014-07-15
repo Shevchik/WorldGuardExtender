@@ -96,7 +96,7 @@ public class WGRegionUtils {
 							if (allowedNameSplit.length == 2) {
 								String[] allowedHandNames = splitColon.split(allowedNameSplit[1]);
 								for (String allowedHandName : allowedHandNames) {
-									if (allowedHandName.equalsIgnoreCase(player.getItemInHand().getType().toString())) {
+									if (allowedHandName.equals(player.getItemInHand().getType().toString())) {
 										return true;
 									}
 								}
