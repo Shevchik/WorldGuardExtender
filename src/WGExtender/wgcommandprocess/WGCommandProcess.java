@@ -17,11 +17,10 @@
 
 package WGExtender.wgcommandprocess;
 
+import java.util.Arrays;
 import java.util.HashSet;
 
-import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
-import org.bukkit.World;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.EventPriority;
 import org.bukkit.event.Listener;
@@ -40,35 +39,32 @@ public class WGCommandProcess implements Listener {
 		this.config = config;
 	}
 
-	private HashSet<String> regionManagersToSave = new HashSet<String>();
-
-	public void saveRegionManagers() {
-		for (String worldname : regionManagersToSave) {
-			World world = Bukkit.getWorld(worldname);
-			if (world != null) {
-				try {
-					main.getWorldGuard().getRegionManager(world).save();
-				} catch (Exception e) {
-				}
+	private HashSet<String> wgcmds = new HashSet<String>(
+		Arrays.asList(
+			new String[] {
+				"/rg",
+				"/region"
 			}
-		}
-	}
+		)
+	);
 
 	@EventHandler(priority = EventPriority.HIGHEST, ignoreCancelled = true)
-	public void ProcessWGCommand(final PlayerCommandPreprocessEvent event) {
-		final String[] cmds = event.getMessage().split("\\s+");
+	public void processWGCommand(final PlayerCommandPreprocessEvent event) {
+		final String[] cmds = event.getMessage().toLowerCase().split("\\s+");
 		if (cmds.length < 3) {
 			return;
 		}
-		if (!(cmds[0].equalsIgnoreCase("/rg") || cmds[0].equalsIgnoreCase("/region"))) {
+		if (!wgcmds.contains(cmds[0])) {
 			return;
 		}
-		if (!cmds[1].equalsIgnoreCase("claim")) {
+		if (!cmds[1].equals("claim")) {
 			return;
 		}
 		if (config.expandvert) {
-			VertExpand.expand(main.getWorldEdit(), event.getPlayer());
-			event.getPlayer().sendMessage(ChatColor.LIGHT_PURPLE + "Регион автоматически расширен по вертикали");
+			boolean result = VertExpand.expand(main.getWorldEdit(), event.getPlayer());
+			if (result) {
+				event.getPlayer().sendMessage(ChatColor.LIGHT_PURPLE + "Регион автоматически расширен по вертикали");
+			}
 		}
 		if (config.blocklimitsenabled) {
 			if (!BlockLimits.allowClaim(config, main.getWorldEdit(), main.getWorldGuard(), event.getPlayer())) {
@@ -79,7 +75,6 @@ public class WGCommandProcess implements Listener {
 		}
 		if (config.autoflagsenabled) {
 			AutoFlags.setFlagsForRegion(main, config, main.getWorldGuard(), event.getPlayer().getWorld(), cmds[2]);
-			regionManagersToSave.add(event.getPlayer().getWorld().getName());
 		}
 	}
 

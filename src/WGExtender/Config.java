@@ -59,7 +59,6 @@ public class Config {
 	public boolean entityrestrictflag = true;
 
 	public boolean autoflagsenabled = false;
-	public boolean autoflagssaverm = true;
 	public Map<Flag<?>, String> autoflags = new HashMap<Flag<?>, String>();
 
 	public boolean restrictcommandsinregionsenabled = false;
@@ -99,7 +98,6 @@ public class Config {
 		entityrestrictflag = config.getBoolean("customflags.entity-interact.enabled", entityrestrictflag);
 
 		autoflagsenabled = config.getBoolean("autoflags.enabled",autoflagsenabled);
-		autoflagssaverm = config.getBoolean("autoflags.saveonset",autoflagssaverm);
 		autoflags.clear();
 		ConfigurationSection aflagscs = config.getConfigurationSection("autoflags.flags");
 		if (aflagscs != null) {
@@ -144,13 +142,11 @@ public class Config {
 		config.set("customflags.entity-interact.enabled", entityrestrictflag);
 
 		config.set("autoflags.enabled", autoflagsenabled);
-		config.set("autoflags.saveonset",autoflagssaverm);
 		if (autoflags.isEmpty()) {
 			config.createSection("autoflags.flags");
 		}
 		for (Flag<?> flag : autoflags.keySet()) {
-			config.set("autoflags.flags." + flag.getName(),
-					autoflags.get(flag));
+			config.set("autoflags.flags." + flag.getName(), autoflags.get(flag));
 		}
 
 		config.set("restrictcommands.enabled", restrictcommandsinregionsenabled);
@@ -158,4 +154,5 @@ public class Config {
 
 		try {config.save(configfile);} catch (IOException e) {}
 	}
+
 }

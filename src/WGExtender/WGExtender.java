@@ -111,7 +111,6 @@ public class WGExtender extends JavaPlugin {
 
 	@Override
 	public void onDisable() {
-		cmdprocess.saveRegionManagers();
 		AnimalProtectFlag.uninjectFlag();
 		BlockInteractRestrictFlag.uninjectFlag();
 		BlockInteractRestrictWhitelistFlag.uninjectFlag();
@@ -138,4 +137,5 @@ public class WGExtender extends JavaPlugin {
 			log.log(Level.SEVERE, message);
 		}
 	}
+
 }

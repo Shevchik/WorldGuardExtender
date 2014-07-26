@@ -26,7 +26,6 @@ import WGExtender.Config;
 import WGExtender.WGExtender;
 
 import com.sk89q.worldguard.bukkit.WorldGuardPlugin;
-import com.sk89q.worldguard.protection.databases.ProtectionDatabaseException;
 import com.sk89q.worldguard.protection.flags.Flag;
 import com.sk89q.worldguard.protection.flags.InvalidFlagFormat;
 import com.sk89q.worldguard.protection.managers.RegionManager;
@@ -56,9 +55,7 @@ public class AutoFlags {
 							e.printStackTrace();
 						}
 					}
-					if (config.autoflagssaverm) {
-						try {rm.save();} catch (ProtectionDatabaseException e) {}
-					}
+					rm.save(true);
 				}
 			}
 		}, 20);

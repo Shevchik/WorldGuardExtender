@@ -17,14 +17,31 @@
 
 package WGExtender.wgcommandprocess;
 
-import org.bukkit.entity.Player;
-
+import com.sk89q.worldedit.IncompleteRegionException;
+import com.sk89q.worldedit.LocalSession;
+import com.sk89q.worldedit.Vector;
 import com.sk89q.worldedit.bukkit.WorldEditPlugin;
+import com.sk89q.worldedit.entity.Player;
+import com.sk89q.worldedit.regions.Region;
+import com.sk89q.worldedit.regions.RegionOperationException;
 
 public class VertExpand {
 
-	protected static void expand(WorldEditPlugin we, Player player) {
-		player.chat("//expand vert");
+	protected static boolean expand(WorldEditPlugin we, org.bukkit.entity.Player player) {
+		Player weplayer = we.wrapPlayer(player);
+		LocalSession session = we.getSession(player);
+        try {
+			Region region = session.getSelection(weplayer.getWorld());
+			region.expand(
+				new Vector(0, (weplayer.getWorld().getMaxY() + 1), 0),
+				new Vector(0, -(weplayer.getWorld().getMaxY() + 1), 0)
+			);
+            session.getRegionSelector(weplayer.getWorld()).learnChanges();
+            session.getRegionSelector(weplayer.getWorld()).explainRegionAdjust(weplayer, session);
+            return true;
+		} catch (IncompleteRegionException | RegionOperationException e) {
+		}
+        return false;
 	}
 
 }
