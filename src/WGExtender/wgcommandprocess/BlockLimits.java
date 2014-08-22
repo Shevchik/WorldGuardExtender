@@ -19,6 +19,9 @@ package WGExtender.wgcommandprocess;
 
 import java.math.BigInteger;
 
+import net.milkbowl.vault.permission.Permission;
+
+import org.bukkit.Bukkit;
 import org.bukkit.entity.Player;
 
 import WGExtender.Config;
@@ -30,6 +33,9 @@ import com.sk89q.worldguard.bukkit.WorldGuardPlugin;
 
 public class BlockLimits {
 
+	private static Object vaultperms;
+	private static boolean vaultCached;
+
 	protected static ProcessedClaimInfo processClaimInfo(Config config, WorldEditPlugin we, WorldGuardPlugin wg, Player player) {
 		ProcessedClaimInfo info = new ProcessedClaimInfo();
 		if (player.hasPermission("worldguard.region.unlimited")) {
@@ -37,6 +43,13 @@ public class BlockLimits {
 		}
 		Selection psel = we.getSelection(player);
 		String[] pgroups = wg.getGroups(player);
+		if (Bukkit.getPluginManager().getPlugin("Vault") != null) {
+			if (!vaultCached) {
+				vaultperms = Bukkit.getServicesManager().getRegistration(net.milkbowl.vault.permission.Permission.class).getProvider();
+				vaultCached = true;
+			}
+			pgroups = ((Permission) vaultperms).getPlayerGroups(player);
+		}
 		if (psel == null) {
 			return info;
 		}
