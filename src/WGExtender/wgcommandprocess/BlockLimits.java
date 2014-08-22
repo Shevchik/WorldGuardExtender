@@ -30,17 +30,18 @@ import com.sk89q.worldguard.bukkit.WorldGuardPlugin;
 
 public class BlockLimits {
 
-	protected static boolean allowClaim(Config config, WorldEditPlugin we, WorldGuardPlugin wg, Player player) {
+	protected static ProcessedClaimInfo processClaimInfo(Config config, WorldEditPlugin we, WorldGuardPlugin wg, Player player) {
+		ProcessedClaimInfo info = new ProcessedClaimInfo();
 		if (player.hasPermission("worldguard.region.unlimited")) {
-			return true;
+			return info;
 		}
 		Selection psel = we.getSelection(player);
 		String[] pgroups = wg.getGroups(player);
 		if (psel == null) {
-			return true;
+			return info;
 		}
 		if (pgroups.length == 0) {
-			return true;
+			return info;
 		}
 		int maxblocks = 0;
 		for (String pgroup : pgroups) {
@@ -55,10 +56,42 @@ public class BlockLimits {
 		size = size.multiply(BigInteger.valueOf(max.getBlockX() - min.getBlockX()));
 		size = size.multiply(BigInteger.valueOf(max.getBlockZ() - min.getBlockZ()));
 		size = size.multiply(BigInteger.valueOf(max.getBlockY() - min.getBlockY()));
-		if (size.compareTo(BigInteger.valueOf(maxblocks)) > 0) {
-			return false;
+		BigInteger maxblocksi = BigInteger.valueOf(maxblocks);
+		if (size.compareTo(maxblocksi) > 0) {
+			info.disallow();
+			info.setInfo(size, maxblocksi);
+			return info;
 		}
-		return true;
+		return info;
 	}
+
+	protected static class ProcessedClaimInfo {
+
+		private boolean claimAllowed = true;
+		private BigInteger claimed;
+		private BigInteger maxsize;
+
+		public void disallow() {
+			claimAllowed = false;
+		}
+
+		public boolean isClaimAllowed() {
+			return claimAllowed;
+		}
+
+		public void setInfo(BigInteger claimed, BigInteger max) {
+			this.claimed = claimed;
+			this.maxsize = max;
+		}
+
+		public String getClaimedSize() {
+			return claimed.toString();
+		}
+
+		public String getMaxSize() {
+			return maxsize.toString();
+		}
+
+	} 
 
 }

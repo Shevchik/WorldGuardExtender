@@ -28,6 +28,7 @@ import org.bukkit.event.player.PlayerCommandPreprocessEvent;
 
 import WGExtender.Config;
 import WGExtender.WGExtender;
+import WGExtender.wgcommandprocess.BlockLimits.ProcessedClaimInfo;
 
 public class WGCommandProcess implements Listener {
 
@@ -67,8 +68,10 @@ public class WGCommandProcess implements Listener {
 			}
 		}
 		if (config.blocklimitsenabled) {
-			if (!BlockLimits.allowClaim(config, main.getWorldEdit(), main.getWorldGuard(), event.getPlayer())) {
+			ProcessedClaimInfo info = BlockLimits.processClaimInfo(config, main.getWorldEdit(), main.getWorldGuard(), event.getPlayer());
+			if (!info.isClaimAllowed()) {
 				event.getPlayer().sendMessage(ChatColor.RED + "Вы не можете заприватить такой большой регион");
+				event.getPlayer().sendMessage(ChatColor.RED + "Ваш лимит: "+info.getMaxSize()+", вы попытались заприватить: "+info.getClaimedSize());
 				event.setCancelled(true);
 				return;
 			}
