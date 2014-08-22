@@ -17,10 +17,13 @@
 
 package WGExtender.wgcommandprocess;
 
+import java.math.BigInteger;
+
 import org.bukkit.entity.Player;
 
 import WGExtender.Config;
 
+import com.sk89q.worldedit.Vector;
 import com.sk89q.worldedit.bukkit.WorldEditPlugin;
 import com.sk89q.worldedit.bukkit.selections.Selection;
 import com.sk89q.worldguard.bukkit.WorldGuardPlugin;
@@ -46,7 +49,13 @@ public class BlockLimits {
 				maxblocks = Math.max(maxblocks, config.blocklimits.get(pgroup));
 			}
 		}
-		if (psel.getArea() > maxblocks) {
+		Vector min = psel.getNativeMinimumPoint();
+		Vector max = psel.getNativeMaximumPoint();
+		BigInteger size = BigInteger.ONE;
+		size = size.multiply(BigInteger.valueOf(max.getBlockX() - min.getBlockX()));
+		size = size.multiply(BigInteger.valueOf(max.getBlockZ() - min.getBlockZ()));
+		size = size.multiply(BigInteger.valueOf(max.getBlockY() - min.getBlockY()));
+		if (size.compareTo(BigInteger.valueOf(maxblocks)) > 0) {
 			return false;
 		}
 		return true;
