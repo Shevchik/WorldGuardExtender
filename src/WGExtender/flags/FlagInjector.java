@@ -19,7 +19,6 @@ package WGExtender.flags;
 
 import java.lang.reflect.Field;
 import java.lang.reflect.InvocationTargetException;
-import java.lang.reflect.Method;
 import java.lang.reflect.Modifier;
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -29,11 +28,10 @@ import java.util.logging.Level;
 
 import WGExtender.WGExtender;
 
-import com.sk89q.worldguard.protection.GlobalRegionManager;
+import com.sk89q.worldguard.bukkit.WorldGuardPlugin;
 import com.sk89q.worldguard.protection.flags.DefaultFlag;
 import com.sk89q.worldguard.protection.flags.Flag;
 
-@SuppressWarnings("deprecation")
 public class FlagInjector {
 
 	protected static void injectFlag(Flag<?> flagtoinject) {
@@ -79,12 +77,12 @@ public class FlagInjector {
 
 	private static void reloadRegions() throws IllegalAccessException, IllegalArgumentException, InvocationTargetException, NoSuchMethodException, SecurityException {
 		try {
-			GlobalRegionManager manager = WGExtender.getInstance().getWorldGuard().getGlobalRegionManager();
-			Method preloadMethod = manager.getClass().getMethod("preload");
-			preloadMethod.invoke(manager);
+			WGExtender.getInstance().getWorldGuard().getGlobalRegionManager().preload();
 		} catch (Throwable t) {
 			try {
-				WGExtender.getInstance().getWorldGuard().getRegionContainer().reload();
+				WorldGuardPlugin wg = WGExtender.getInstance().getWorldGuard();
+				Object regionContainer = wg.getClass().getMethod("getRegionContainer").invoke(wg);
+				regionContainer.getClass().getMethod("reload").invoke(regionContainer);
 			} catch (Throwable tin) {
 				throw tin;
 			}

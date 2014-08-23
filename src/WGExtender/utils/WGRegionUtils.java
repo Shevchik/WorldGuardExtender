@@ -74,7 +74,6 @@ public class WGRegionUtils {
 		return true;
 	}
 
-	@SuppressWarnings("deprecation")
 	public static boolean canBuild(Player player, Location l) {
 		try {
 			WorldGuardPlugin wg = WGExtender.getInstance().getWorldGuard();
@@ -87,7 +86,6 @@ public class WGRegionUtils {
 	private static Pattern splitWhiteSpace = Pattern.compile("\\s+");
 	private static Pattern splitVertLine = Pattern.compile("[|]");
 	private static Pattern splitColon = Pattern.compile("[:]");
-	@SuppressWarnings("deprecation")
 	public static boolean isFlagAllows(Player player, Block block, StateFlag flag) {
 		try {
 			WorldGuardPlugin wg = WGExtender.getInstance().getWorldGuard();
@@ -120,7 +118,6 @@ public class WGRegionUtils {
 		return true;
 	}
 
-	@SuppressWarnings("deprecation")
 	public static boolean isFlagAllows(Player player, Entity entity, StateFlag flag) {
 		try {
 			WorldGuardPlugin wg = WGExtender.getInstance().getWorldGuard();
