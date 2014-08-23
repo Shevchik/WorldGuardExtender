@@ -41,24 +41,10 @@ public class BlockLimits {
 	private Object vaultperms;
 
 	public ProcessedClaimInfo processClaimInfo(Config config, Player player) {
-		ProcessedClaimInfo info = new ProcessedClaimInfo();
-		if (player.hasPermission("worldguard.region.unlimited")) {
-			return info;
-		}
 		Selection psel = WGExtender.getInstance().getWorldEdit().getSelection(player);
-		String[] pgroups = vaultperms != null ? ((Permission) vaultperms).getPlayerGroups(player) : WGExtender.getInstance().getWorldGuard().getGroups(player);
+		ProcessedClaimInfo info = new ProcessedClaimInfo();
 		if (psel == null) {
 			return info;
-		}
-		if (pgroups.length == 0) {
-			return info;
-		}
-		int maxblocks = 0;
-		for (String pgroup : pgroups) {
-			pgroup = pgroup.toLowerCase();
-			if (config.blocklimits.containsKey(pgroup)) {
-				maxblocks = Math.max(maxblocks, config.blocklimits.get(pgroup));
-			}
 		}
 		Vector min = psel.getNativeMinimumPoint();
 		Vector max = psel.getNativeMaximumPoint();
@@ -66,11 +52,32 @@ public class BlockLimits {
 		size = size.multiply(BigInteger.valueOf(max.getBlockX() - min.getBlockX()));
 		size = size.multiply(BigInteger.valueOf(max.getBlockZ() - min.getBlockZ()));
 		size = size.multiply(BigInteger.valueOf(max.getBlockY() - min.getBlockY()));
-		BigInteger maxblocksi = BigInteger.valueOf(maxblocks);
-		if (size.compareTo(maxblocksi) > 0) {
+		if (size.compareTo(BigInteger.valueOf(Integer.MAX_VALUE)) > 0) {
 			info.disallow();
-			info.setInfo(size, maxblocksi);
+			info.setInfo(size, BigInteger.valueOf(Integer.MAX_VALUE));
 			return info;
+		}
+		if (player.hasPermission("worldguard.region.unlimited")) {
+			return info;
+		}
+		if (config.blocklimitsenabled) {
+			String[] pgroups = vaultperms != null ? ((Permission) vaultperms).getPlayerGroups(player) : WGExtender.getInstance().getWorldGuard().getGroups(player);
+			if (pgroups.length == 0) {
+				return info;
+			}
+			int maxblocks = 0;
+			for (String pgroup : pgroups) {
+				pgroup = pgroup.toLowerCase();
+				if (config.blocklimits.containsKey(pgroup)) {
+					maxblocks = Math.max(maxblocks, config.blocklimits.get(pgroup));
+				}
+			}
+			BigInteger maxblocksi = BigInteger.valueOf(maxblocks);
+			if (size.compareTo(maxblocksi) > 0) {
+				info.disallow();
+				info.setInfo(size, maxblocksi);
+				return info;
+			}
 		}
 		return info;
 	}

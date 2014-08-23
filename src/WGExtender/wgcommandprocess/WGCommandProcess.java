@@ -68,14 +68,12 @@ public class WGCommandProcess implements Listener {
 				event.getPlayer().sendMessage(ChatColor.LIGHT_PURPLE + "Регион автоматически расширен по вертикали");
 			}
 		}
-		if (config.blocklimitsenabled) {
-			ProcessedClaimInfo info = blocklimits.processClaimInfo(config, event.getPlayer());
-			if (!info.isClaimAllowed()) {
-				event.getPlayer().sendMessage(ChatColor.RED + "Вы не можете заприватить такой большой регион");
-				event.getPlayer().sendMessage(ChatColor.RED + "Ваш лимит: "+info.getMaxSize()+", вы попытались заприватить: "+info.getClaimedSize());
-				event.setCancelled(true);
-				return;
-			}
+		ProcessedClaimInfo info = blocklimits.processClaimInfo(config, event.getPlayer());
+		if (!info.isClaimAllowed()) {
+			event.getPlayer().sendMessage(ChatColor.RED + "Вы не можете заприватить такой большой регион");
+			event.getPlayer().sendMessage(ChatColor.RED + "Ваш лимит: "+info.getMaxSize()+", вы попытались заприватить: "+info.getClaimedSize());
+			event.setCancelled(true);
+			return;
 		}
 		if (config.autoflagsenabled) {
 			AutoFlags.setFlagsForRegion(config, event.getPlayer().getWorld(), cmds[2]);
