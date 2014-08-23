@@ -78,7 +78,7 @@ public class WGExtender extends JavaPlugin {
 		EntityInteractRestrictWhitelistFlag.injectFlag();
 		config = new Config(this);
 		config.loadConfig();
-		commands = new Commands(this, config);
+		commands = new Commands(config);
 		getCommand("wgex").setExecutor(commands);
 		getServer().getPluginManager().registerEvents(new WGCommandProcess(config), this);
 		getServer().getPluginManager().registerEvents(new RestrictCommandProcess(config), this);

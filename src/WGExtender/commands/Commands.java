@@ -38,11 +38,9 @@ import com.sk89q.worldguard.protection.flags.Flag;
 
 public class Commands implements CommandExecutor {
 
-	private WGExtender main;
 	private Config config;
 
-	public Commands(WGExtender main, Config config) {
-		this.main = main;
+	public Commands(Config config) {
 		this.config = config;
 	}
 
@@ -63,7 +61,7 @@ public class Commands implements CommandExecutor {
 			return true;
 		} else if ((args.length == 1) && args[0].equalsIgnoreCase("search")) {
 			if (sender instanceof Player) {
-				List<String> regions = RegionsInAreaSearch.getRegionsInPlayerSelection(main.getWorldEdit(), main.getWorldGuard(), (Player) sender);
+				List<String> regions = RegionsInAreaSearch.getRegionsInPlayerSelection(WGExtender.getInstance().getWorldEdit(), WGExtender.getInstance().getWorldGuard(), (Player) sender);
 				if ((regions == null) || (regions.size() == 0)) {
 					sender.sendMessage(ChatColor.BLUE + "Регионов пересекающихся с выделенной зоной не найдено");
 					return true;
@@ -79,7 +77,7 @@ public class Commands implements CommandExecutor {
 					if (flag.getName().equalsIgnoreCase(args[2])) {
 						try {
 							String value = joinString(Arrays.copyOfRange(args, 3, args.length), " ");
-							SetFlags.setFlags(main.getWorldGuard(), flag, value, world);
+							SetFlags.setFlags(WGExtender.getInstance().getWorldGuard(), flag, value, world);
 							sender.sendMessage(ChatColor.BLUE + "Флаги установлены");
 							return true;
 						} catch (Exception e) {
