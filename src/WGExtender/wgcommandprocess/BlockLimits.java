@@ -25,31 +25,28 @@ import org.bukkit.Bukkit;
 import org.bukkit.entity.Player;
 
 import WGExtender.Config;
+import WGExtender.WGExtender;
 
 import com.sk89q.worldedit.Vector;
-import com.sk89q.worldedit.bukkit.WorldEditPlugin;
 import com.sk89q.worldedit.bukkit.selections.Selection;
-import com.sk89q.worldguard.bukkit.WorldGuardPlugin;
 
 public class BlockLimits {
 
-	private static Object vaultperms;
-	private static boolean vaultCached;
+	public BlockLimits() {
+		if (Bukkit.getPluginManager().getPlugin("Vault") != null) {
+			vaultperms = Bukkit.getServicesManager().getRegistration(net.milkbowl.vault.permission.Permission.class).getProvider();
+		}
+	}
 
-	protected static ProcessedClaimInfo processClaimInfo(Config config, WorldEditPlugin we, WorldGuardPlugin wg, Player player) {
+	private Object vaultperms;
+
+	public ProcessedClaimInfo processClaimInfo(Config config, Player player) {
 		ProcessedClaimInfo info = new ProcessedClaimInfo();
 		if (player.hasPermission("worldguard.region.unlimited")) {
 			return info;
 		}
-		Selection psel = we.getSelection(player);
-		String[] pgroups = wg.getGroups(player);
-		if (Bukkit.getPluginManager().getPlugin("Vault") != null) {
-			if (!vaultCached) {
-				vaultperms = Bukkit.getServicesManager().getRegistration(net.milkbowl.vault.permission.Permission.class).getProvider();
-				vaultCached = true;
-			}
-			pgroups = ((Permission) vaultperms).getPlayerGroups(player);
-		}
+		Selection psel = WGExtender.getInstance().getWorldEdit().getSelection(player);
+		String[] pgroups = vaultperms != null ? ((Permission) vaultperms).getPlayerGroups(player) : WGExtender.getInstance().getWorldGuard().getGroups(player);
 		if (psel == null) {
 			return info;
 		}

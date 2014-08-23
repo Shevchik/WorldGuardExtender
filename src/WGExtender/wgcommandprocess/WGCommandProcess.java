@@ -27,16 +27,14 @@ import org.bukkit.event.Listener;
 import org.bukkit.event.player.PlayerCommandPreprocessEvent;
 
 import WGExtender.Config;
-import WGExtender.WGExtender;
 import WGExtender.wgcommandprocess.BlockLimits.ProcessedClaimInfo;
+import WGExtender.wgcommandprocess.vertexpand.VertExpand;
 
 public class WGCommandProcess implements Listener {
 
-	private WGExtender main;
 	private Config config;
 
-	public WGCommandProcess(WGExtender main, Config config) {
-		this.main = main;
+	public WGCommandProcess(Config config) {
 		this.config = config;
 	}
 
@@ -48,6 +46,9 @@ public class WGCommandProcess implements Listener {
 			}
 		)
 	);
+
+	private VertExpand vertexpand = new VertExpand();
+	private BlockLimits blocklimits = new BlockLimits();
 
 	@EventHandler(priority = EventPriority.HIGHEST, ignoreCancelled = true)
 	public void processWGCommand(final PlayerCommandPreprocessEvent event) {
@@ -62,13 +63,13 @@ public class WGCommandProcess implements Listener {
 			return;
 		}
 		if (config.expandvert) {
-			boolean result = VertExpand.expand(main.getWorldEdit(), event.getPlayer());
+			boolean result = vertexpand.expand(event.getPlayer());
 			if (result) {
 				event.getPlayer().sendMessage(ChatColor.LIGHT_PURPLE + "Регион автоматически расширен по вертикали");
 			}
 		}
 		if (config.blocklimitsenabled) {
-			ProcessedClaimInfo info = BlockLimits.processClaimInfo(config, main.getWorldEdit(), main.getWorldGuard(), event.getPlayer());
+			ProcessedClaimInfo info = blocklimits.processClaimInfo(config, event.getPlayer());
 			if (!info.isClaimAllowed()) {
 				event.getPlayer().sendMessage(ChatColor.RED + "Вы не можете заприватить такой большой регион");
 				event.getPlayer().sendMessage(ChatColor.RED + "Ваш лимит: "+info.getMaxSize()+", вы попытались заприватить: "+info.getClaimedSize());
@@ -77,7 +78,7 @@ public class WGCommandProcess implements Listener {
 			}
 		}
 		if (config.autoflagsenabled) {
-			AutoFlags.setFlagsForRegion(main, config, main.getWorldGuard(), event.getPlayer().getWorld(), cmds[2]);
+			AutoFlags.setFlagsForRegion(config, event.getPlayer().getWorld(), cmds[2]);
 		}
 	}
 

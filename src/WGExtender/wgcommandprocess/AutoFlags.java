@@ -33,7 +33,8 @@ import com.sk89q.worldguard.protection.regions.ProtectedRegion;
 
 public class AutoFlags {
 
-	protected static void setFlagsForRegion(WGExtender main, final Config config, final WorldGuardPlugin wg, World world, final String regionname) {
+	protected static void setFlagsForRegion(final Config config, World world, final String regionname) {
+		final WorldGuardPlugin wg = WGExtender.getInstance().getWorldGuard();
 		final RegionManager rm = wg.getRegionManager(world);
 		if (rm == null) {
 			return;
@@ -41,7 +42,7 @@ public class AutoFlags {
 		if (rm.hasRegion(regionname)) {
 			return;
 		}
-		Bukkit.getScheduler().scheduleSyncDelayedTask(main, new Runnable() {
+		Bukkit.getScheduler().scheduleSyncDelayedTask(WGExtender.getInstance(), new Runnable() {
 			@Override
 			@SuppressWarnings({ "unchecked", "rawtypes" })
 			public void run() {

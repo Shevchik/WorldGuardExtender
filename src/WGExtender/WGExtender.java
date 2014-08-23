@@ -80,7 +80,7 @@ public class WGExtender extends JavaPlugin {
 		config.loadConfig();
 		commands = new Commands(this, config);
 		getCommand("wgex").setExecutor(commands);
-		getServer().getPluginManager().registerEvents(new WGCommandProcess(this, config), this);
+		getServer().getPluginManager().registerEvents(new WGCommandProcess(config), this);
 		getServer().getPluginManager().registerEvents(new RestrictCommandProcess(config), this);
 		getServer().getPluginManager().registerEvents(new LiquidFlow(config), this);
 		getServer().getPluginManager().registerEvents(new IgniteByPlayer(config), this);
