@@ -25,6 +25,7 @@ import org.bukkit.block.Block;
 import org.bukkit.entity.Entity;
 import org.bukkit.entity.Player;
 
+import WGExtender.WGExtender;
 import WGExtender.flags.BlockInteractRestrictFlag;
 import WGExtender.flags.BlockInteractRestrictWhitelistFlag;
 import WGExtender.flags.EntityInteractRestrictFlag;
@@ -53,16 +54,18 @@ public class WGRegionUtils {
 		return false;
 	}
 
-	public static boolean isInWGRegion(WorldGuardPlugin wg, Location l) {
+	public static boolean isInWGRegion(Location l) {
 		try {
+			WorldGuardPlugin wg = WGExtender.getInstance().getWorldGuard();
 			return wg.getRegionManager(l.getWorld()).getApplicableRegions(l).size() > 0;
 		} catch (Exception e) {
 		}
 		return false;
 	}
 
-	public static boolean isInTheSameRegion(WorldGuardPlugin wg, Location l1, Location l2) {
+	public static boolean isInTheSameRegion(Location l1, Location l2) {
 		try {
+			WorldGuardPlugin wg = WGExtender.getInstance().getWorldGuard();
 			List<String> ari1 = wg.getRegionManager(l1.getWorld()).getApplicableRegionsIDs(BukkitUtil.toVector(l1));
 			List<String> ari2 = wg.getRegionManager(l2.getWorld()).getApplicableRegionsIDs(BukkitUtil.toVector(l2));
 			return ari1.equals(ari2);
@@ -72,8 +75,9 @@ public class WGRegionUtils {
 	}
 
 	@SuppressWarnings("deprecation")
-	public static boolean canBuild(WorldGuardPlugin wg, Player player, Location l) {
+	public static boolean canBuild(Player player, Location l) {
 		try {
+			WorldGuardPlugin wg = WGExtender.getInstance().getWorldGuard();
 			return wg.getRegionManager(l.getWorld()).getApplicableRegions(l).canBuild(wg.wrapPlayer(player));
 		} catch (Exception e) {
 		}
@@ -84,8 +88,9 @@ public class WGRegionUtils {
 	private static Pattern splitVertLine = Pattern.compile("[|]");
 	private static Pattern splitColon = Pattern.compile("[:]");
 	@SuppressWarnings("deprecation")
-	public static boolean isFlagAllows(WorldGuardPlugin wg, Player player, Block block, StateFlag flag) {
+	public static boolean isFlagAllows(Player player, Block block, StateFlag flag) {
 		try {
+			WorldGuardPlugin wg = WGExtender.getInstance().getWorldGuard();
 			ApplicableRegionSet ars = wg.getRegionManager(block.getLocation().getWorld()).getApplicableRegions(block.getLocation());
 			if (flag instanceof BlockInteractRestrictFlag) {
 				String blockName = block.getType().toString();
@@ -116,8 +121,9 @@ public class WGRegionUtils {
 	}
 
 	@SuppressWarnings("deprecation")
-	public static boolean isFlagAllows(WorldGuardPlugin wg, Player player, Entity entity, StateFlag flag) {
+	public static boolean isFlagAllows(Player player, Entity entity, StateFlag flag) {
 		try {
+			WorldGuardPlugin wg = WGExtender.getInstance().getWorldGuard();
 			ApplicableRegionSet ars = wg.getRegionManager(entity.getLocation().getWorld()).getApplicableRegions(entity.getLocation());
 			if (flag instanceof EntityInteractRestrictFlag) {
 				String entityName = entity.getType().getName();

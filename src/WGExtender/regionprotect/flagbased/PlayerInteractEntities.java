@@ -25,17 +25,14 @@ import org.bukkit.event.Listener;
 import org.bukkit.event.player.PlayerInteractEntityEvent;
 
 import WGExtender.Config;
-import WGExtender.WGExtender;
 import WGExtender.flags.EntityInteractRestrictFlag;
 import WGExtender.utils.WGRegionUtils;
 
 public class PlayerInteractEntities implements Listener {
 
-	private WGExtender main;
 	private Config config;
 
-	public PlayerInteractEntities(WGExtender main, Config config) {
-		this.main = main;
+	public PlayerInteractEntities(Config config) {
 		this.config = config;
 	}
 
@@ -47,7 +44,7 @@ public class PlayerInteractEntities implements Listener {
 		Player player = event.getPlayer();
 		Entity entity = event.getRightClicked();
 		if (!WGRegionUtils.canBypassProtection(player)) {
-			if (!WGRegionUtils.isFlagAllows(main.getWorldGuard(), player, entity, EntityInteractRestrictFlag.instance)) {
+			if (!WGRegionUtils.isFlagAllows(player, entity, EntityInteractRestrictFlag.instance)) {
 				event.setCancelled(true);
 			}
 		}

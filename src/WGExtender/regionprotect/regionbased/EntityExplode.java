@@ -29,16 +29,13 @@ import org.bukkit.event.entity.EntityDamageEvent.DamageCause;
 import org.bukkit.event.entity.EntityExplodeEvent;
 
 import WGExtender.Config;
-import WGExtender.WGExtender;
 import WGExtender.utils.WGRegionUtils;
 
 public class EntityExplode implements Listener {
 
-	private WGExtender main;
 	private Config config;
 
-	public EntityExplode(WGExtender main, Config config) {
-		this.main = main;
+	public EntityExplode(Config config) {
 		this.config = config;
 	}
 
@@ -49,7 +46,7 @@ public class EntityExplode implements Listener {
 		}
 		Iterator<Block> it = e.blockList().iterator();
 		while (it.hasNext()) {
-			if (WGRegionUtils.isInWGRegion(main.getWorldGuard(), it.next().getLocation())) {
+			if (WGRegionUtils.isInWGRegion(it.next().getLocation())) {
 				it.remove();
 			}
 		}
@@ -59,7 +56,7 @@ public class EntityExplode implements Listener {
 	public void onEntityDamageByExplosion(EntityDamageByEntityEvent e) {
 		if (e.getCause() == DamageCause.BLOCK_EXPLOSION || e.getCause() == DamageCause.ENTITY_EXPLOSION) {
 			if (!(e.getEntity() instanceof Player)) {
-				if (WGRegionUtils.isInWGRegion(main.getWorldGuard(), e.getEntity().getLocation())) {
+				if (WGRegionUtils.isInWGRegion(e.getEntity().getLocation())) {
 					e.setCancelled(true);
 				}
 			}

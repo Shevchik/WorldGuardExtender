@@ -26,16 +26,13 @@ import org.bukkit.event.block.BlockIgniteEvent;
 import org.bukkit.event.block.BlockIgniteEvent.IgniteCause;
 
 import WGExtender.Config;
-import WGExtender.WGExtender;
 import WGExtender.utils.WGRegionUtils;
 
 public class IgniteByPlayer implements Listener {
 
-	private WGExtender main;
 	private Config config;
 
-	public IgniteByPlayer(WGExtender main, Config config) {
-		this.main = main;
+	public IgniteByPlayer(Config config) {
 		this.config = config;
 	}
 
@@ -47,13 +44,13 @@ public class IgniteByPlayer implements Listener {
 		Player player = e.getPlayer();
 		if (player != null) {
 			if (!WGRegionUtils.canBypassProtection(player)) {
-				if (!WGRegionUtils.canBuild(main.getWorldGuard(), player, e.getBlock().getLocation())) {
+				if (!WGRegionUtils.canBuild( player, e.getBlock().getLocation())) {
 					player.sendMessage(ChatColor.RED + "Вы не можете поджечь блок в чужом регионе");
 					e.setCancelled(true);
 				}
 			}
 		} else if (e.getCause() == IgniteCause.FIREBALL) {
-			if (WGRegionUtils.isInWGRegion(main.getWorldGuard(), e.getBlock().getLocation())) {
+			if (WGRegionUtils.isInWGRegion(e.getBlock().getLocation())) {
 				e.setCancelled(true);
 			}
 		}

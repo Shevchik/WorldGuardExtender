@@ -28,16 +28,13 @@ import org.bukkit.event.block.BlockPistonExtendEvent;
 import org.bukkit.event.block.BlockPistonRetractEvent;
 
 import WGExtender.Config;
-import WGExtender.WGExtender;
 import WGExtender.utils.WGRegionUtils;
 
 public class Pistons implements Listener {
 
-	private WGExtender main;
 	private Config config;
 
-	public Pistons(WGExtender main, Config config) {
-		this.main = main;
+	public Pistons(Config config) {
 		this.config = config;
 	}
 
@@ -51,14 +48,14 @@ public class Pistons implements Listener {
 		Block mblock = null;
 		while (bit.hasNext()) {
 			mblock = bit.next();
-			if (!WGRegionUtils.isInTheSameRegion(main.getWorldGuard(), pistonlocation, mblock.getLocation())) {
+			if (!WGRegionUtils.isInTheSameRegion(pistonlocation, mblock.getLocation())) {
 				e.setCancelled(true);
 				break;
 			}
 		}
 		if (mblock != null) {
 			mblock = mblock.getRelative(e.getDirection());
-			if (!WGRegionUtils.isInTheSameRegion(main.getWorldGuard(), pistonlocation, mblock.getLocation())) {
+			if (!WGRegionUtils.isInTheSameRegion(pistonlocation, mblock.getLocation())) {
 				e.setCancelled(true);
 			}
 		}
@@ -72,7 +69,7 @@ public class Pistons implements Listener {
 		if (e.isSticky()) {
 			Location pistonlocation = e.getBlock().getLocation();
 			Location retractblocklocation = e.getRetractLocation();
-			if (!WGRegionUtils.isInTheSameRegion(main.getWorldGuard(), pistonlocation, retractblocklocation)) {
+			if (!WGRegionUtils.isInTheSameRegion(pistonlocation, retractblocklocation)) {
 				e.setCancelled(true);
 			}
 		}

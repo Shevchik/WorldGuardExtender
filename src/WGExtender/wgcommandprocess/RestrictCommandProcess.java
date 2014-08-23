@@ -25,16 +25,13 @@ import org.bukkit.event.Listener;
 import org.bukkit.event.player.PlayerCommandPreprocessEvent;
 
 import WGExtender.Config;
-import WGExtender.WGExtender;
 import WGExtender.utils.WGRegionUtils;
 
 public class RestrictCommandProcess implements Listener {
 
-	private WGExtender main;
 	private Config config;
 
-	public RestrictCommandProcess(WGExtender main, Config config) {
-		this.main = main;
+	public RestrictCommandProcess(Config config) {
 		this.config = config;
 	}
 
@@ -47,11 +44,11 @@ public class RestrictCommandProcess implements Listener {
 		if (WGRegionUtils.canBypassProtection(player)) {
 			return;
 		}
-		if (WGRegionUtils.isInWGRegion(main.getWorldGuard(), player.getLocation())) {
+		if (WGRegionUtils.isInWGRegion(player.getLocation())) {
 			String message = event.getMessage();
 			message = message.replaceFirst("/", "").toLowerCase();
 			for (String rcommand : config.restrictedcommands) {
-				if (message.startsWith(rcommand) && !WGRegionUtils.canBuild(main.getWorldGuard(), player, player.getLocation())) {
+				if (message.startsWith(rcommand) && !WGRegionUtils.canBuild(player, player.getLocation())) {
 					event.setCancelled(true);
 					player.sendMessage(ChatColor.RED + "Вы не можете использовать эту команду на чужом регионе");
 					return;

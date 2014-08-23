@@ -81,16 +81,16 @@ public class WGExtender extends JavaPlugin {
 		commands = new Commands(this, config);
 		getCommand("wgex").setExecutor(commands);
 		getServer().getPluginManager().registerEvents(new WGCommandProcess(this, config), this);
-		getServer().getPluginManager().registerEvents(new RestrictCommandProcess(this, config), this);
-		getServer().getPluginManager().registerEvents(new LiquidFlow(this, config), this);
-		getServer().getPluginManager().registerEvents(new IgniteByPlayer(this, config), this);
-		getServer().getPluginManager().registerEvents(new FireSpread(this, config), this);
-		getServer().getPluginManager().registerEvents(new BlockBurn(this, config), this);
-		getServer().getPluginManager().registerEvents(new Pistons(this, config), this);
-		getServer().getPluginManager().registerEvents(new EntityExplode(this, config), this);
-		getServer().getPluginManager().registerEvents(new AttackByPlayer(this, config), this);
-		getServer().getPluginManager().registerEvents(new PlayerInteractBlocks(this, config), this);
-		getServer().getPluginManager().registerEvents(new PlayerInteractEntities(this, config), this);
+		getServer().getPluginManager().registerEvents(new RestrictCommandProcess(config), this);
+		getServer().getPluginManager().registerEvents(new LiquidFlow(config), this);
+		getServer().getPluginManager().registerEvents(new IgniteByPlayer(config), this);
+		getServer().getPluginManager().registerEvents(new FireSpread(config), this);
+		getServer().getPluginManager().registerEvents(new BlockBurn(config), this);
+		getServer().getPluginManager().registerEvents(new Pistons(config), this);
+		getServer().getPluginManager().registerEvents(new EntityExplode(config), this);
+		getServer().getPluginManager().registerEvents(new AttackByPlayer(config), this);
+		getServer().getPluginManager().registerEvents(new PlayerInteractBlocks(config), this);
+		getServer().getPluginManager().registerEvents(new PlayerInteractEntities(config), this);
 	}
 
 	@Override

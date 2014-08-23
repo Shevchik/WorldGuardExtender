@@ -24,16 +24,13 @@ import org.bukkit.event.Listener;
 import org.bukkit.event.block.BlockSpreadEvent;
 
 import WGExtender.Config;
-import WGExtender.WGExtender;
 import WGExtender.utils.WGRegionUtils;
 
 public class FireSpread implements Listener {
 
-	private WGExtender main;
 	private Config config;
 
-	public FireSpread(WGExtender main, Config config) {
-		this.main = main;
+	public FireSpread(Config config) {
 		this.config = config;
 	}
 
@@ -41,12 +38,12 @@ public class FireSpread implements Listener {
 	public void onBlockIgniteBySpread(BlockSpreadEvent e) {
 		if (e.getNewState().getType() == Material.FIRE) {
 			if (config.blockfirespreadtoregion) {
-				if (!WGRegionUtils.isInTheSameRegion(main.getWorldGuard(), e.getSource().getLocation(), e.getBlock().getLocation())) {
+				if (!WGRegionUtils.isInTheSameRegion(e.getSource().getLocation(), e.getBlock().getLocation())) {
 					e.setCancelled(true);
 				}
 			}
 			if (config.blockfirespreadinregion) {
-				if (WGRegionUtils.isInWGRegion(main.getWorldGuard(), e.getSource().getLocation()) && WGRegionUtils.isInTheSameRegion(main.getWorldGuard(), e.getSource().getLocation(), e.getBlock().getLocation())) {
+				if (WGRegionUtils.isInWGRegion(e.getSource().getLocation()) && WGRegionUtils.isInTheSameRegion(e.getSource().getLocation(), e.getBlock().getLocation())) {
 					e.setCancelled(true);
 				}
 			}

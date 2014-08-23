@@ -23,16 +23,13 @@ import org.bukkit.event.Listener;
 import org.bukkit.event.block.BlockBurnEvent;
 
 import WGExtender.Config;
-import WGExtender.WGExtender;
 import WGExtender.utils.WGRegionUtils;
 
 public class BlockBurn implements Listener {
 
-	private WGExtender main;
 	private Config config;
 
-	public BlockBurn(WGExtender main, Config config) {
-		this.main = main;
+	public BlockBurn(Config config) {
 		this.config = config;
 	}
 
@@ -41,7 +38,7 @@ public class BlockBurn implements Listener {
 		if (!config.blockblockburninregion) {
 			return;
 		}
-		if (WGRegionUtils.isInWGRegion(main.getWorldGuard(), e.getBlock().getLocation())) {
+		if (WGRegionUtils.isInWGRegion(e.getBlock().getLocation())) {
 			e.setCancelled(true);
 		}
 	}
