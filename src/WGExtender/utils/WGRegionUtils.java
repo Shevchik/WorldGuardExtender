@@ -17,26 +17,25 @@
 
 package WGExtender.utils;
 
-import java.util.List;
-import java.util.regex.Pattern;
-
 import org.bukkit.Location;
 import org.bukkit.block.Block;
 import org.bukkit.entity.Entity;
 import org.bukkit.entity.Player;
 
-import WGExtender.WGExtender;
-import WGExtender.flags.BlockInteractRestrictFlag;
-import WGExtender.flags.BlockInteractRestrictWhitelistFlag;
-import WGExtender.flags.EntityInteractRestrictFlag;
-import WGExtender.flags.EntityInteractRestrictWhitelistFlag;
-
-import com.sk89q.worldedit.bukkit.BukkitUtil;
-import com.sk89q.worldguard.bukkit.WorldGuardPlugin;
-import com.sk89q.worldguard.protection.ApplicableRegionSet;
 import com.sk89q.worldguard.protection.flags.StateFlag;
 
 public class WGRegionUtils {
+
+	private static WGRegionUtilsInterface utils;
+	static {
+		utils = new OldWGRegionUtils();
+		try {
+			if (Class.forName("com.sk89q.worldguard.protection.ApplicableRegionSet").isInterface()) {
+				utils = new NewWGRegionUtils();
+			}
+		} catch (ClassNotFoundException e) {
+		}
+	}
 
 	public static boolean canBypassProtection(Player p) {
 		if (p.hasPermission("worldguard.*")) {
@@ -55,89 +54,23 @@ public class WGRegionUtils {
 	}
 
 	public static boolean isInWGRegion(Location l) {
-		try {
-			WorldGuardPlugin wg = WGExtender.getInstance().getWorldGuard();
-			return wg.getRegionManager(l.getWorld()).getApplicableRegions(l).size() > 0;
-		} catch (Exception e) {
-		}
-		return false;
+		return utils.isInWGRegion(l);
 	}
 
 	public static boolean isInTheSameRegion(Location l1, Location l2) {
-		try {
-			WorldGuardPlugin wg = WGExtender.getInstance().getWorldGuard();
-			List<String> ari1 = wg.getRegionManager(l1.getWorld()).getApplicableRegionsIDs(BukkitUtil.toVector(l1));
-			List<String> ari2 = wg.getRegionManager(l2.getWorld()).getApplicableRegionsIDs(BukkitUtil.toVector(l2));
-			return ari1.equals(ari2);
-		} catch (Exception e) {
-		}
-		return true;
+		return utils.isInTheSameRegion(l1, l2);
 	}
 
 	public static boolean canBuild(Player player, Location l) {
-		try {
-			WorldGuardPlugin wg = WGExtender.getInstance().getWorldGuard();
-			return wg.getRegionManager(l.getWorld()).getApplicableRegions(l).canBuild(wg.wrapPlayer(player));
-		} catch (Exception e) {
-		}
-		return false;
+		return utils.canBuild(player, l);
 	}
 
-	private static Pattern splitWhiteSpace = Pattern.compile("\\s+");
-	private static Pattern splitVertLine = Pattern.compile("[|]");
-	private static Pattern splitColon = Pattern.compile("[:]");
 	public static boolean isFlagAllows(Player player, Block block, StateFlag flag) {
-		try {
-			WorldGuardPlugin wg = WGExtender.getInstance().getWorldGuard();
-			ApplicableRegionSet ars = wg.getRegionManager(block.getLocation().getWorld()).getApplicableRegions(block.getLocation());
-			if (flag instanceof BlockInteractRestrictFlag) {
-				String blockName = block.getType().toString();
-				String allowed = ars.getFlag(BlockInteractRestrictWhitelistFlag.instance);
-				if (allowed != null) {
-					String[] allowedNames = splitWhiteSpace.split(allowed);
-					for (String allowedName : allowedNames) {
-						String[] allowedNameSplit = splitVertLine.split(allowedName);
-						if (allowedNameSplit[0].equals(blockName)) {
-							if (allowedNameSplit.length == 2) {
-								String[] allowedHandNames = splitColon.split(allowedNameSplit[1]);
-								for (String allowedHandName : allowedHandNames) {
-									if (allowedHandName.equals(player.getItemInHand().getType().toString())) {
-										return true;
-									}
-								}
-							} else {
-								return true;
-							}
-						}
-					}
-				}
-			}
-			return (ars.allows(flag, wg.wrapPlayer(player)));
-		} catch (Exception e) {
-		}
-		return true;
+		return utils.isFlagAllows(player, block, flag);
 	}
 
 	public static boolean isFlagAllows(Player player, Entity entity, StateFlag flag) {
-		try {
-			WorldGuardPlugin wg = WGExtender.getInstance().getWorldGuard();
-			ApplicableRegionSet ars = wg.getRegionManager(entity.getLocation().getWorld()).getApplicableRegions(entity.getLocation());
-			if (flag instanceof EntityInteractRestrictFlag) {
-				String entityName = entity.getType().getName();
-				String allowedNames = ars.getFlag(EntityInteractRestrictWhitelistFlag.instance);
-				if (allowedNames != null) {
-					String[] allowedNamesSplit = allowedNames.split("\\s+");
-					for (String allowedName : allowedNamesSplit) {
-						if (allowedName.equals(entityName)) {
-							return true;
-						}
-					}
-				}
-			}
-			return (ars.allows(flag, wg.wrapPlayer(player)));
-		} catch (Exception e) {
-		}
-		return true;
+		return utils.isFlagAllows(player, entity, flag);
 	}
 
 }
