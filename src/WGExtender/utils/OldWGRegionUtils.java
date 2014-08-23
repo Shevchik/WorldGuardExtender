@@ -38,6 +38,7 @@ import com.sk89q.worldguard.protection.flags.StateFlag;
 
 public class OldWGRegionUtils implements WGRegionUtilsInterface {
 
+	@Override
 	public boolean isInWGRegion(Location l) {
 		try {
 			WorldGuardPlugin wg = WGExtender.getInstance().getWorldGuard();
@@ -47,6 +48,7 @@ public class OldWGRegionUtils implements WGRegionUtilsInterface {
 		return false;
 	}
 
+	@Override
 	public boolean isInTheSameRegion(Location l1, Location l2) {
 		try {
 			WorldGuardPlugin wg = WGExtender.getInstance().getWorldGuard();
@@ -58,6 +60,7 @@ public class OldWGRegionUtils implements WGRegionUtilsInterface {
 		return true;
 	}
 
+	@Override
 	public boolean canBuild(Player player, Location l) {
 		try {
 			WorldGuardPlugin wg = WGExtender.getInstance().getWorldGuard();
@@ -71,6 +74,7 @@ public class OldWGRegionUtils implements WGRegionUtilsInterface {
 	private Pattern splitVertLine = Pattern.compile("[|]");
 	private Pattern splitColon = Pattern.compile("[:]");
 
+	@Override
 	public boolean isFlagAllows(Player player, Block block, StateFlag flag) {
 		try {
 			WorldGuardPlugin wg = WGExtender.getInstance().getWorldGuard();
@@ -103,6 +107,7 @@ public class OldWGRegionUtils implements WGRegionUtilsInterface {
 		return true;
 	}
 
+	@Override
 	public boolean isFlagAllows(Player player, Entity entity, StateFlag flag) {
 		try {
 			WorldGuardPlugin wg = WGExtender.getInstance().getWorldGuard();
