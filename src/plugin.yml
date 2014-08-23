@@ -3,6 +3,5 @@ main: WGExtender.WGExtender
 version: 1.0
 author: _Shevchik_
 depend: [WorldGuard, WorldEdit]
-load: STARTUP
 commands:
   wgex:
