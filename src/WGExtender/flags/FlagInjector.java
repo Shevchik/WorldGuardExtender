@@ -18,6 +18,8 @@
 package WGExtender.flags;
 
 import java.lang.reflect.Field;
+import java.lang.reflect.InvocationTargetException;
+import java.lang.reflect.Method;
 import java.lang.reflect.Modifier;
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -25,14 +27,13 @@ import java.util.Iterator;
 import java.util.List;
 import java.util.logging.Level;
 
-import org.bukkit.Bukkit;
-
 import WGExtender.WGExtender;
 
-import com.sk89q.worldguard.bukkit.WorldGuardPlugin;
+import com.sk89q.worldguard.protection.GlobalRegionManager;
 import com.sk89q.worldguard.protection.flags.DefaultFlag;
 import com.sk89q.worldguard.protection.flags.Flag;
 
+@SuppressWarnings("deprecation")
 public class FlagInjector {
 
 	protected static void injectFlag(Flag<?> flagtoinject) {
@@ -45,8 +46,8 @@ public class FlagInjector {
 			List<Flag<?>> flags = new ArrayList<Flag<?>>(Arrays.asList(DefaultFlag.getFlags()));
 			flags.add(flagtoinject);
 			field.set(null, flags.toArray(new Flag[flags.size()]));
-			WorldGuardPlugin.class.cast(Bukkit.getPluginManager().getPlugin("WorldGuard")).getGlobalRegionManager().preload();
-		} catch (Exception e) {
+			reloadRegions();
+		} catch (Throwable e) {
 			WGExtender.log(Level.SEVERE, "Failed to inject flag " + flagtoinject.getName());
 			e.printStackTrace();
 		}
@@ -69,10 +70,24 @@ public class FlagInjector {
 				}
 			}
 			field.set(null, flags.toArray(new Flag[flags.size()]));
-			WorldGuardPlugin.class.cast(Bukkit.getPluginManager().getPlugin("WorldGuard")).getGlobalRegionManager().preload();
-		} catch (Exception e) {
+			reloadRegions();
+		} catch (Throwable e) {
 			WGExtender.log(Level.SEVERE, "Failed to uninject flag " + flagtouninject.getName());
 			e.printStackTrace();
+		}
+	}
+
+	private static void reloadRegions() throws IllegalAccessException, IllegalArgumentException, InvocationTargetException, NoSuchMethodException, SecurityException {
+		try {
+			GlobalRegionManager manager = WGExtender.getInstance().getWorldGuard().getGlobalRegionManager();
+			Method preloadMethod = manager.getClass().getMethod("preload");
+			preloadMethod.invoke(manager);
+		} catch (Throwable t) {
+			try {
+				WGExtender.getInstance().getWorldGuard().getRegionContainer().reload();
+			} catch (Throwable tin) {
+				throw tin;
+			}
 		}
 	}
 

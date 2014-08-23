@@ -46,6 +46,11 @@ import com.sk89q.worldguard.bukkit.WorldGuardPlugin;
 
 public class WGExtender extends JavaPlugin {
 
+	private static WGExtender instance;
+	public static WGExtender getInstance() {
+		return instance;
+	}
+
 	private static Logger log;
 
 	private Config config;
@@ -62,6 +67,9 @@ public class WGExtender extends JavaPlugin {
 
 	@Override
 	public void onEnable() {
+		instance = this;
+		we = (WorldEditPlugin) Bukkit.getPluginManager().getPlugin("WorldEdit");
+		wg = (WorldGuardPlugin) Bukkit.getPluginManager().getPlugin("WorldGuard");
 		log = this.getLogger();
 		AnimalProtectFlag.injectFlag();
 		BlockInteractRestrictFlag.injectFlag();
@@ -72,8 +80,6 @@ public class WGExtender extends JavaPlugin {
 		config.loadConfig();
 		commands = new Commands(this, config);
 		getCommand("wgex").setExecutor(commands);
-		we = (WorldEditPlugin) Bukkit.getPluginManager().getPlugin("WorldEdit");
-		wg = (WorldGuardPlugin) Bukkit.getPluginManager().getPlugin("WorldGuard");
 		getServer().getPluginManager().registerEvents(new WGCommandProcess(this, config), this);
 		getServer().getPluginManager().registerEvents(new RestrictCommandProcess(this, config), this);
 		getServer().getPluginManager().registerEvents(new LiquidFlow(this, config), this);
@@ -97,6 +103,7 @@ public class WGExtender extends JavaPlugin {
 		config = null;
 		we = null;
 		wg = null;
+		instance = null;
 	}
 
 	public static void log(Level level, String message) {

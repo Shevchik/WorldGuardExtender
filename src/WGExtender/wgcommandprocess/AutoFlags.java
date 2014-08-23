@@ -45,7 +45,7 @@ public class AutoFlags {
 			@Override
 			@SuppressWarnings({ "unchecked", "rawtypes" })
 			public void run() {
-				final ProtectedRegion rg = rm.getRegionExact(regionname);
+				final ProtectedRegion rg = rm.getRegion(regionname);
 				if (rg != null) {
 					for (Entry<Flag<?>, String> entry : config.autoflags.entrySet()) {
 						try {
@@ -55,7 +55,10 @@ public class AutoFlags {
 							e.printStackTrace();
 						}
 					}
-					rm.save(true);
+					try {
+						rm.save();
+					} catch (Exception e) {
+					}
 				}
 			}
 		}, 20);

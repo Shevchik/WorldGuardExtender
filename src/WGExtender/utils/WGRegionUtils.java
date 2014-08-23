@@ -71,6 +71,7 @@ public class WGRegionUtils {
 		return true;
 	}
 
+	@SuppressWarnings("deprecation")
 	public static boolean canBuild(WorldGuardPlugin wg, Player player, Location l) {
 		try {
 			return wg.getRegionManager(l.getWorld()).getApplicableRegions(l).canBuild(wg.wrapPlayer(player));
@@ -82,6 +83,7 @@ public class WGRegionUtils {
 	private static Pattern splitWhiteSpace = Pattern.compile("\\s+");
 	private static Pattern splitVertLine = Pattern.compile("[|]");
 	private static Pattern splitColon = Pattern.compile("[:]");
+	@SuppressWarnings("deprecation")
 	public static boolean isFlagAllows(WorldGuardPlugin wg, Player player, Block block, StateFlag flag) {
 		try {
 			ApplicableRegionSet ars = wg.getRegionManager(block.getLocation().getWorld()).getApplicableRegions(block.getLocation());
@@ -113,6 +115,7 @@ public class WGRegionUtils {
 		return true;
 	}
 
+	@SuppressWarnings("deprecation")
 	public static boolean isFlagAllows(WorldGuardPlugin wg, Player player, Entity entity, StateFlag flag) {
 		try {
 			ApplicableRegionSet ars = wg.getRegionManager(entity.getLocation().getWorld()).getApplicableRegions(entity.getLocation());
