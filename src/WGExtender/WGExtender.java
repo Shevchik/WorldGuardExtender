@@ -70,7 +70,7 @@ public class WGExtender extends JavaPlugin {
 		instance = this;
 		we = (WorldEditPlugin) Bukkit.getPluginManager().getPlugin("WorldEdit");
 		wg = (WorldGuardPlugin) Bukkit.getPluginManager().getPlugin("WorldGuard");
-		log = this.getLogger();
+		log = getLogger();
 		AnimalProtectFlag.injectFlag();
 		BlockInteractRestrictFlag.injectFlag();
 		BlockInteractRestrictWhitelistFlag.injectFlag();

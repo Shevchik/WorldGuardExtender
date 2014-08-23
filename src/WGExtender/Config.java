@@ -36,7 +36,7 @@ public class Config {
 
 	private File configfile;
 	public Config(WGExtender plugin) {
-		this.configfile = new File(plugin.getDataFolder(), "config.yml");
+		configfile = new File(plugin.getDataFolder(), "config.yml");
 	}
 
 	public boolean expandvert = false;

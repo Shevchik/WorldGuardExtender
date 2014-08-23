@@ -54,7 +54,7 @@ public class EntityExplode implements Listener {
 
 	@EventHandler(priority = EventPriority.HIGH, ignoreCancelled = true)
 	public void onEntityDamageByExplosion(EntityDamageByEntityEvent e) {
-		if (e.getCause() == DamageCause.BLOCK_EXPLOSION || e.getCause() == DamageCause.ENTITY_EXPLOSION) {
+		if ((e.getCause() == DamageCause.BLOCK_EXPLOSION) || (e.getCause() == DamageCause.ENTITY_EXPLOSION)) {
 			if (!(e.getEntity() instanceof Player)) {
 				if (WGRegionUtils.isInWGRegion(e.getEntity().getLocation())) {
 					e.setCancelled(true);

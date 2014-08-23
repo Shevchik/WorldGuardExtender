@@ -41,13 +41,13 @@ public class LiquidFlow implements Listener {
 	@EventHandler(priority = EventPriority.LOWEST, ignoreCancelled = true)
 	public void onLiquidFlow(BlockFromToEvent e) {
 		Block b = e.getBlock();
-		if (b.getType() == Material.LAVA || b.getType() == Material.STATIONARY_LAVA) {
+		if ((b.getType() == Material.LAVA) || (b.getType() == Material.STATIONARY_LAVA)) {
 			if (config.blocklavaflow) {
 				if (!WGRegionUtils.isInTheSameRegion(b.getLocation(), e.getToBlock().getLocation())) {
 					e.setCancelled(true);
 				}
 			}
-		} else if (b.getType() == Material.WATER || b.getType() == Material.STATIONARY_WATER) {
+		} else if ((b.getType() == Material.WATER) || (b.getType() == Material.STATIONARY_WATER)) {
 			if (config.blockwaterflow) {
 				if (!WGRegionUtils.isInTheSameRegion(b.getLocation(), e.getToBlock().getLocation())) {
 					e.setCancelled(true);

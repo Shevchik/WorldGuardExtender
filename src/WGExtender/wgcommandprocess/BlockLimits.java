@@ -81,7 +81,7 @@ public class BlockLimits {
 	protected static class ProcessedClaimInfo {
 
 		private boolean claimAllowed = true;
-		private BigInteger claimed;
+		private BigInteger size;
 		private BigInteger maxsize;
 
 		public void disallow() {
@@ -93,18 +93,18 @@ public class BlockLimits {
 		}
 
 		public void setInfo(BigInteger claimed, BigInteger max) {
-			this.claimed = claimed;
-			this.maxsize = max;
+			size = claimed;
+			maxsize = max;
 		}
 
 		public String getClaimedSize() {
-			return claimed.toString();
+			return size.toString();
 		}
 
 		public String getMaxSize() {
 			return maxsize.toString();
 		}
 
-	} 
+	}
 
 }

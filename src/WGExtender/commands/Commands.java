@@ -52,19 +52,19 @@ public class Commands implements CommandExecutor {
 			sender.sendMessage(ChatColor.RED+"Недостаточно прав");
 			return true;
 		}
-		if (args.length == 1 && args[0].equalsIgnoreCase("help")) {
+		if ((args.length == 1) && args[0].equalsIgnoreCase("help")) {
 			sender.sendMessage(ChatColor.BLUE + "[SENDER:ANY] wgex reload - перезагрузить конфиг");
 			sender.sendMessage(ChatColor.BLUE + "[SENDER:PLAYER] wgex search - ищет регионы в выделенной области");
 			sender.sendMessage(ChatColor.BLUE + "[SENDER:ANY] wgex setflag {world} {flag} {value}  - устанавливает флаг {flag} со значением {value} на все регионы в мире {world}");
 			return true;
-		} else if (args.length == 1 && args[0].equalsIgnoreCase("reload")) {
+		} else if ((args.length == 1) && args[0].equalsIgnoreCase("reload")) {
 			config.loadConfig();
 			sender.sendMessage(ChatColor.BLUE + "Конфиг перезагружен");
 			return true;
-		} else if (args.length == 1 && args[0].equalsIgnoreCase("search")) {
+		} else if ((args.length == 1) && args[0].equalsIgnoreCase("search")) {
 			if (sender instanceof Player) {
 				List<String> regions = RegionsInAreaSearch.getRegionsInPlayerSelection(main.getWorldEdit(), main.getWorldGuard(), (Player) sender);
-				if (regions == null || regions.size() == 0) {
+				if ((regions == null) || (regions.size() == 0)) {
 					sender.sendMessage(ChatColor.BLUE + "Регионов пересекающихся с выделенной зоной не найдено");
 					return true;
 				} else {
@@ -72,7 +72,7 @@ public class Commands implements CommandExecutor {
 					return true;
 				}
 			}
-		} else if (args.length >= 4 && args[0].equalsIgnoreCase("setflag")) {
+		} else if ((args.length >= 4) && args[0].equalsIgnoreCase("setflag")) {
 			World world = Bukkit.getWorld(args[1]);
 			if (world != null) {
 				for (Flag<?> flag : DefaultFlag.getFlags()) {
@@ -99,7 +99,7 @@ public class Commands implements CommandExecutor {
 	}
 
 	private boolean canExecute(CommandSender sender) {
-		if (sender instanceof ConsoleCommandSender || sender instanceof RemoteConsoleCommandSender) {
+		if ((sender instanceof ConsoleCommandSender) || (sender instanceof RemoteConsoleCommandSender)) {
 			return true;
 		} else if (sender instanceof Player) {
 			if (sender.isOp() || sender.hasPermission("wgextender.admin")) {

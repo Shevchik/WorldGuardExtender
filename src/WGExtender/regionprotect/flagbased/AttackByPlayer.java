@@ -45,7 +45,7 @@ public class AttackByPlayer implements Listener {
 			return;
 		}
 		Entity entity = e.getEntity();
-		if ((entity instanceof Animals || entity instanceof Villager) && WGRegionUtils.isInWGRegion(entity.getLocation())) {
+		if (((entity instanceof Animals) || (entity instanceof Villager)) && WGRegionUtils.isInWGRegion(entity.getLocation())) {
 			Player damagerplayer = null;
 			Entity edamager = e.getDamager();
 			if (edamager instanceof Player) {
