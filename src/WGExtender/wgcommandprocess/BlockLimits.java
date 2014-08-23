@@ -54,7 +54,7 @@ public class BlockLimits {
 		size = size.multiply(BigInteger.valueOf(max.getBlockY()).subtract(BigInteger.valueOf(min.getBlockY())));
 		if (size.compareTo(BigInteger.valueOf(Integer.MAX_VALUE)) > 0) {
 			info.disallow();
-			info.setInfo(size, BigInteger.valueOf(Integer.MAX_VALUE));
+			info.setInfo(size, BigInteger.valueOf(-1));
 			return info;
 		}
 		if (config.blocklimitsenabled) {

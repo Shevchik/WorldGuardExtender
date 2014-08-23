@@ -71,7 +71,9 @@ public class WGCommandProcess implements Listener {
 		ProcessedClaimInfo info = blocklimits.processClaimInfo(config, event.getPlayer());
 		if (!info.isClaimAllowed()) {
 			event.getPlayer().sendMessage(ChatColor.RED + "Вы не можете заприватить такой большой регион");
-			event.getPlayer().sendMessage(ChatColor.RED + "Ваш лимит: "+info.getMaxSize()+", вы попытались заприватить: "+info.getClaimedSize());
+			if (!info.getMaxSize().equals("-1")) {
+				event.getPlayer().sendMessage(ChatColor.RED + "Ваш лимит: "+info.getMaxSize()+", вы попытались заприватить: "+info.getClaimedSize());
+			}
 			event.setCancelled(true);
 			return;
 		}
