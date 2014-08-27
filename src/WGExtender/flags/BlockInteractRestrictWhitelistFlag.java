@@ -17,6 +17,11 @@
 
 package WGExtender.flags;
 
+import java.util.HashMap;
+import java.util.HashSet;
+import java.util.regex.Pattern;
+
+import org.bukkit.Material;
 import org.bukkit.command.CommandSender;
 
 import com.sk89q.worldguard.bukkit.WorldGuardPlugin;
@@ -49,8 +54,7 @@ public class BlockInteractRestrictWhitelistFlag extends Flag<String> {
 	}
 
 	@Override
-	public String parseInput(WorldGuardPlugin wg, CommandSender sender,
-			String args) throws InvalidFlagFormat {
+	public String parseInput(WorldGuardPlugin wg, CommandSender sender, String args) throws InvalidFlagFormat {
 		return args;
 	}
 
@@ -61,6 +65,33 @@ public class BlockInteractRestrictWhitelistFlag extends Flag<String> {
 		} else {
 			return null;
 		}
+	}
+
+	private static Pattern splitWhiteSpace = Pattern.compile("\\s+");
+	private static Pattern splitVertLine = Pattern.compile("[|]");
+	private static Pattern splitColon = Pattern.compile("[:]");
+	public static HashMap<Material, HashSet<Material>> parseWhitelist(String value) {
+		HashMap<Material, HashSet<Material>> map = new HashMap<Material, HashSet<Material>>();
+		String[] whitelistEntries = splitWhiteSpace.split(value);
+		for (String whitelistEntry : whitelistEntries) {
+			String[] allowedDataSplit = splitVertLine.split(whitelistEntry);
+			String blockMaterialName = allowedDataSplit[0];
+			Material blockmaterial = Material.getMaterial(blockMaterialName);
+			if (blockmaterial != null) {
+				map.put(blockmaterial, new HashSet<Material>());
+				if (allowedDataSplit.length == 2) {
+					String whitelistHandEntries = allowedDataSplit[1];
+					String[] handMaterialNames = splitColon.split(whitelistHandEntries);
+					for (String handMaterialName : handMaterialNames) {
+						Material handmaterial = Material.getMaterial(handMaterialName);
+						if (handmaterial != null) {
+							map.get(blockmaterial).add(handmaterial);
+						}
+					}
+				}
+			}
+		}
+		return map;
 	}
 
 }

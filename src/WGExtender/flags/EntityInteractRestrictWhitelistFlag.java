@@ -17,7 +17,11 @@
 
 package WGExtender.flags;
 
+import java.util.HashSet;
+import java.util.regex.Pattern;
+
 import org.bukkit.command.CommandSender;
+import org.bukkit.entity.EntityType;
 
 import com.sk89q.worldguard.bukkit.WorldGuardPlugin;
 import com.sk89q.worldguard.protection.flags.Flag;
@@ -60,6 +64,19 @@ public class EntityInteractRestrictWhitelistFlag extends Flag<String> {
 		} else {
 			return null;
 		}
+	}
+
+	private static Pattern splitWhiteSpace = Pattern.compile("\\s+");
+	public static HashSet<EntityType> parseWhitelist(String value) {
+		HashSet<EntityType> set = new HashSet<EntityType>();
+		String[] entityTypeNames = splitWhiteSpace.split(value);
+		for (String entityTypeName : entityTypeNames) {
+			EntityType entityType = EntityType.fromName(entityTypeName);
+			if (entityType != null) {
+				set.add(entityType);
+			}
+		}
+		return set;
 	}
 
 }
