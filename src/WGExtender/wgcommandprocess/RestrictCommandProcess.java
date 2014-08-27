@@ -44,11 +44,11 @@ public class RestrictCommandProcess implements Listener {
 		if (WGRegionUtils.canBypassProtection(player)) {
 			return;
 		}
-		if (WGRegionUtils.isInWGRegion(player.getLocation())) {
+		if (WGRegionUtils.isInWGRegion(player.getLocation()) && !WGRegionUtils.canBuild(player, player.getLocation())) {
 			String message = event.getMessage();
 			message = message.replaceFirst("/", "").toLowerCase();
 			for (String rcommand : config.restrictedcommands) {
-				if (message.startsWith(rcommand) && !WGRegionUtils.canBuild(player, player.getLocation())) {
+				if (message.startsWith(rcommand)) {
 					event.setCancelled(true);
 					player.sendMessage(ChatColor.RED + "Вы не можете использовать эту команду на чужом регионе");
 					return;
