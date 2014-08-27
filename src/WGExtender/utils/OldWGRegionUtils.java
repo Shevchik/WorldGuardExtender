@@ -19,12 +19,15 @@ package WGExtender.utils;
 
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
+import java.util.HashMap;
+import java.util.HashSet;
 import java.util.logging.Level;
-import java.util.regex.Pattern;
 
 import org.bukkit.Location;
+import org.bukkit.Material;
 import org.bukkit.block.Block;
 import org.bukkit.entity.Entity;
+import org.bukkit.entity.EntityType;
 import org.bukkit.entity.Player;
 
 import WGExtender.WGExtender;
@@ -85,42 +88,33 @@ public class OldWGRegionUtils implements WGRegionUtilsInterface {
 		return false;
 	}
 
-	private Pattern splitWhiteSpace = Pattern.compile("\\s+");
-	private Pattern splitVertLine = Pattern.compile("[|]");
-	private Pattern splitColon = Pattern.compile("[:]");
-
 	@Override
 	public boolean isFlagAllows(Player player, Block block, StateFlag flag) {
 		try {
+			LocalPlayer localPlayer = WGExtender.getInstance().getWorldGuard().wrapPlayer(player);
 			Object ars = getARS(block.getLocation());
 			if (flag instanceof BlockInteractRestrictFlag) {
-				String blockName = block.getType().toString();
 				Method getFlagMethod = ars.getClass().getMethod("getFlag", Flag.class);
 				getFlagMethod.setAccessible(true);
-				String allowed = (String) getFlagMethod.invoke(ars, BlockInteractRestrictWhitelistFlag.getInstance());
-				if (allowed != null) {
-					String[] allowedNames = splitWhiteSpace.split(allowed);
-					for (String allowedName : allowedNames) {
-						String[] allowedNameSplit = splitVertLine.split(allowedName);
-						if (allowedNameSplit[0].equals(blockName)) {
-							if (allowedNameSplit.length == 2) {
-								String[] allowedHandNames = splitColon.split(allowedNameSplit[1]);
-								for (String allowedHandName : allowedHandNames) {
-									if (allowedHandName.equals(player.getItemInHand().getType().toString())) {
-										return true;
-									}
-								}
-							} else {
-								return true;
-							}
+				String whitelistValue = (String) getFlagMethod.invoke(ars, BlockInteractRestrictWhitelistFlag.getInstance());
+				if (whitelistValue != null) {
+					HashMap<Material, HashSet<Material>> whitelistData = BlockInteractRestrictWhitelistFlag.parseWhitelist(whitelistValue);
+					Material blockMaterial = block.getType();
+					Material handMaterial = player.getItemInHand() == null ? Material.AIR : player.getItemInHand().getType();
+					if (whitelistData.containsKey(blockMaterial)) {
+						HashSet<Material> allowedHandMaterials = whitelistData.get(blockMaterial);
+						if (allowedHandMaterials.size() == 0) {
+							return true;
+						}
+						if (allowedHandMaterials.contains(handMaterial)) {
+							return true;
 						}
 					}
 				}
 			}
-			LocalPlayer weplayer = WGExtender.getInstance().getWorldGuard().wrapPlayer(player);
-			Method allowsMethod = ars.getClass().getMethod("allows", weplayer.getClass());
+			Method allowsMethod = ars.getClass().getMethod("allows", localPlayer.getClass());
 			allowsMethod.setAccessible(true);
-			return (boolean) allowsMethod.invoke(ars, weplayer);
+			return (boolean) allowsMethod.invoke(ars, localPlayer);
 		} catch (Exception e) {
 			WGExtender.log(Level.SEVERE, "Unable to check isFlagAllows");
 			WGExtender.log(Level.SEVERE, e.getMessage());
@@ -131,25 +125,23 @@ public class OldWGRegionUtils implements WGRegionUtilsInterface {
 	@Override
 	public boolean isFlagAllows(Player player, Entity entity, StateFlag flag) {
 		try {
+			LocalPlayer localPlayer = WGExtender.getInstance().getWorldGuard().wrapPlayer(player);
 			Object ars = getARS(entity.getLocation());
 			if (flag instanceof EntityInteractRestrictFlag) {
-				String entityName = entity.getType().getName();
 				Method getFlagMethod = ars.getClass().getMethod("getFlag", Flag.class);
 				getFlagMethod.setAccessible(true);
-				String allowedNames = (String) getFlagMethod.invoke(EntityInteractRestrictWhitelistFlag.getInstance());
-				if (allowedNames != null) {
-					String[] allowedNamesSplit = splitWhiteSpace.split(allowedNames);
-					for (String allowedName : allowedNamesSplit) {
-						if (allowedName.equals(entityName)) {
-							return true;
-						}
+				String whitelistValue = (String) getFlagMethod.invoke(EntityInteractRestrictWhitelistFlag.getInstance());
+				if (whitelistValue != null) {
+					HashSet<EntityType> whitelistData = EntityInteractRestrictWhitelistFlag.parseWhitelist(whitelistValue);
+					EntityType entityType = entity.getType();
+					if (whitelistData.contains(entityType)) {
+						return true;
 					}
 				}
 			}
-			LocalPlayer weplayer = WGExtender.getInstance().getWorldGuard().wrapPlayer(player);
-			Method allowsMethod = ars.getClass().getMethod("allows", weplayer.getClass());
+			Method allowsMethod = ars.getClass().getMethod("allows", localPlayer.getClass());
 			allowsMethod.setAccessible(true);
-			return (boolean) allowsMethod.invoke(ars, weplayer);
+			return (boolean) allowsMethod.invoke(ars, localPlayer);
 		} catch (Exception e) {
 			WGExtender.log(Level.SEVERE, "Unable to check isFlagAllows");
 			WGExtender.log(Level.SEVERE, e.getMessage());
