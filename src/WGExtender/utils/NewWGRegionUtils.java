@@ -72,8 +72,7 @@ public class NewWGRegionUtils implements WGRegionUtilsInterface {
 	@Override
 	public boolean isFlagAllows(Player player, Block block, StateFlag flag) {
 		try {
-			WorldGuardPlugin wg = WGExtender.getInstance().getWorldGuard();
-			LocalPlayer localPlayer = wg.wrapPlayer(player, true);
+			LocalPlayer localPlayer = WGExtender.getInstance().getWorldGuard().wrapPlayer(player, true);
 			ApplicableRegionSet ars = getARS(block.getLocation());
 			if (flag instanceof BlockInteractRestrictFlag) {
 				String whitelistValue = ars.queryValue(localPlayer, BlockInteractRestrictWhitelistFlag.getInstance());
@@ -101,10 +100,10 @@ public class NewWGRegionUtils implements WGRegionUtilsInterface {
 	@Override
 	public boolean isFlagAllows(Player player, Entity entity, StateFlag flag) {
 		try {
-			WorldGuardPlugin wg = WGExtender.getInstance().getWorldGuard();
+			LocalPlayer localPlayer = WGExtender.getInstance().getWorldGuard().wrapPlayer(player, true);
 			ApplicableRegionSet ars = getARS(entity.getLocation());
 			if (flag instanceof EntityInteractRestrictFlag) {
-				String whitelistValue = ars.queryValue(wg.wrapPlayer(player, true), EntityInteractRestrictWhitelistFlag.getInstance());
+				String whitelistValue = ars.queryValue(localPlayer, EntityInteractRestrictWhitelistFlag.getInstance());
 				if (whitelistValue != null) {
 					HashSet<EntityType> whitelistData = EntityInteractRestrictWhitelistFlag.parseWhitelist(whitelistValue);
 					EntityType entityType = entity.getType();
@@ -113,7 +112,7 @@ public class NewWGRegionUtils implements WGRegionUtilsInterface {
 					}
 				}
 			}
-			return (ars.testState(wg.wrapPlayer(player, true), flag));
+			return (ars.testState(localPlayer, flag));
 		} catch (Exception e) {
 		}
 		return true;
