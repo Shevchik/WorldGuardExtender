@@ -55,6 +55,7 @@ public class OldWGRegionUtils implements WGRegionUtilsInterface {
 			return (int) sizeMethod.invoke(ars) > 0;
 		} catch (Exception e) {
 			WGExtender.log(Level.SEVERE, "Unable to check isInWGRegion");
+			e.printStackTrace();
 		}
 		return false;
 	}
@@ -67,6 +68,7 @@ public class OldWGRegionUtils implements WGRegionUtilsInterface {
 			return ars1.equals(ars2);
 		} catch (Exception e) {
 			WGExtender.log(Level.SEVERE, "Unable to check isInTheSameRegion");
+			e.printStackTrace();
 		}
 		return false;
 	}
@@ -81,6 +83,7 @@ public class OldWGRegionUtils implements WGRegionUtilsInterface {
 			return (boolean) canBuildMethod.invoke(ars, localPlayer);
 		} catch (Exception e) {
 			WGExtender.log(Level.SEVERE, "Unable to check canBuild");
+			e.printStackTrace();
 		}
 		return false;
 	}
@@ -141,6 +144,7 @@ public class OldWGRegionUtils implements WGRegionUtilsInterface {
 			return (boolean) allowsMethod.invoke(ars, EntityInteractRestrictFlag.getInstance(), localPlayer);
 		} catch (Exception e) {
 			WGExtender.log(Level.SEVERE, "Unable to check isFlagAllows");
+			e.printStackTrace();
 		}
 		return true;
 	}
