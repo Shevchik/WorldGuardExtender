@@ -32,6 +32,7 @@ import WGExtender.flags.EntityInteractRestrictWhitelistFlag;
 
 import com.sk89q.worldguard.bukkit.WorldGuardPlugin;
 import com.sk89q.worldguard.protection.ApplicableRegionSet;
+import com.sk89q.worldguard.protection.flags.DefaultFlag;
 import com.sk89q.worldguard.protection.flags.StateFlag;
 
 public class NewWGRegionUtils implements WGRegionUtilsInterface {
@@ -54,12 +55,11 @@ public class NewWGRegionUtils implements WGRegionUtilsInterface {
 		return true;
 	}
 
-	@SuppressWarnings("deprecation")
 	@Override
 	public boolean canBuild(Player player, Location l) {
 		try {
 			WorldGuardPlugin wg = WGExtender.getInstance().getWorldGuard();
-			return getARS(l).canBuild(wg.wrapPlayer(player));
+			return getARS(l).testState(wg.wrapPlayer(player, true), DefaultFlag.BUILD);
 		} catch (Exception e) {
 		}
 		return false;
@@ -69,7 +69,6 @@ public class NewWGRegionUtils implements WGRegionUtilsInterface {
 	private Pattern splitVertLine = Pattern.compile("[|]");
 	private Pattern splitColon = Pattern.compile("[:]");
 
-	@SuppressWarnings("deprecation")
 	@Override
 	public boolean isFlagAllows(Player player, Block block, StateFlag flag) {
 		try {
@@ -77,7 +76,7 @@ public class NewWGRegionUtils implements WGRegionUtilsInterface {
 			ApplicableRegionSet ars = getARS(block.getLocation());
 			if (flag instanceof BlockInteractRestrictFlag) {
 				String blockName = block.getType().toString();
-				String allowed = ars.getFlag(BlockInteractRestrictWhitelistFlag.instance);
+				String allowed = ars.queryValue(wg.wrapPlayer(player, true), BlockInteractRestrictWhitelistFlag.instance);
 				if (allowed != null) {
 					String[] allowedNames = splitWhiteSpace.split(allowed);
 					for (String allowedName : allowedNames) {
@@ -97,13 +96,12 @@ public class NewWGRegionUtils implements WGRegionUtilsInterface {
 					}
 				}
 			}
-			return (ars.allows(flag, wg.wrapPlayer(player)));
+			return (ars.testState(wg.wrapPlayer(player, true), flag));
 		} catch (Exception e) {
 		}
 		return true;
 	}
 
-	@SuppressWarnings("deprecation")
 	@Override
 	public boolean isFlagAllows(Player player, Entity entity, StateFlag flag) {
 		try {
@@ -111,7 +109,7 @@ public class NewWGRegionUtils implements WGRegionUtilsInterface {
 			ApplicableRegionSet ars = getARS(entity.getLocation());
 			if (flag instanceof EntityInteractRestrictFlag) {
 				String entityName = entity.getType().getName();
-				String allowedNames = ars.getFlag(EntityInteractRestrictWhitelistFlag.instance);
+				String allowedNames = ars.queryValue(wg.wrapPlayer(player, true), EntityInteractRestrictWhitelistFlag.instance);
 				if (allowedNames != null) {
 					String[] allowedNamesSplit = splitWhiteSpace.split(allowedNames);
 					for (String allowedName : allowedNamesSplit) {
@@ -121,7 +119,7 @@ public class NewWGRegionUtils implements WGRegionUtilsInterface {
 					}
 				}
 			}
-			return (ars.allows(flag, wg.wrapPlayer(player)));
+			return (ars.testState(wg.wrapPlayer(player, true), flag));
 		} catch (Exception e) {
 		}
 		return true;
