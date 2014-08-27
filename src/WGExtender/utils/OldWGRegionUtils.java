@@ -109,7 +109,7 @@ public class OldWGRegionUtils implements WGRegionUtilsInterface {
 					}
 				}
 			}
-			Method allowsMethod = ars.getClass().getMethod("allows", StateFlag.class, LocalPlayer.class);
+			Method allowsMethod = getAllowsMethod(ars);
 			allowsMethod.setAccessible(true);
 			return (boolean) allowsMethod.invoke(ars, BlockInteractRestrictFlag.getInstance(), localPlayer);
 		} catch (Exception e) {
@@ -136,7 +136,7 @@ public class OldWGRegionUtils implements WGRegionUtilsInterface {
 					}
 				}
 			}
-			Method allowsMethod = ars.getClass().getMethod("allows", StateFlag.class, LocalPlayer.class);
+			Method allowsMethod = getAllowsMethod(ars);
 			allowsMethod.setAccessible(true);
 			return (boolean) allowsMethod.invoke(ars, EntityInteractRestrictFlag.getInstance(), localPlayer);
 		} catch (Exception e) {
@@ -152,6 +152,15 @@ public class OldWGRegionUtils implements WGRegionUtilsInterface {
 		Method getARSMethod = rm.getClass().getMethod("getApplicableRegions", Vector.class);
 		getARSMethod.setAccessible(true);
 		return getARSMethod.invoke(rm, wevect);
+	}
+
+	private Method getAllowsMethod(Object ars) {
+		for (Method method : ars.getClass().getMethods()) {
+			if (method.getName().equals("allows") && method.getParameterTypes().length == 2) {
+				return method;
+			}
+		}
+		return null;
 	}
 
 }
