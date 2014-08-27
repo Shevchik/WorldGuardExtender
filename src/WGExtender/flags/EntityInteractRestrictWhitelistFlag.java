@@ -29,7 +29,10 @@ import com.sk89q.worldguard.protection.flags.InvalidFlagFormat;
 
 public class EntityInteractRestrictWhitelistFlag extends Flag<String> {
 
-	public static EntityInteractRestrictWhitelistFlag instance = null;
+	private static EntityInteractRestrictWhitelistFlag instance = null;
+	public static EntityInteractRestrictWhitelistFlag getInstance() {
+		return instance;
+	}
 
 	public static void injectFlag() {
 		instance = new EntityInteractRestrictWhitelistFlag();

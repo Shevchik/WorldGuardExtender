@@ -30,7 +30,10 @@ import com.sk89q.worldguard.protection.flags.InvalidFlagFormat;
 
 public class BlockInteractRestrictWhitelistFlag extends Flag<String> {
 
-	public static BlockInteractRestrictWhitelistFlag instance = null;
+	private static BlockInteractRestrictWhitelistFlag instance = null;
+	public static BlockInteractRestrictWhitelistFlag getInstance() {
+		return instance;
+	}
 
 	public static void injectFlag() {
 		instance = new BlockInteractRestrictWhitelistFlag();

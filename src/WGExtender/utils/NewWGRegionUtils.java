@@ -76,7 +76,7 @@ public class NewWGRegionUtils implements WGRegionUtilsInterface {
 			LocalPlayer localPlayer = wg.wrapPlayer(player, true);
 			ApplicableRegionSet ars = getARS(block.getLocation());
 			if (flag instanceof BlockInteractRestrictFlag) {
-				String whitelistValue = ars.queryValue(localPlayer, BlockInteractRestrictWhitelistFlag.instance);
+				String whitelistValue = ars.queryValue(localPlayer, BlockInteractRestrictWhitelistFlag.getInstance());
 				if (whitelistValue != null) {
 					HashMap<Material, HashSet<Material>> whitelistData = BlockInteractRestrictWhitelistFlag.parseWhitelist(whitelistValue);
 					Material blockMaterial = block.getType();
@@ -104,7 +104,7 @@ public class NewWGRegionUtils implements WGRegionUtilsInterface {
 			WorldGuardPlugin wg = WGExtender.getInstance().getWorldGuard();
 			ApplicableRegionSet ars = getARS(entity.getLocation());
 			if (flag instanceof EntityInteractRestrictFlag) {
-				String whitelistValue = ars.queryValue(wg.wrapPlayer(player, true), EntityInteractRestrictWhitelistFlag.instance);
+				String whitelistValue = ars.queryValue(wg.wrapPlayer(player, true), EntityInteractRestrictWhitelistFlag.getInstance());
 				if (whitelistValue != null) {
 					HashSet<EntityType> whitelistData = EntityInteractRestrictWhitelistFlag.parseWhitelist(whitelistValue);
 					EntityType entityType = entity.getType();

@@ -21,7 +21,10 @@ import com.sk89q.worldguard.protection.flags.StateFlag;
 
 public class AnimalProtectFlag extends StateFlag {
 
-	public static AnimalProtectFlag instance = null;
+	private static AnimalProtectFlag instance = null;
+	public static AnimalProtectFlag getInstance() {
+		return instance;
+	}
 
 	public static void injectFlag() {
 		instance = new AnimalProtectFlag();

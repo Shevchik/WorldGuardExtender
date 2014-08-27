@@ -97,7 +97,7 @@ public class OldWGRegionUtils implements WGRegionUtilsInterface {
 				String blockName = block.getType().toString();
 				Method getFlagMethod = ars.getClass().getMethod("getFlag", Flag.class);
 				getFlagMethod.setAccessible(true);
-				String allowed = (String) getFlagMethod.invoke(ars, BlockInteractRestrictWhitelistFlag.instance);
+				String allowed = (String) getFlagMethod.invoke(ars, BlockInteractRestrictWhitelistFlag.getInstance());
 				if (allowed != null) {
 					String[] allowedNames = splitWhiteSpace.split(allowed);
 					for (String allowedName : allowedNames) {
@@ -136,7 +136,7 @@ public class OldWGRegionUtils implements WGRegionUtilsInterface {
 				String entityName = entity.getType().getName();
 				Method getFlagMethod = ars.getClass().getMethod("getFlag", Flag.class);
 				getFlagMethod.setAccessible(true);
-				String allowedNames = (String) getFlagMethod.invoke(EntityInteractRestrictWhitelistFlag.instance);
+				String allowedNames = (String) getFlagMethod.invoke(EntityInteractRestrictWhitelistFlag.getInstance());
 				if (allowedNames != null) {
 					String[] allowedNamesSplit = splitWhiteSpace.split(allowedNames);
 					for (String allowedName : allowedNamesSplit) {

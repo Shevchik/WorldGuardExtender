@@ -58,7 +58,7 @@ public class AttackByPlayer implements Listener {
 			}
 			if (damagerplayer != null) {
 				if (!WGRegionUtils.canBypassProtection(damagerplayer)) {
-					if (!WGRegionUtils.isFlagAllows(damagerplayer, entity, AnimalProtectFlag.instance)) {
+					if (!WGRegionUtils.isFlagAllows(damagerplayer, entity, AnimalProtectFlag.getInstance())) {
 						e.setCancelled(true);
 					}
 				}

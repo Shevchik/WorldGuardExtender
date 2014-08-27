@@ -21,7 +21,10 @@ import com.sk89q.worldguard.protection.flags.StateFlag;
 
 public class EntityInteractRestrictFlag extends StateFlag {
 
-	public static EntityInteractRestrictFlag instance = null;
+	private static EntityInteractRestrictFlag instance = null;
+	public static EntityInteractRestrictFlag getInstance() {
+		return instance;
+	}
 
 	public static void injectFlag() {
 		instance = new EntityInteractRestrictFlag();
