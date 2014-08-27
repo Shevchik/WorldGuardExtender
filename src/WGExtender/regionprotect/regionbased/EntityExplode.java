@@ -39,7 +39,7 @@ public class EntityExplode implements Listener {
 		this.config = config;
 	}
 
-	@EventHandler(priority = EventPriority.HIGH, ignoreCancelled = true)
+	@EventHandler(priority = EventPriority.LOW, ignoreCancelled = true)
 	public void onEntityExplode(EntityExplodeEvent e) {
 		if (!config.blockentityexplosionblockdamage) {
 			return;
@@ -52,7 +52,7 @@ public class EntityExplode implements Listener {
 		}
 	}
 
-	@EventHandler(priority = EventPriority.HIGH, ignoreCancelled = true)
+	@EventHandler(priority = EventPriority.LOW, ignoreCancelled = true)
 	public void onEntityDamageByExplosion(EntityDamageByEntityEvent e) {
 		if ((e.getCause() == DamageCause.BLOCK_EXPLOSION) || (e.getCause() == DamageCause.ENTITY_EXPLOSION)) {
 			if (!(e.getEntity() instanceof Player)) {

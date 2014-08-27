@@ -36,7 +36,7 @@ public class PlayerInteractBlocks implements Listener {
 		this.config = config;
 	}
 
-	@EventHandler(priority = EventPriority.HIGH, ignoreCancelled = true)
+	@EventHandler(priority = EventPriority.LOW, ignoreCancelled = true)
 	public void onPlayerInteract(PlayerInteractEvent e) {
 		if (!config.blockrestrictflag) {
 			return;

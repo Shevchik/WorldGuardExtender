@@ -36,7 +36,7 @@ public class PlayerInteractEntities implements Listener {
 		this.config = config;
 	}
 
-	@EventHandler(priority = EventPriority.HIGH, ignoreCancelled = true)
+	@EventHandler(priority = EventPriority.LOW, ignoreCancelled = true)
 	public void onPlayerInteract(PlayerInteractEntityEvent event) {
 		if (!config.entityrestrictflag) {
 			return;

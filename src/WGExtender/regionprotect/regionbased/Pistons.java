@@ -38,7 +38,7 @@ public class Pistons implements Listener {
 		this.config = config;
 	}
 
-	@EventHandler(priority = EventPriority.LOWEST, ignoreCancelled = true)
+	@EventHandler(priority = EventPriority.LOW, ignoreCancelled = true)
 	public void onExtend(BlockPistonExtendEvent e) {
 		if (!config.blockpistonmoveblock) {
 			return;
@@ -61,7 +61,7 @@ public class Pistons implements Listener {
 		}
 	}
 
-	@EventHandler(priority = EventPriority.LOWEST, ignoreCancelled = true)
+	@EventHandler(priority = EventPriority.LOW, ignoreCancelled = true)
 	public void onRetract(BlockPistonRetractEvent e) {
 		if (!config.blockpistonmoveblock) {
 			return;

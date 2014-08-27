@@ -33,7 +33,7 @@ public class BlockBurn implements Listener {
 		this.config = config;
 	}
 
-	@EventHandler(priority = EventPriority.LOWEST, ignoreCancelled = true)
+	@EventHandler(priority = EventPriority.LOW, ignoreCancelled = true)
 	public void onBlockBurn(BlockBurnEvent e) {
 		if (!config.blockblockburninregion) {
 			return;

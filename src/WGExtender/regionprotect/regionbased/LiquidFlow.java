@@ -38,7 +38,7 @@ public class LiquidFlow implements Listener {
 		this.config = config;
 	}
 
-	@EventHandler(priority = EventPriority.LOWEST, ignoreCancelled = true)
+	@EventHandler(priority = EventPriority.LOW, ignoreCancelled = true)
 	public void onLiquidFlow(BlockFromToEvent e) {
 		Block b = e.getBlock();
 		if ((b.getType() == Material.LAVA) || (b.getType() == Material.STATIONARY_LAVA)) {
@@ -56,7 +56,7 @@ public class LiquidFlow implements Listener {
 		}
 	}
 
-	@EventHandler(priority = EventPriority.LOWEST, ignoreCancelled = true)
+	@EventHandler(priority = EventPriority.LOW, ignoreCancelled = true)
 	public void onDispenserDispense(BlockDispenseEvent e) {
 		ItemStack item = e.getItem();
 		Block b = e.getBlock();

@@ -34,7 +34,7 @@ public class FireSpread implements Listener {
 		this.config = config;
 	}
 
-	@EventHandler(priority = EventPriority.LOWEST, ignoreCancelled = true)
+	@EventHandler(priority = EventPriority.LOW, ignoreCancelled = true)
 	public void onBlockIgniteBySpread(BlockSpreadEvent e) {
 		if (e.getNewState().getType() == Material.FIRE) {
 			if (config.blockfirespreadtoregion) {

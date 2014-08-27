@@ -39,7 +39,7 @@ public class AttackByPlayer implements Listener {
 		this.config = config;
 	}
 
-	@EventHandler(priority = EventPriority.HIGH, ignoreCancelled = true)
+	@EventHandler(priority = EventPriority.LOW, ignoreCancelled = true)
 	public void onEntityDamage(EntityDamageByEntityEvent e) {
 		if (!config.animalprotectflag) {
 			return;
