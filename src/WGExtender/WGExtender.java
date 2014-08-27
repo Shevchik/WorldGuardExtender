@@ -29,6 +29,7 @@ import WGExtender.flags.BlockInteractRestrictFlag;
 import WGExtender.flags.BlockInteractRestrictWhitelistFlag;
 import WGExtender.flags.EntityInteractRestrictFlag;
 import WGExtender.flags.EntityInteractRestrictWhitelistFlag;
+import WGExtender.flags.FlagInjector;
 import WGExtender.regionprotect.flagbased.AttackByPlayer;
 import WGExtender.regionprotect.flagbased.PlayerInteractBlocks;
 import WGExtender.regionprotect.flagbased.PlayerInteractEntities;
@@ -76,6 +77,7 @@ public class WGExtender extends JavaPlugin {
 		BlockInteractRestrictWhitelistFlag.injectFlag();
 		EntityInteractRestrictFlag.injectFlag();
 		EntityInteractRestrictWhitelistFlag.injectFlag();
+		FlagInjector.reloadRegions();
 		config = new Config(this);
 		config.loadConfig();
 		commands = new Commands(config);
@@ -100,6 +102,7 @@ public class WGExtender extends JavaPlugin {
 		BlockInteractRestrictWhitelistFlag.uninjectFlag();
 		EntityInteractRestrictFlag.uninjectFlag();
 		EntityInteractRestrictWhitelistFlag.uninjectFlag();
+		FlagInjector.reloadRegions();
 		config = null;
 		we = null;
 		wg = null;

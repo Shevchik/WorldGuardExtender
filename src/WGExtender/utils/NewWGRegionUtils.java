@@ -17,9 +17,7 @@
 
 package WGExtender.utils;
 
-import java.lang.reflect.InvocationTargetException;
-import java.lang.reflect.Method;
-import java.util.logging.Level;
+import java.util.List;
 import java.util.regex.Pattern;
 
 import org.bukkit.Location;
@@ -33,26 +31,19 @@ import WGExtender.flags.BlockInteractRestrictWhitelistFlag;
 import WGExtender.flags.EntityInteractRestrictFlag;
 import WGExtender.flags.EntityInteractRestrictWhitelistFlag;
 
-import com.sk89q.worldedit.Vector;
 import com.sk89q.worldedit.bukkit.BukkitUtil;
-import com.sk89q.worldguard.LocalPlayer;
 import com.sk89q.worldguard.bukkit.WorldGuardPlugin;
-import com.sk89q.worldguard.protection.flags.Flag;
+import com.sk89q.worldguard.protection.ApplicableRegionSet;
 import com.sk89q.worldguard.protection.flags.StateFlag;
-import com.sk89q.worldguard.protection.managers.RegionManager;
 
 public class NewWGRegionUtils implements WGRegionUtilsInterface {
 
 	@Override
 	public boolean isInWGRegion(Location l) {
 		try {
-			Object ars = getARS(l);
-			Method sizeMethod = ars.getClass().getDeclaredMethod("size");
-			sizeMethod.setAccessible(true);
-			return (int) sizeMethod.invoke(ars) > 0;
+			WorldGuardPlugin wg = WGExtender.getInstance().getWorldGuard();
+			return wg.getRegionManager(l.getWorld()).getApplicableRegions(l).size() > 0;
 		} catch (Exception e) {
-			WGExtender.log(Level.SEVERE, "Unable to check isInWGRegion");
-			WGExtender.log(Level.SEVERE, e.getMessage());
 		}
 		return false;
 	}
@@ -60,27 +51,21 @@ public class NewWGRegionUtils implements WGRegionUtilsInterface {
 	@Override
 	public boolean isInTheSameRegion(Location l1, Location l2) {
 		try {
-			Object ars1 = getARS(l1);
-			Object ars2 = getARS(l2);
-			return ars1.equals(ars2);
+			WorldGuardPlugin wg = WGExtender.getInstance().getWorldGuard();
+			List<String> ari1 = wg.getRegionManager(l1.getWorld()).getApplicableRegionsIDs(BukkitUtil.toVector(l1));
+			List<String> ari2 = wg.getRegionManager(l2.getWorld()).getApplicableRegionsIDs(BukkitUtil.toVector(l2));
+			return ari1.equals(ari2);
 		} catch (Exception e) {
-			WGExtender.log(Level.SEVERE, "Unable to check isInTheSameRegion");
-			WGExtender.log(Level.SEVERE, e.getMessage());
 		}
-		return false;
+		return true;
 	}
 
 	@Override
 	public boolean canBuild(Player player, Location l) {
 		try {
-			Object ars = getARS(l);
-			LocalPlayer weplayer = WGExtender.getInstance().getWorldGuard().wrapPlayer(player);
-			Method canBuildMethod = ars.getClass().getMethod("canBuild", weplayer.getClass());
-			canBuildMethod.setAccessible(true);
-			return (boolean) canBuildMethod.invoke(ars, weplayer);
+			WorldGuardPlugin wg = WGExtender.getInstance().getWorldGuard();
+			return wg.getRegionManager(l.getWorld()).getApplicableRegions(l).canBuild(wg.wrapPlayer(player));
 		} catch (Exception e) {
-			WGExtender.log(Level.SEVERE, "Unable to check canBuild");
-			WGExtender.log(Level.SEVERE, e.getMessage());
 		}
 		return false;
 	}
@@ -92,12 +77,11 @@ public class NewWGRegionUtils implements WGRegionUtilsInterface {
 	@Override
 	public boolean isFlagAllows(Player player, Block block, StateFlag flag) {
 		try {
-			Object ars = getARS(block.getLocation());
+			WorldGuardPlugin wg = WGExtender.getInstance().getWorldGuard();
+			ApplicableRegionSet ars = wg.getRegionManager(block.getLocation().getWorld()).getApplicableRegions(block.getLocation());
 			if (flag instanceof BlockInteractRestrictFlag) {
 				String blockName = block.getType().toString();
-				Method getFlagMethod = ars.getClass().getMethod("getFlag", Flag.class);
-				getFlagMethod.setAccessible(true);
-				String allowed = (String) getFlagMethod.invoke(ars, BlockInteractRestrictWhitelistFlag.instance);
+				String allowed = ars.getFlag(BlockInteractRestrictWhitelistFlag.instance);
 				if (allowed != null) {
 					String[] allowedNames = splitWhiteSpace.split(allowed);
 					for (String allowedName : allowedNames) {
@@ -117,13 +101,8 @@ public class NewWGRegionUtils implements WGRegionUtilsInterface {
 					}
 				}
 			}
-			LocalPlayer weplayer = WGExtender.getInstance().getWorldGuard().wrapPlayer(player);
-			Method allowsMethod = ars.getClass().getMethod("allows", weplayer.getClass());
-			allowsMethod.setAccessible(true);
-			return (boolean) allowsMethod.invoke(ars, weplayer);
+			return (ars.allows(flag, wg.wrapPlayer(player)));
 		} catch (Exception e) {
-			WGExtender.log(Level.SEVERE, "Unable to check isFlagAllows");
-			WGExtender.log(Level.SEVERE, e.getMessage());
 		}
 		return true;
 	}
@@ -131,12 +110,11 @@ public class NewWGRegionUtils implements WGRegionUtilsInterface {
 	@Override
 	public boolean isFlagAllows(Player player, Entity entity, StateFlag flag) {
 		try {
-			Object ars = getARS(entity.getLocation());
+			WorldGuardPlugin wg = WGExtender.getInstance().getWorldGuard();
+			ApplicableRegionSet ars = wg.getRegionManager(entity.getLocation().getWorld()).getApplicableRegions(entity.getLocation());
 			if (flag instanceof EntityInteractRestrictFlag) {
 				String entityName = entity.getType().getName();
-				Method getFlagMethod = ars.getClass().getMethod("getFlag", Flag.class);
-				getFlagMethod.setAccessible(true);
-				String allowedNames = (String) getFlagMethod.invoke(EntityInteractRestrictWhitelistFlag.instance);
+				String allowedNames = ars.getFlag(EntityInteractRestrictWhitelistFlag.instance);
 				if (allowedNames != null) {
 					String[] allowedNamesSplit = splitWhiteSpace.split(allowedNames);
 					for (String allowedName : allowedNamesSplit) {
@@ -146,24 +124,10 @@ public class NewWGRegionUtils implements WGRegionUtilsInterface {
 					}
 				}
 			}
-			LocalPlayer weplayer = WGExtender.getInstance().getWorldGuard().wrapPlayer(player);
-			Method allowsMethod = ars.getClass().getMethod("allows", weplayer.getClass());
-			allowsMethod.setAccessible(true);
-			return (boolean) allowsMethod.invoke(ars, weplayer);
+			return (ars.allows(flag, wg.wrapPlayer(player)));
 		} catch (Exception e) {
-			WGExtender.log(Level.SEVERE, "Unable to check isFlagAllows");
-			WGExtender.log(Level.SEVERE, e.getMessage());
 		}
 		return true;
-	}
-
-	private Object getARS(Location l) throws NoSuchMethodException, SecurityException, IllegalAccessException, IllegalArgumentException, InvocationTargetException {
-		WorldGuardPlugin wg = WGExtender.getInstance().getWorldGuard();
-		RegionManager rm = wg.getRegionManager(l.getWorld());
-		Vector wevect = BukkitUtil.toVector(l);
-		Method getARSMethod = rm.getClass().getMethod("getApplicableRegions", wevect.getClass());
-		getARSMethod.setAccessible(true);
-		return getARSMethod.invoke(rm, wevect);
 	}
 
 }

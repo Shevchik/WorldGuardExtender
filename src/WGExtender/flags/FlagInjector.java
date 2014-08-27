@@ -18,7 +18,6 @@
 package WGExtender.flags;
 
 import java.lang.reflect.Field;
-import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Modifier;
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -26,12 +25,15 @@ import java.util.Iterator;
 import java.util.List;
 import java.util.logging.Level;
 
+import org.bukkit.Bukkit;
+
 import WGExtender.WGExtender;
 
-import com.sk89q.worldguard.bukkit.WorldGuardPlugin;
+import com.sk89q.worldguard.protection.GlobalRegionManager;
 import com.sk89q.worldguard.protection.flags.DefaultFlag;
 import com.sk89q.worldguard.protection.flags.Flag;
 
+@SuppressWarnings("deprecation")
 public class FlagInjector {
 
 	protected static void injectFlag(Flag<?> flagtoinject) {
@@ -44,7 +46,6 @@ public class FlagInjector {
 			List<Flag<?>> flags = new ArrayList<Flag<?>>(Arrays.asList(DefaultFlag.getFlags()));
 			flags.add(flagtoinject);
 			field.set(null, flags.toArray(new Flag[flags.size()]));
-			reloadRegions();
 		} catch (Throwable e) {
 			WGExtender.log(Level.SEVERE, "Failed to inject flag " + flagtoinject.getName());
 			e.printStackTrace();
@@ -68,23 +69,21 @@ public class FlagInjector {
 				}
 			}
 			field.set(null, flags.toArray(new Flag[flags.size()]));
-			reloadRegions();
 		} catch (Throwable e) {
 			WGExtender.log(Level.SEVERE, "Failed to uninject flag " + flagtouninject.getName());
 			e.printStackTrace();
 		}
 	}
 
-	private static void reloadRegions() throws IllegalAccessException, IllegalArgumentException, InvocationTargetException, NoSuchMethodException, SecurityException {
+	public static void reloadRegions() {
 		try {
-			WGExtender.getInstance().getWorldGuard().getGlobalRegionManager().preload();
+			WGExtender.getInstance().getWorldGuard().getRegionContainer().reload();
 		} catch (Throwable t) {
 			try {
-				WorldGuardPlugin wg = WGExtender.getInstance().getWorldGuard();
-				Object regionContainer = wg.getClass().getMethod("getRegionContainer").invoke(wg);
-				regionContainer.getClass().getMethod("reload").invoke(regionContainer);
+				GlobalRegionManager globalRegionManager = WGExtender.getInstance().getWorldGuard().getGlobalRegionManager();
+				globalRegionManager.getClass().getMethod("preload").invoke(globalRegionManager);
 			} catch (Throwable tin) {
-				throw tin;
+				Bukkit.dispatchCommand(Bukkit.getConsoleSender(), "wg reload");
 			}
 		}
 	}

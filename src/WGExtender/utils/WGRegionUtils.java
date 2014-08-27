@@ -28,13 +28,18 @@ public class WGRegionUtils {
 
 	private static WGRegionUtilsInterface utils;
 	static {
-		utils = new OldWGRegionUtils();
+		initUtils();
+	}
+
+	private static void initUtils() {
 		try {
 			if (Class.forName("com.sk89q.worldguard.protection.ApplicableRegionSet").isInterface()) {
 				utils = new NewWGRegionUtils();
+				return;
 			}
 		} catch (ClassNotFoundException e) {
 		}
+		utils = new OldWGRegionUtils();
 	}
 
 	public static boolean canBypassProtection(Player p) {
