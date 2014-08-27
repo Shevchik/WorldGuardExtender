@@ -55,7 +55,6 @@ public class OldWGRegionUtils implements WGRegionUtilsInterface {
 			return (int) sizeMethod.invoke(ars) > 0;
 		} catch (Exception e) {
 			WGExtender.log(Level.SEVERE, "Unable to check isInWGRegion");
-			WGExtender.log(Level.SEVERE, e.getMessage());
 		}
 		return false;
 	}
@@ -68,7 +67,6 @@ public class OldWGRegionUtils implements WGRegionUtilsInterface {
 			return ars1.equals(ars2);
 		} catch (Exception e) {
 			WGExtender.log(Level.SEVERE, "Unable to check isInTheSameRegion");
-			WGExtender.log(Level.SEVERE, e.getMessage());
 		}
 		return false;
 	}
@@ -77,13 +75,12 @@ public class OldWGRegionUtils implements WGRegionUtilsInterface {
 	public boolean canBuild(Player player, Location l) {
 		try {
 			Object ars = getARS(l);
-			LocalPlayer weplayer = WGExtender.getInstance().getWorldGuard().wrapPlayer(player);
-			Method canBuildMethod = ars.getClass().getMethod("canBuild", weplayer.getClass());
+			LocalPlayer localPlayer = WGExtender.getInstance().getWorldGuard().wrapPlayer(player);
+			Method canBuildMethod = ars.getClass().getMethod("canBuild", LocalPlayer.class);
 			canBuildMethod.setAccessible(true);
-			return (boolean) canBuildMethod.invoke(ars, weplayer);
+			return (boolean) canBuildMethod.invoke(ars, localPlayer);
 		} catch (Exception e) {
 			WGExtender.log(Level.SEVERE, "Unable to check canBuild");
-			WGExtender.log(Level.SEVERE, e.getMessage());
 		}
 		return false;
 	}
@@ -112,12 +109,12 @@ public class OldWGRegionUtils implements WGRegionUtilsInterface {
 					}
 				}
 			}
-			Method allowsMethod = ars.getClass().getMethod("allows", localPlayer.getClass());
+			Method allowsMethod = ars.getClass().getMethod("allows", StateFlag.class, LocalPlayer.class);
 			allowsMethod.setAccessible(true);
-			return (boolean) allowsMethod.invoke(ars, localPlayer);
+			return (boolean) allowsMethod.invoke(ars, BlockInteractRestrictFlag.getInstance(), localPlayer);
 		} catch (Exception e) {
 			WGExtender.log(Level.SEVERE, "Unable to check isFlagAllows");
-			WGExtender.log(Level.SEVERE, e.getMessage());
+			e.printStackTrace();
 		}
 		return true;
 	}
@@ -139,12 +136,11 @@ public class OldWGRegionUtils implements WGRegionUtilsInterface {
 					}
 				}
 			}
-			Method allowsMethod = ars.getClass().getMethod("allows", localPlayer.getClass());
+			Method allowsMethod = ars.getClass().getMethod("allows", StateFlag.class, LocalPlayer.class);
 			allowsMethod.setAccessible(true);
-			return (boolean) allowsMethod.invoke(ars, localPlayer);
+			return (boolean) allowsMethod.invoke(ars, EntityInteractRestrictFlag.getInstance(), localPlayer);
 		} catch (Exception e) {
 			WGExtender.log(Level.SEVERE, "Unable to check isFlagAllows");
-			WGExtender.log(Level.SEVERE, e.getMessage());
 		}
 		return true;
 	}
@@ -153,7 +149,7 @@ public class OldWGRegionUtils implements WGRegionUtilsInterface {
 		WorldGuardPlugin wg = WGExtender.getInstance().getWorldGuard();
 		RegionManager rm = wg.getRegionManager(l.getWorld());
 		Vector wevect = BukkitUtil.toVector(l);
-		Method getARSMethod = rm.getClass().getMethod("getApplicableRegions", wevect.getClass());
+		Method getARSMethod = rm.getClass().getMethod("getApplicableRegions", Vector.class);
 		getARSMethod.setAccessible(true);
 		return getARSMethod.invoke(rm, wevect);
 	}
