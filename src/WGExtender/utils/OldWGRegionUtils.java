@@ -130,7 +130,7 @@ public class OldWGRegionUtils implements WGRegionUtilsInterface {
 			if (flag instanceof EntityInteractRestrictFlag) {
 				Method getFlagMethod = ars.getClass().getMethod("getFlag", Flag.class);
 				getFlagMethod.setAccessible(true);
-				String whitelistValue = (String) getFlagMethod.invoke(EntityInteractRestrictWhitelistFlag.getInstance());
+				String whitelistValue = (String) getFlagMethod.invoke(ars, EntityInteractRestrictWhitelistFlag.getInstance());
 				if (whitelistValue != null) {
 					HashSet<EntityType> whitelistData = EntityInteractRestrictWhitelistFlag.parseWhitelist(whitelistValue);
 					EntityType entityType = entity.getType();
