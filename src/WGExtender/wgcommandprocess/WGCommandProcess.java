@@ -42,7 +42,8 @@ public class WGCommandProcess implements Listener {
 		Arrays.asList(
 			new String[] {
 				"/rg",
-				"/region"
+				"/region",
+				"/regions"
 			}
 		)
 	);
