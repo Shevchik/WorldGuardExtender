@@ -56,10 +56,6 @@ public class AutoFlags {
 							e.printStackTrace();
 						}
 					}
-					try {
-						rm.save();
-					} catch (Exception e) {
-					}
 				}
 			}
 		}, 20);
