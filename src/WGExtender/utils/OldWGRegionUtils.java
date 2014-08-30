@@ -21,6 +21,7 @@ import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
 import java.util.HashMap;
 import java.util.HashSet;
+import java.util.List;
 import java.util.logging.Level;
 
 import org.bukkit.Location;
@@ -63,9 +64,10 @@ public class OldWGRegionUtils implements WGRegionUtilsInterface {
 	@Override
 	public boolean isInTheSameRegion(Location l1, Location l2) {
 		try {
-			Object ars1 = getARS(l1);
-			Object ars2 = getARS(l2);
-			return ars1.equals(ars2);
+			RegionManager rm = WGExtender.getInstance().getWorldGuard().getRegionManager(l1.getWorld());
+			List<String> ari1 = rm.getApplicableRegionsIDs(BukkitUtil.toVector(l1));
+			List<String> ari2 = rm.getApplicableRegionsIDs(BukkitUtil.toVector(l2));
+			return ari1.equals(ari2);
 		} catch (Exception e) {
 			WGExtender.log(Level.SEVERE, "Unable to check isInTheSameRegion");
 			e.printStackTrace();
