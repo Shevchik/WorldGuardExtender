@@ -41,6 +41,9 @@ public class WGCommandProcess implements Listener {
 	private HashSet<String> wgcmds = new HashSet<String>(
 		Arrays.asList(
 			new String[] {
+				"/worldguard:rg",
+				"/worldguard:region",
+				"/worldguard:regions",
 				"/rg",
 				"/region",
 				"/regions"
