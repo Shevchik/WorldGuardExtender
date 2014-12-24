@@ -34,12 +34,16 @@ import WGExtender.flags.EntityInteractRestrictFlag;
 import WGExtender.flags.EntityInteractRestrictWhitelistFlag;
 
 import com.sk89q.worldguard.LocalPlayer;
+import com.sk89q.worldguard.bukkit.RegionQuery;
+import com.sk89q.worldguard.bukkit.WGBukkit;
 import com.sk89q.worldguard.bukkit.WorldGuardPlugin;
 import com.sk89q.worldguard.protection.ApplicableRegionSet;
 import com.sk89q.worldguard.protection.flags.DefaultFlag;
 import com.sk89q.worldguard.protection.flags.StateFlag;
 
 public class NewWGRegionUtils implements WGRegionUtilsInterface {
+
+	private final RegionQuery regionQuery = WGBukkit.getPlugin().getRegionContainer().createQuery();
 
 	@Override
 	public boolean isInWGRegion(Location l) {
@@ -119,7 +123,7 @@ public class NewWGRegionUtils implements WGRegionUtilsInterface {
 	}
 
 	private ApplicableRegionSet getARS(Location l) {
-		return WGExtender.getInstance().getWorldGuard().getRegionContainer().createQuery().getApplicableRegions(l);
+		return regionQuery.getApplicableRegions(l);
 	}
 
 }
