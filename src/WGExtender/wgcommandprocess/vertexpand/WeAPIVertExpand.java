@@ -17,18 +17,20 @@
 
 package WGExtender.wgcommandprocess.vertexpand;
 
+import org.bukkit.entity.Player;
+
 import WGExtender.WGExtender;
 
 import com.sk89q.worldedit.LocalSession;
 import com.sk89q.worldedit.Vector;
-import com.sk89q.worldedit.entity.Player;
+import com.sk89q.worldedit.LocalPlayer;
 import com.sk89q.worldedit.regions.Region;
 
 public class WeAPIVertExpand implements VertExpandInterface {
 
 	@Override
-	public boolean expand(org.bukkit.entity.Player player) {
-		Player weplayer = WGExtender.getInstance().getWorldEdit().wrapPlayer(player);
+	public boolean expand(Player player) {
+		LocalPlayer weplayer = WGExtender.getInstance().getWorldEdit().wrapPlayer(player);
 		LocalSession session = WGExtender.getInstance().getWorldEdit().getSession(player);
         try {
 			Region region = session.getSelection(weplayer.getWorld());
