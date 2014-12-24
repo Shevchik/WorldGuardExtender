@@ -17,6 +17,7 @@
 
 package WGExtender.flags;
 
+import com.sk89q.worldguard.protection.flags.RegionGroup;
 import com.sk89q.worldguard.protection.flags.StateFlag;
 
 public class AnimalProtectFlag extends StateFlag {
@@ -39,7 +40,7 @@ public class AnimalProtectFlag extends StateFlag {
 	}
 
 	public AnimalProtectFlag() {
-		super("damage-animals", true);
+		super("damage-animals", true, RegionGroup.NON_MEMBERS);
 	}
 
 }
