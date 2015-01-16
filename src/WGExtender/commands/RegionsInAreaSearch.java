@@ -41,7 +41,7 @@ public class RegionsInAreaSearch {
 			return null;
 		} else {
 			List<String> regions = new ArrayList<String>();
-			ProtectedRegion fakerg = new ProtectedCuboidRegion("wgexfakerg", BukkitUtil.toVector(psel.getMinimumPoint()).toBlockVector(), BukkitUtil.toVector(psel.getMaximumPoint()).toBlockVector());
+			ProtectedRegion fakerg = new ProtectedCuboidRegion("wgexfakerg", BukkitUtil.toVector(psel.getMaximumPoint()).toBlockVector(), BukkitUtil.toVector(psel.getMinimumPoint()).toBlockVector());
 			ApplicableRegionSet ars = wg.getRegionManager(psel.getWorld()).getApplicableRegions(fakerg);
 			Iterator<ProtectedRegion> it = ars.iterator();
 			while (it.hasNext()) {
