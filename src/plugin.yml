@@ -1,5 +1,5 @@
 name: WGExtender
-main: WGExtender.WGExtender
+main: wgextender.WGExtender
 version: 1.0
 author: _Shevchik_
 depend: [WorldGuard, WorldEdit]
