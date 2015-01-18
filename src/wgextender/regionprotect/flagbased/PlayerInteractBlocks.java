@@ -37,15 +37,15 @@ public class PlayerInteractBlocks implements Listener {
 	}
 
 	@EventHandler(priority = EventPriority.LOW, ignoreCancelled = true)
-	public void onPlayerInteract(PlayerInteractEvent e) {
+	public void onPlayerInteract(PlayerInteractEvent event) {
 		if (!config.blockrestrictflag) {
 			return;
 		}
-		Player player = e.getPlayer();
-		Block block = e.getClickedBlock();
+		Player player = event.getPlayer();
+		Block block = event.getClickedBlock();
 		if (!WGRegionUtils.canBypassProtection(player)) {
 			if (!WGRegionUtils.isFlagAllows( player, block, BlockInteractRestrictFlag.getInstance())) {
-				e.setCancelled(true);
+				event.setCancelled(true);
 			}
 		}
 	}

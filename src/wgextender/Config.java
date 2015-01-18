@@ -22,6 +22,7 @@ import java.io.IOException;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.HashSet;
+import java.util.LinkedHashMap;
 import java.util.Map;
 import java.util.Set;
 
@@ -42,10 +43,11 @@ public class Config {
 	public boolean expandvert = false;
 
 	public boolean blocklimitsenabled = false;
-	public Map<String, Integer> blocklimits = new HashMap<String, Integer>();
+	public LinkedHashMap<String, Integer> blocklimits = new LinkedHashMap<String, Integer>();
 
 	public boolean blocklavaflow = false;
 	public boolean blockwaterflow = false;
+	public boolean blockotherliquidflow = false;
 	public boolean blockigniteotherregionbyplayer = false;
 	public boolean blockfirespreadtoregion = false;
 	public boolean blockfirespreadinregion = false;
@@ -85,6 +87,7 @@ public class Config {
 
 		blocklavaflow = config.getBoolean("regionprotect.flow.lava.enabled", blocklavaflow);
 		blockwaterflow = config.getBoolean("regionprotect.flow.water.enabled", blockwaterflow);
+		blockotherliquidflow = config.getBoolean("regionprotect.flow.otherliquid.enabled", blockotherliquidflow);
 		blockigniteotherregionbyplayer = config.getBoolean("regionprotect.ignitebyplayer.enabled", blockigniteotherregionbyplayer);
 		blockfirespreadtoregion = config.getBoolean("regionprotect.fire.spread.toregion.enabled", blockfirespreadtoregion);
 		blockfirespreadinregion = config.getBoolean("regionprotect.fire.spread.inregion.enabled", blockfirespreadinregion);
@@ -129,6 +132,7 @@ public class Config {
 
 		config.set("regionprotect.flow.lava.enabled", blocklavaflow);
 		config.set("regionprotect.flow.water.enabled", blockwaterflow);
+		config.set("regionprotect.flow.otherliquid.enabled", blockotherliquidflow);
 		config.set("regionprotect.ignitebyplayer.enabled", blockigniteotherregionbyplayer);
 		config.set("regionprotect.fire.spread.toregion.enabled", blockfirespreadtoregion);
 		config.set("regionprotect.fire.spread.inregion.enabled", blockfirespreadinregion);

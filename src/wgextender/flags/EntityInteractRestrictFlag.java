@@ -17,6 +17,7 @@
 
 package wgextender.flags;
 
+import com.sk89q.worldguard.protection.flags.RegionGroup;
 import com.sk89q.worldguard.protection.flags.StateFlag;
 
 public class EntityInteractRestrictFlag extends StateFlag {
@@ -39,7 +40,7 @@ public class EntityInteractRestrictFlag extends StateFlag {
 	}
 
 	public EntityInteractRestrictFlag() {
-		super("entity-interact", true);
+		super("entity-interact", true, RegionGroup.NON_MEMBERS);
 	}
 
 }

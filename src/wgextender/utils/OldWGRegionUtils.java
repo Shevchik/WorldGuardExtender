@@ -48,42 +48,36 @@ import com.sk89q.worldguard.protection.managers.RegionManager;
 public class OldWGRegionUtils implements WGRegionUtilsInterface {
 
 	@Override
-	public boolean isInWGRegion(Location l) {
+	public boolean isInWGRegion(Location location) {
 		try {
-			Object ars = getARS(l);
-			Method sizeMethod = ars.getClass().getDeclaredMethod("size");
-			sizeMethod.setAccessible(true);
-			return (int) sizeMethod.invoke(ars) > 0;
-		} catch (Exception e) {
-			WGExtender.log(Level.SEVERE, "Unable to check isInWGRegion");
-			e.printStackTrace();
+			RegionManager rm = WGExtender.getInstance().getWorldGuard().getRegionManager(location.getWorld());
+			return !rm.getApplicableRegionsIDs(BukkitUtil.toVector(location)).isEmpty();
+		} catch (Throwable e) {
 		}
 		return false;
 	}
 
 	@Override
-	public boolean isInTheSameRegion(Location l1, Location l2) {
+	public boolean isInTheSameRegion(Location location1, Location location2) {
 		try {
-			RegionManager rm = WGExtender.getInstance().getWorldGuard().getRegionManager(l1.getWorld());
-			List<String> ari1 = rm.getApplicableRegionsIDs(BukkitUtil.toVector(l1));
-			List<String> ari2 = rm.getApplicableRegionsIDs(BukkitUtil.toVector(l2));
+			RegionManager rm = WGExtender.getInstance().getWorldGuard().getRegionManager(location1.getWorld());
+			List<String> ari1 = rm.getApplicableRegionsIDs(BukkitUtil.toVector(location1));
+			List<String> ari2 = rm.getApplicableRegionsIDs(BukkitUtil.toVector(location2));
 			return ari1.equals(ari2);
-		} catch (Exception e) {
-			WGExtender.log(Level.SEVERE, "Unable to check isInTheSameRegion");
-			e.printStackTrace();
+		} catch (Throwable e) {
 		}
 		return false;
 	}
 
 	@Override
-	public boolean canBuild(Player player, Location l) {
+	public boolean canBuild(Player player, Location location) {
 		try {
-			Object ars = getARS(l);
+			Object ars = getARS(location);
 			LocalPlayer localPlayer = WGExtender.getInstance().getWorldGuard().wrapPlayer(player);
 			Method canBuildMethod = ars.getClass().getMethod("canBuild", LocalPlayer.class);
 			canBuildMethod.setAccessible(true);
 			return (boolean) canBuildMethod.invoke(ars, localPlayer);
-		} catch (Exception e) {
+		} catch (Throwable e) {
 			WGExtender.log(Level.SEVERE, "Unable to check canBuild");
 			e.printStackTrace();
 		}
@@ -114,10 +108,8 @@ public class OldWGRegionUtils implements WGRegionUtilsInterface {
 					}
 				}
 			}
-			Method allowsMethod = getAllowsMethod(ars);
-			allowsMethod.setAccessible(true);
-			return (boolean) allowsMethod.invoke(ars, BlockInteractRestrictFlag.getInstance(), localPlayer);
-		} catch (Exception e) {
+			return (boolean) MethodsCache.getAllowsMethod(ars).invoke(ars, BlockInteractRestrictFlag.getInstance(), localPlayer);
+		} catch (Throwable e) {
 			WGExtender.log(Level.SEVERE, "Unable to check isFlagAllows");
 			e.printStackTrace();
 		}
@@ -141,37 +133,48 @@ public class OldWGRegionUtils implements WGRegionUtilsInterface {
 					}
 				}
 			}
-			Method allowsMethod = getAllowsMethod(ars);
-			allowsMethod.setAccessible(true);
-			return (boolean) allowsMethod.invoke(ars, EntityInteractRestrictFlag.getInstance(), localPlayer);
-		} catch (Exception e) {
+			return (boolean) MethodsCache.getAllowsMethod(ars).invoke(ars, EntityInteractRestrictFlag.getInstance(), localPlayer);
+		} catch (Throwable e) {
 			WGExtender.log(Level.SEVERE, "Unable to check isFlagAllows");
 			e.printStackTrace();
 		}
 		return true;
 	}
 
-	private Object getARS(Location l) throws NoSuchMethodException, SecurityException, IllegalAccessException, IllegalArgumentException, InvocationTargetException {
+	private Object getARS(Location location) throws NoSuchMethodException, SecurityException, IllegalAccessException, IllegalArgumentException, InvocationTargetException {
 		WorldGuardPlugin wg = WGExtender.getInstance().getWorldGuard();
-		RegionManager rm = wg.getRegionManager(l.getWorld());
-		Vector wevect = BukkitUtil.toVector(l);
-		Method getARSMethod = rm.getClass().getMethod("getApplicableRegions", Vector.class);
-		getARSMethod.setAccessible(true);
-		return getARSMethod.invoke(rm, wevect);
+		RegionManager rm = wg.getRegionManager(location.getWorld());
+		Vector wevect = BukkitUtil.toVector(location);
+		return MethodsCache.getGetARSMethod(rm).invoke(rm, wevect);
 	}
 
 
-	private Method cachedAllowsMethod = null;
-	private Method getAllowsMethod(Object ars) {
-		if (cachedAllowsMethod == null) {
-			for (Method method : ars.getClass().getMethods()) {
-				if (method.getName().equals("allows") && method.getParameterTypes().length == 2) {
-					cachedAllowsMethod = method;
-					return method;
+	private static class MethodsCache {
+
+		private static Method cachedAllowsMethod = null;
+		public static Method getAllowsMethod(Object ars) {
+			if (cachedAllowsMethod == null) {
+				for (Method method : ars.getClass().getMethods()) {
+					if (method.getName().equals("allows") && method.getParameterTypes().length == 2) {
+						cachedAllowsMethod = method;
+						cachedAllowsMethod.setAccessible(true);
+						return cachedAllowsMethod;
+					}
 				}
 			}
+			return cachedAllowsMethod;
 		}
-		return cachedAllowsMethod;
+
+		private static Method cachedGetARSMethod = null;
+		public static Method getGetARSMethod(Object rm) throws NoSuchMethodException, SecurityException {
+			if (cachedGetARSMethod == null) {
+				cachedAllowsMethod = rm.getClass().getMethod("getApplicableRegions", Vector.class);
+				cachedAllowsMethod.setAccessible(true);
+				return cachedAllowsMethod;
+			}
+			return cachedAllowsMethod;
+		}
+
 	}
 
 }

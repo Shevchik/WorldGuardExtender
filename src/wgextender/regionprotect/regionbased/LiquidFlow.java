@@ -17,8 +17,9 @@
 
 package wgextender.regionprotect.regionbased;
 
-import org.bukkit.Material;
+import org.bukkit.Location;
 import org.bukkit.block.Block;
+import org.bukkit.event.Cancellable;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.EventPriority;
 import org.bukkit.event.Listener;
@@ -26,6 +27,7 @@ import org.bukkit.event.block.BlockDispenseEvent;
 import org.bukkit.event.block.BlockFromToEvent;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.material.DirectionalContainer;
+import org.bukkit.material.MaterialData;
 
 import wgextender.Config;
 import wgextender.utils.WGRegionUtils;
@@ -39,40 +41,65 @@ public class LiquidFlow implements Listener {
 	}
 
 	@EventHandler(priority = EventPriority.LOW, ignoreCancelled = true)
-	public void onLiquidFlow(BlockFromToEvent e) {
-		Block b = e.getBlock();
-		if ((b.getType() == Material.LAVA) || (b.getType() == Material.STATIONARY_LAVA)) {
-			if (config.blocklavaflow) {
-				if (!WGRegionUtils.isInTheSameRegion(b.getLocation(), e.getToBlock().getLocation())) {
-					e.setCancelled(true);
+	public void onLiquidFlow(BlockFromToEvent event) {
+		Block b = event.getBlock();
+		switch (b.getType()) {
+			case LAVA:
+			case STATIONARY_LAVA: {
+				if (config.blocklavaflow) {
+					check(b.getLocation(), event.getToBlock().getLocation(), event);
 				}
+				break;
 			}
-		} else if ((b.getType() == Material.WATER) || (b.getType() == Material.STATIONARY_WATER)) {
-			if (config.blockwaterflow) {
-				if (!WGRegionUtils.isInTheSameRegion(b.getLocation(), e.getToBlock().getLocation())) {
-					e.setCancelled(true);
+			case WATER:
+			case STATIONARY_WATER: {
+				if (config.blockwaterflow) {
+					check(b.getLocation(), event.getToBlock().getLocation(), event);
 				}
+				break;
+			}
+			default: {
+				if (config.blockotherliquidflow) {
+					check(b.getLocation(), event.getToBlock().getLocation(), event);
+				}
+				break;
 			}
 		}
 	}
 
 	@EventHandler(priority = EventPriority.LOW, ignoreCancelled = true)
-	public void onDispenserDispense(BlockDispenseEvent e) {
-		ItemStack item = e.getItem();
-		Block b = e.getBlock();
-		Block nextBlock = b.getRelative(DirectionalContainer.class.cast(b.getState().getData()).getFacing());
-		if (item.getType() == Material.LAVA_BUCKET) {
-			if (config.blocklavaflow) {
-				if (!WGRegionUtils.isInTheSameRegion(b.getLocation(), nextBlock.getLocation())) {
-					e.setCancelled(true);
+	public void onDispenserDispense(BlockDispenseEvent event) {
+		ItemStack item = event.getItem();
+		Block dispenser = event.getBlock();
+		MaterialData mdata = dispenser.getState().getData();
+		if (mdata instanceof DirectionalContainer) {
+			Block nextBlock = dispenser.getRelative(((DirectionalContainer) mdata).getFacing());
+			switch (item.getType()) {
+				case LAVA_BUCKET: {
+					if (config.blocklavaflow) {
+						check(dispenser.getLocation(), nextBlock.getLocation(), event);
+					}
+					break;
+				}
+				case WATER_BUCKET: {
+					if (config.blockwaterflow) {
+						check(dispenser.getLocation(), nextBlock.getLocation(), event);
+					}
+					break;
+				}
+				default: {
+					if (config.blockotherliquidflow) {
+						check(dispenser.getLocation(), nextBlock.getLocation(), event);
+					}
+					break;
 				}
 			}
-		} else if (item.getType() == Material.WATER_BUCKET) {
-			if (config.blockwaterflow) {
-				if (!WGRegionUtils.isInTheSameRegion(b.getLocation(), nextBlock.getLocation())) {
-					e.setCancelled(true);
-				}
-			}
+		}
+	}
+
+	private void check(Location source, Location to, Cancellable event) {
+		if (!WGRegionUtils.isInTheSameRegion(source, to)) {
+			event.setCancelled(true);
 		}
 	}
 

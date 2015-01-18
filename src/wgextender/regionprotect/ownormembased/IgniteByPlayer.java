@@ -37,21 +37,22 @@ public class IgniteByPlayer implements Listener {
 	}
 
 	@EventHandler(priority = EventPriority.LOW, ignoreCancelled = true)
-	public void onPlayerIgnitedBlock(BlockIgniteEvent e) {
+	public void onPlayerIgnitedBlock(BlockIgniteEvent event) {
 		if (!config.blockigniteotherregionbyplayer) {
 			return;
 		}
-		Player player = e.getPlayer();
+		Player player = event.getPlayer();
 		if (player != null) {
-			if (!WGRegionUtils.canBypassProtection(player)) {
-				if (!WGRegionUtils.canBuild( player, e.getBlock().getLocation())) {
-					player.sendMessage(ChatColor.RED + "Вы не можете поджечь блок в чужом регионе");
-					e.setCancelled(true);
-				}
+			if (
+				!WGRegionUtils.canBypassProtection(player) &&
+				!WGRegionUtils.canBuild( player, event.getBlock().getLocation())
+			) {
+				player.sendMessage(ChatColor.RED + "Вы не можете поджечь блок в чужом регионе");
+				event.setCancelled(true);
 			}
-		} else if (e.getCause() == IgniteCause.FIREBALL) {
-			if (WGRegionUtils.isInWGRegion(e.getBlock().getLocation())) {
-				e.setCancelled(true);
+		} else if (event.getCause() == IgniteCause.FIREBALL) {
+			if (WGRegionUtils.isInWGRegion(event.getBlock().getLocation())) {
+				event.setCancelled(true);
 			}
 		}
 	}

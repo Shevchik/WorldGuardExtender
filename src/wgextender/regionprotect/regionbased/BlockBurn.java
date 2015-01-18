@@ -34,12 +34,12 @@ public class BlockBurn implements Listener {
 	}
 
 	@EventHandler(priority = EventPriority.LOW, ignoreCancelled = true)
-	public void onBlockBurn(BlockBurnEvent e) {
+	public void onBlockBurn(BlockBurnEvent event) {
 		if (!config.blockblockburninregion) {
 			return;
 		}
-		if (WGRegionUtils.isInWGRegion(e.getBlock().getLocation())) {
-			e.setCancelled(true);
+		if (WGRegionUtils.isInWGRegion(event.getBlock().getLocation())) {
+			event.setCancelled(true);
 		}
 	}
 

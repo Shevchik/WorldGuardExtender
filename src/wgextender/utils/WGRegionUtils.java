@@ -35,6 +35,7 @@ public class WGRegionUtils {
 		try {
 			if (Class.forName("com.sk89q.worldguard.protection.ApplicableRegionSet").isInterface()) {
 				utils = new NewWGRegionUtils();
+				newWG = true;
 				return;
 			}
 		} catch (ClassNotFoundException e) {
@@ -56,6 +57,12 @@ public class WGRegionUtils {
 			return true;
 		}
 		return false;
+	}
+
+	private static boolean newWG = false;
+
+	public static boolean isNewWG() {
+		return newWG;
 	}
 
 	public static boolean isInWGRegion(Location l) {

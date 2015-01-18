@@ -40,14 +40,14 @@ public class AttackByPlayer implements Listener {
 	}
 
 	@EventHandler(priority = EventPriority.LOW, ignoreCancelled = true)
-	public void onEntityDamage(EntityDamageByEntityEvent e) {
+	public void onEntityDamage(EntityDamageByEntityEvent event) {
 		if (!config.animalprotectflag) {
 			return;
 		}
-		Entity entity = e.getEntity();
+		Entity entity = event.getEntity();
 		if (((entity instanceof Animals) || (entity instanceof Villager)) && WGRegionUtils.isInWGRegion(entity.getLocation())) {
 			Player damagerplayer = null;
-			Entity edamager = e.getDamager();
+			Entity edamager = event.getDamager();
 			if (edamager instanceof Player) {
 				damagerplayer = (Player) edamager;
 			} else if (edamager instanceof Arrow) {
@@ -59,7 +59,7 @@ public class AttackByPlayer implements Listener {
 			if (damagerplayer != null) {
 				if (!WGRegionUtils.canBypassProtection(damagerplayer)) {
 					if (!WGRegionUtils.isFlagAllows(damagerplayer, entity, AnimalProtectFlag.getInstance())) {
-						e.setCancelled(true);
+						event.setCancelled(true);
 					}
 				}
 			}

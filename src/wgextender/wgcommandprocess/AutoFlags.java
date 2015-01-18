@@ -24,6 +24,7 @@ import org.bukkit.World;
 
 import wgextender.Config;
 import wgextender.WGExtender;
+import wgextender.utils.WGRegionUtils;
 
 import com.sk89q.worldguard.bukkit.WorldGuardPlugin;
 import com.sk89q.worldguard.protection.flags.Flag;
@@ -53,6 +54,13 @@ public class AutoFlags {
 							Flag flag = entry.getKey();
 							rg.setFlag(flag, flag.parseInput(wg, Bukkit.getConsoleSender(), entry.getValue()));
 						} catch (InvalidFlagFormat e) {
+							e.printStackTrace();
+						}
+					}
+					if (!WGRegionUtils.isNewWG()) {
+						try {
+							rm.save();
+						} catch (Exception e) {
 							e.printStackTrace();
 						}
 					}

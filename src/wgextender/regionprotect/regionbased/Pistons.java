@@ -17,8 +17,6 @@
 
 package wgextender.regionprotect.regionbased;
 
-import java.util.Iterator;
-
 import org.bukkit.Location;
 import org.bukkit.block.Block;
 import org.bukkit.event.EventHandler;
@@ -39,38 +37,30 @@ public class Pistons implements Listener {
 	}
 
 	@EventHandler(priority = EventPriority.LOW, ignoreCancelled = true)
-	public void onExtend(BlockPistonExtendEvent e) {
+	public void onExtend(BlockPistonExtendEvent event) {
 		if (!config.blockpistonmoveblock) {
 			return;
 		}
-		Location pistonlocation = e.getBlock().getLocation();
-		Iterator<Block> bit = e.getBlocks().iterator();
-		Block mblock = null;
-		while (bit.hasNext()) {
-			mblock = bit.next();
-			if (!WGRegionUtils.isInTheSameRegion(pistonlocation, mblock.getLocation())) {
-				e.setCancelled(true);
+		Location pistonlocation = event.getBlock().getLocation();
+		for (Block block : event.getBlocks()) {
+			if (
+				!WGRegionUtils.isInTheSameRegion(pistonlocation, block.getLocation()) ||
+				!WGRegionUtils.isInTheSameRegion(pistonlocation, block.getRelative(event.getDirection()).getLocation())
+			) {
+				event.setCancelled(true);
 				break;
-			}
-		}
-		if (mblock != null) {
-			mblock = mblock.getRelative(e.getDirection());
-			if (!WGRegionUtils.isInTheSameRegion(pistonlocation, mblock.getLocation())) {
-				e.setCancelled(true);
 			}
 		}
 	}
 
 	@EventHandler(priority = EventPriority.LOW, ignoreCancelled = true)
-	public void onRetract(BlockPistonRetractEvent e) {
+	public void onRetract(BlockPistonRetractEvent event) {
 		if (!config.blockpistonmoveblock) {
 			return;
 		}
-		if (e.isSticky()) {
-			Location pistonlocation = e.getBlock().getLocation();
-			Location retractblocklocation = e.getRetractLocation();
-			if (!WGRegionUtils.isInTheSameRegion(pistonlocation, retractblocklocation)) {
-				e.setCancelled(true);
+		if (event.isSticky()) {
+			if (!WGRegionUtils.isInTheSameRegion(event.getBlock().getLocation(), event.getRetractLocation())) {
+				event.setCancelled(true);
 			}
 		}
 	}

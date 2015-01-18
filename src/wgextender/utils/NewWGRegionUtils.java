@@ -46,28 +46,28 @@ public class NewWGRegionUtils implements WGRegionUtilsInterface {
 	private final RegionQuery regionQuery = WGBukkit.getPlugin().getRegionContainer().createQuery();
 
 	@Override
-	public boolean isInWGRegion(Location l) {
+	public boolean isInWGRegion(Location location) {
 		try {
-			return getARS(l).size() > 0;
+			return getARS(location).size() > 0;
 		} catch (Exception e) {
 		}
 		return false;
 	}
 
 	@Override
-	public boolean isInTheSameRegion(Location l1, Location l2) {
+	public boolean isInTheSameRegion(Location location1, Location location2) {
 		try {
-			return getARS(l1).getRegions().equals(getARS(l2).getRegions());
+			return getARS(location1).getRegions().equals(getARS(location2).getRegions());
 		} catch (Exception e) {
 		}
 		return true;
 	}
 
 	@Override
-	public boolean canBuild(Player player, Location l) {
+	public boolean canBuild(Player player, Location location) {
 		try {
 			WorldGuardPlugin wg = WGExtender.getInstance().getWorldGuard();
-			return getARS(l).testState(wg.wrapPlayer(player, true), DefaultFlag.BUILD);
+			return getARS(location).testState(wg.wrapPlayer(player, true), DefaultFlag.BUILD);
 		} catch (Exception e) {
 		}
 		return false;

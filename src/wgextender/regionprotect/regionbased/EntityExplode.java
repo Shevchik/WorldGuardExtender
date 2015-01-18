@@ -19,8 +19,11 @@ package wgextender.regionprotect.regionbased;
 
 import java.util.Iterator;
 
+import org.bukkit.Location;
 import org.bukkit.block.Block;
+import org.bukkit.entity.Entity;
 import org.bukkit.entity.Player;
+import org.bukkit.entity.TNTPrimed;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.EventPriority;
 import org.bukkit.event.Listener;
@@ -40,11 +43,26 @@ public class EntityExplode implements Listener {
 	}
 
 	@EventHandler(priority = EventPriority.LOW, ignoreCancelled = true)
-	public void onEntityExplode(EntityExplodeEvent e) {
+	public void onEntityExplode(EntityExplodeEvent event) {
 		if (!config.blockentityexplosionblockdamage) {
 			return;
 		}
-		Iterator<Block> it = e.blockList().iterator();
+		if (event.getEntity() instanceof TNTPrimed) {
+			Entity source = ((TNTPrimed) event.getEntity()).getSource();
+			if (source instanceof Player) {
+				Player igniter = (Player) source;
+				boolean canBypass = WGRegionUtils.canBypassProtection(igniter);
+				Iterator<Block> it = event.blockList().iterator();
+				while (it.hasNext()) {
+					Location location = it.next().getLocation();
+					if (!canBypass && !WGRegionUtils.canBuild(igniter, location)) {
+						it.remove();
+					}
+				}
+				return;
+			}
+		}
+		Iterator<Block> it = event.blockList().iterator();
 		while (it.hasNext()) {
 			if (WGRegionUtils.isInWGRegion(it.next().getLocation())) {
 				it.remove();
@@ -58,10 +76,8 @@ public class EntityExplode implements Listener {
 			return;
 		}
 		if ((e.getCause() == DamageCause.BLOCK_EXPLOSION) || (e.getCause() == DamageCause.ENTITY_EXPLOSION)) {
-			if (!(e.getEntity() instanceof Player)) {
-				if (WGRegionUtils.isInWGRegion(e.getEntity().getLocation())) {
-					e.setCancelled(true);
-				}
+			if (WGRegionUtils.isInWGRegion(e.getEntity().getLocation())) {
+				e.setCancelled(true);
 			}
 		}
 	}

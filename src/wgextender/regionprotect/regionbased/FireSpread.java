@@ -35,16 +35,16 @@ public class FireSpread implements Listener {
 	}
 
 	@EventHandler(priority = EventPriority.LOW, ignoreCancelled = true)
-	public void onBlockIgniteBySpread(BlockSpreadEvent e) {
-		if (e.getNewState().getType() == Material.FIRE) {
+	public void onBlockIgniteBySpread(BlockSpreadEvent event) {
+		if (event.getNewState().getType() == Material.FIRE) {
 			if (config.blockfirespreadtoregion) {
-				if (!WGRegionUtils.isInTheSameRegion(e.getSource().getLocation(), e.getBlock().getLocation())) {
-					e.setCancelled(true);
+				if (!WGRegionUtils.isInTheSameRegion(event.getSource().getLocation(), event.getBlock().getLocation())) {
+					event.setCancelled(true);
 				}
 			}
 			if (config.blockfirespreadinregion) {
-				if (WGRegionUtils.isInWGRegion(e.getSource().getLocation()) && WGRegionUtils.isInTheSameRegion(e.getSource().getLocation(), e.getBlock().getLocation())) {
-					e.setCancelled(true);
+				if (WGRegionUtils.isInWGRegion(event.getSource().getLocation()) && WGRegionUtils.isInTheSameRegion(event.getSource().getLocation(), event.getBlock().getLocation())) {
+					event.setCancelled(true);
 				}
 			}
 		}
