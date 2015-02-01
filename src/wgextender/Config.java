@@ -57,7 +57,6 @@ public class Config {
 	public boolean blockpistonmoveblock = false;
 
 	public boolean animalprotectflag = true;
-	public boolean blockrestrictflag = true;
 	public boolean entityrestrictflag = true;
 
 	public boolean autoflagsenabled = false;
@@ -97,7 +96,6 @@ public class Config {
 		blockpistonmoveblock = config.getBoolean("regionprotect.pistonmove.enabled", blockpistonmoveblock);
 
 		animalprotectflag = config.getBoolean("customflags.damage-animals.enabled", animalprotectflag);
-		blockrestrictflag = config.getBoolean("customflags.block-interact.enabled", blockrestrictflag);
 		entityrestrictflag = config.getBoolean("customflags.entity-interact.enabled", entityrestrictflag);
 
 		autoflagsenabled = config.getBoolean("autoflags.enabled",autoflagsenabled);
@@ -142,7 +140,6 @@ public class Config {
 		config.set("regionprotect.pistonmove.enabled", blockpistonmoveblock);
 
 		config.set("customflags.damage-animals.enabled", animalprotectflag);
-		config.set("customflags.block-interact.enabled", blockrestrictflag);
 		config.set("customflags.entity-interact.enabled", entityrestrictflag);
 
 		config.set("autoflags.enabled", autoflagsenabled);

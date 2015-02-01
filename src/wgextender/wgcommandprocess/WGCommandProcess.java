@@ -27,8 +27,8 @@ import org.bukkit.event.Listener;
 import org.bukkit.event.player.PlayerCommandPreprocessEvent;
 
 import wgextender.Config;
+import wgextender.utils.WEUtils;
 import wgextender.wgcommandprocess.BlockLimits.ProcessedClaimInfo;
-import wgextender.wgcommandprocess.vertexpand.VertExpand;
 
 public class WGCommandProcess implements Listener {
 
@@ -51,7 +51,6 @@ public class WGCommandProcess implements Listener {
 		)
 	);
 
-	private VertExpand vertexpand = new VertExpand();
 	private BlockLimits blocklimits = new BlockLimits();
 
 	@EventHandler(priority = EventPriority.HIGHEST, ignoreCancelled = true)
@@ -67,9 +66,9 @@ public class WGCommandProcess implements Listener {
 			return;
 		}
 		if (config.expandvert) {
-			boolean result = vertexpand.expand(event.getPlayer());
+			boolean result = WEUtils.expandVert(event.getPlayer());
 			if (result) {
-				event.getPlayer().sendMessage(ChatColor.LIGHT_PURPLE + "Регион автоматически расширен по вертикали");
+				event.getPlayer().sendMessage(ChatColor.YELLOW + "Регион автоматически расширен по вертикали");
 			}
 		}
 		ProcessedClaimInfo info = blocklimits.processClaimInfo(config, event.getPlayer());
@@ -82,7 +81,7 @@ public class WGCommandProcess implements Listener {
 			return;
 		}
 		if (config.autoflagsenabled) {
-			AutoFlags.setFlagsForRegion(config, event.getPlayer().getWorld(), cmds[2]);
+			AutoFlags.setFlagsForRegion(event.getPlayer(), config, cmds[2]);
 		}
 	}
 

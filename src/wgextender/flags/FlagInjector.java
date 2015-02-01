@@ -25,15 +25,11 @@ import java.util.Iterator;
 import java.util.List;
 import java.util.logging.Level;
 
-import org.bukkit.Bukkit;
-
 import wgextender.WGExtender;
 
-import com.sk89q.worldguard.protection.GlobalRegionManager;
 import com.sk89q.worldguard.protection.flags.DefaultFlag;
 import com.sk89q.worldguard.protection.flags.Flag;
 
-@SuppressWarnings("deprecation")
 public class FlagInjector {
 
 	protected static void injectFlag(Flag<?> flagtoinject) {
@@ -76,16 +72,7 @@ public class FlagInjector {
 	}
 
 	public static void reloadRegions() {
-		try {
-			WGExtender.getInstance().getWorldGuard().getRegionContainer().reload();
-		} catch (Throwable t) {
-			try {
-				GlobalRegionManager globalRegionManager = WGExtender.getInstance().getWorldGuard().getGlobalRegionManager();
-				globalRegionManager.getClass().getMethod("preload").invoke(globalRegionManager);
-			} catch (Throwable tin) {
-				Bukkit.dispatchCommand(Bukkit.getConsoleSender(), "wg reload");
-			}
-		}
+		WGExtender.getInstance().getWorldGuard().getRegionContainer().reload();
 	}
 
 }

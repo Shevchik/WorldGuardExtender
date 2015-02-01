@@ -32,13 +32,13 @@ import com.sk89q.worldedit.bukkit.selections.Selection;
 
 public class BlockLimits {
 
+	private Object vaultperms;
+
 	public BlockLimits() {
 		if (Bukkit.getPluginManager().getPlugin("Vault") != null) {
 			vaultperms = Bukkit.getServicesManager().getRegistration(net.milkbowl.vault.permission.Permission.class).getProvider();
 		}
 	}
-
-	private Object vaultperms;
 
 	public ProcessedClaimInfo processClaimInfo(Config config, Player player) {
 		ProcessedClaimInfo info = new ProcessedClaimInfo();

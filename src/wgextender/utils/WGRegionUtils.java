@@ -18,71 +18,43 @@
 package wgextender.utils;
 
 import org.bukkit.Location;
-import org.bukkit.block.Block;
-import org.bukkit.entity.Entity;
 import org.bukkit.entity.Player;
 
+import wgextender.WGExtender;
+
+import com.sk89q.worldguard.bukkit.RegionQuery;
+import com.sk89q.worldguard.bukkit.WGBukkit;
+import com.sk89q.worldguard.bukkit.permission.RegionPermissionModel;
+import com.sk89q.worldguard.protection.ApplicableRegionSet;
+import com.sk89q.worldguard.protection.flags.DefaultFlag;
 import com.sk89q.worldguard.protection.flags.StateFlag;
 
-public class WGRegionUtils {
+public class WGRegionUtils  {
 
-	private static WGRegionUtilsInterface utils;
-	static {
-		initUtils();
+	private static final RegionQuery regionQuery = WGBukkit.getPlugin().getRegionContainer().createQuery();
+
+	public static boolean isInWGRegion(Location location) {
+		return getARS(location).size() > 0;
 	}
 
-	private static void initUtils() {
-		try {
-			if (Class.forName("com.sk89q.worldguard.protection.ApplicableRegionSet").isInterface()) {
-				utils = new NewWGRegionUtils();
-				newWG = true;
-				return;
-			}
-		} catch (ClassNotFoundException e) {
-		}
-		utils = new OldWGRegionUtils();
+	public static boolean canBypassProtection(Player player) {
+		return new RegionPermissionModel(WGExtender.getInstance().getWorldGuard(), player).mayIgnoreRegionProtection(player.getWorld());
 	}
 
-	public static boolean canBypassProtection(Player p) {
-		if (p.hasPermission("worldguard.*")) {
-			return true;
-		}
-		if (p.hasPermission("worldguard.region.*")) {
-			return true;
-		}
-		if (p.hasPermission("worldguard.region.bypass.*")) {
-			return true;
-		}
-		if (p.hasPermission("worldguard.region.bypass." + p.getWorld().getName())) {
-			return true;
-		}
-		return false;
+	public static boolean isInTheSameRegion(Location location1, Location location2) {
+		return getARS(location1).getRegions().equals(getARS(location2).getRegions());
 	}
 
-	private static boolean newWG = false;
-
-	public static boolean isNewWG() {
-		return newWG;
+	public static boolean canBuild(Player player, Location location) {
+		return isFlagAllows(player, location, DefaultFlag.BUILD);
 	}
 
-	public static boolean isInWGRegion(Location l) {
-		return utils.isInWGRegion(l);
+	public static boolean isFlagAllows(Player player, Location location, StateFlag flag) {
+		return regionQuery.testState(location, player, flag);
 	}
 
-	public static boolean isInTheSameRegion(Location l1, Location l2) {
-		return utils.isInTheSameRegion(l1, l2);
-	}
-
-	public static boolean canBuild(Player player, Location l) {
-		return utils.canBuild(player, l);
-	}
-
-	public static boolean isFlagAllows(Player player, Block block, StateFlag flag) {
-		return utils.isFlagAllows(player, block, flag);
-	}
-
-	public static boolean isFlagAllows(Player player, Entity entity, StateFlag flag) {
-		return utils.isFlagAllows(player, entity, flag);
+	private static ApplicableRegionSet getARS(Location l) {
+		return regionQuery.getApplicableRegions(l);
 	}
 
 }

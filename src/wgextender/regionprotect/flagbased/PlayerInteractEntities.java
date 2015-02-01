@@ -44,7 +44,7 @@ public class PlayerInteractEntities implements Listener {
 		Player player = event.getPlayer();
 		Entity entity = event.getRightClicked();
 		if (!WGRegionUtils.canBypassProtection(player)) {
-			if (!WGRegionUtils.isFlagAllows(player, entity, EntityInteractRestrictFlag.getInstance())) {
+			if (!WGRegionUtils.isFlagAllows(player, entity.getLocation(), EntityInteractRestrictFlag.getInstance())) {
 				event.setCancelled(true);
 			}
 		}

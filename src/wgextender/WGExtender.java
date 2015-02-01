@@ -26,13 +26,9 @@ import org.bukkit.plugin.java.JavaPlugin;
 
 import wgextender.commands.Commands;
 import wgextender.flags.AnimalProtectFlag;
-import wgextender.flags.BlockInteractRestrictFlag;
-import wgextender.flags.BlockInteractRestrictWhitelistFlag;
 import wgextender.flags.EntityInteractRestrictFlag;
-import wgextender.flags.EntityInteractRestrictWhitelistFlag;
 import wgextender.flags.FlagInjector;
 import wgextender.regionprotect.flagbased.AttackByPlayer;
-import wgextender.regionprotect.flagbased.PlayerInteractBlocks;
 import wgextender.regionprotect.flagbased.PlayerInteractEntities;
 import wgextender.regionprotect.ownormembased.IgniteByPlayer;
 import wgextender.regionprotect.regionbased.BlockBurn;
@@ -62,6 +58,7 @@ public class WGExtender extends JavaPlugin {
 	public WorldEditPlugin getWorldEdit() {
 		return we;
 	}
+
 	private WorldGuardPlugin wg = null;
 	public WorldGuardPlugin getWorldGuard() {
 		return wg;
@@ -70,14 +67,10 @@ public class WGExtender extends JavaPlugin {
 	@Override
 	public void onEnable() {
 		instance = this;
-		we = (WorldEditPlugin) Bukkit.getPluginManager().getPlugin("WorldEdit");
-		wg = (WorldGuardPlugin) Bukkit.getPluginManager().getPlugin("WorldGuard");
 		log = getLogger();
+		we = JavaPlugin.getPlugin(WorldEditPlugin.class);
+		wg = JavaPlugin.getPlugin(WorldGuardPlugin.class);
 		AnimalProtectFlag.injectFlag();
-		BlockInteractRestrictFlag.injectFlag();
-		BlockInteractRestrictWhitelistFlag.injectFlag();
-		EntityInteractRestrictFlag.injectFlag();
-		EntityInteractRestrictWhitelistFlag.injectFlag();
 		FlagInjector.reloadRegions();
 		config = new Config(this);
 		config.loadConfig();
@@ -92,7 +85,6 @@ public class WGExtender extends JavaPlugin {
 		getServer().getPluginManager().registerEvents(new Pistons(config), this);
 		getServer().getPluginManager().registerEvents(new EntityExplode(config), this);
 		getServer().getPluginManager().registerEvents(new AttackByPlayer(config), this);
-		getServer().getPluginManager().registerEvents(new PlayerInteractBlocks(config), this);
 		getServer().getPluginManager().registerEvents(new PlayerInteractEntities(config), this);
 	}
 
@@ -100,10 +92,7 @@ public class WGExtender extends JavaPlugin {
 	public void onDisable() {
 		saveRegions();
 		AnimalProtectFlag.uninjectFlag();
-		BlockInteractRestrictFlag.uninjectFlag();
-		BlockInteractRestrictWhitelistFlag.uninjectFlag();
 		EntityInteractRestrictFlag.uninjectFlag();
-		EntityInteractRestrictWhitelistFlag.uninjectFlag();
 		FlagInjector.reloadRegions();
 		config = null;
 		we = null;
