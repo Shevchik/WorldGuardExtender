@@ -71,6 +71,7 @@ public class WGExtender extends JavaPlugin {
 		we = JavaPlugin.getPlugin(WorldEditPlugin.class);
 		wg = JavaPlugin.getPlugin(WorldGuardPlugin.class);
 		AnimalProtectFlag.injectFlag();
+		EntityInteractRestrictFlag.injectFlag();
 		FlagInjector.reloadRegions();
 		config = new Config(this);
 		config.loadConfig();
