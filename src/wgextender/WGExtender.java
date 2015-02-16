@@ -26,10 +26,8 @@ import org.bukkit.plugin.java.JavaPlugin;
 
 import wgextender.commands.Commands;
 import wgextender.flags.AnimalProtectFlag;
-import wgextender.flags.EntityInteractRestrictFlag;
 import wgextender.flags.FlagInjector;
 import wgextender.regionprotect.flagbased.AttackByPlayer;
-import wgextender.regionprotect.flagbased.PlayerInteractEntities;
 import wgextender.regionprotect.ownormembased.IgniteByPlayer;
 import wgextender.regionprotect.regionbased.BlockBurn;
 import wgextender.regionprotect.regionbased.EntityExplode;
@@ -71,7 +69,6 @@ public class WGExtender extends JavaPlugin {
 		we = JavaPlugin.getPlugin(WorldEditPlugin.class);
 		wg = JavaPlugin.getPlugin(WorldGuardPlugin.class);
 		AnimalProtectFlag.injectFlag();
-		EntityInteractRestrictFlag.injectFlag();
 		FlagInjector.reloadRegions();
 		config = new Config(this);
 		config.loadConfig();
@@ -86,14 +83,12 @@ public class WGExtender extends JavaPlugin {
 		getServer().getPluginManager().registerEvents(new Pistons(config), this);
 		getServer().getPluginManager().registerEvents(new EntityExplode(config), this);
 		getServer().getPluginManager().registerEvents(new AttackByPlayer(config), this);
-		getServer().getPluginManager().registerEvents(new PlayerInteractEntities(config), this);
 	}
 
 	@Override
 	public void onDisable() {
 		saveRegions();
 		AnimalProtectFlag.uninjectFlag();
-		EntityInteractRestrictFlag.uninjectFlag();
 		FlagInjector.reloadRegions();
 		config = null;
 		we = null;
