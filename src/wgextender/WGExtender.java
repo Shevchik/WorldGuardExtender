@@ -25,17 +25,14 @@ import org.bukkit.World;
 import org.bukkit.plugin.java.JavaPlugin;
 
 import wgextender.commands.Commands;
-import wgextender.flags.AnimalProtectFlag;
-import wgextender.flags.FlagInjector;
-import wgextender.regionprotect.flagbased.AttackByPlayer;
 import wgextender.regionprotect.ownormembased.IgniteByPlayer;
+import wgextender.regionprotect.ownormembased.RestrictCommands;
 import wgextender.regionprotect.regionbased.BlockBurn;
 import wgextender.regionprotect.regionbased.EntityExplode;
 import wgextender.regionprotect.regionbased.FireSpread;
 import wgextender.regionprotect.regionbased.LiquidFlow;
 import wgextender.regionprotect.regionbased.Pistons;
-import wgextender.wgcommandprocess.RestrictCommandProcess;
-import wgextender.wgcommandprocess.WGCommandProcess;
+import wgextender.wgcommandprocess.WGRegionCommandWrapper;
 
 import com.sk89q.worldedit.bukkit.WorldEditPlugin;
 import com.sk89q.worldguard.bukkit.WorldGuardPlugin;
@@ -68,28 +65,36 @@ public class WGExtender extends JavaPlugin {
 		log = getLogger();
 		we = JavaPlugin.getPlugin(WorldEditPlugin.class);
 		wg = JavaPlugin.getPlugin(WorldGuardPlugin.class);
-		AnimalProtectFlag.injectFlag();
-		FlagInjector.reloadRegions();
 		config = new Config(this);
 		config.loadConfig();
 		commands = new Commands(config);
 		getCommand("wgex").setExecutor(commands);
-		getServer().getPluginManager().registerEvents(new WGCommandProcess(config), this);
-		getServer().getPluginManager().registerEvents(new RestrictCommandProcess(config), this);
+		getServer().getPluginManager().registerEvents(new RestrictCommands(config), this);
 		getServer().getPluginManager().registerEvents(new LiquidFlow(config), this);
 		getServer().getPluginManager().registerEvents(new IgniteByPlayer(config), this);
 		getServer().getPluginManager().registerEvents(new FireSpread(config), this);
 		getServer().getPluginManager().registerEvents(new BlockBurn(config), this);
 		getServer().getPluginManager().registerEvents(new Pistons(config), this);
 		getServer().getPluginManager().registerEvents(new EntityExplode(config), this);
-		getServer().getPluginManager().registerEvents(new AttackByPlayer(config), this);
+		try {
+			WGRegionCommandWrapper.inject(config);
+		} catch (Throwable t) {
+			log(Level.SEVERE, "Unable to inject WorldGuard region command wrapper, shutting down");
+			t.printStackTrace();
+			Bukkit.shutdown();
+		}
 	}
 
 	@Override
 	public void onDisable() {
+		try {
+			WGRegionCommandWrapper.uninject();
+		} catch (Throwable t) {
+			log(Level.SEVERE, "Unable to uninject WorldGuard region command wrapper, shutting down");
+			t.printStackTrace();
+			Bukkit.shutdown();
+		}
 		saveRegions();
-		AnimalProtectFlag.uninjectFlag();
-		FlagInjector.reloadRegions();
 		config = null;
 		we = null;
 		wg = null;

@@ -22,7 +22,7 @@ import java.util.HashSet;
 import java.util.Map.Entry;
 
 import org.bukkit.Bukkit;
-import org.bukkit.entity.Player;
+import org.bukkit.World;
 
 import wgextender.Config;
 import wgextender.WGExtender;
@@ -38,35 +38,35 @@ import com.sk89q.worldguard.protection.regions.ProtectedRegion;
 
 public class AutoFlags {
 
-	protected static void setFlagsForRegion(final Player player, final Config config, final String regionname) {
-		final RegionManager rm = WGExtender.getInstance().getWorldGuard().getRegionManager(player.getWorld());
+	protected static boolean hasRegion(final World world, final String regionname) {
+		return getRegion(world, regionname) != null;
+	}
+
+	protected static ProtectedRegion getRegion(final World world, final String regionname) {
+		final RegionManager rm = WGExtender.getInstance().getWorldGuard().getRegionManager(world);
 		if (rm == null) {
-			return;
+			return null;
 		}
-		if (rm.hasRegion(regionname)) {
-			return;
-		}
-		Bukkit.getScheduler().scheduleSyncDelayedTask(WGExtender.getInstance(), new Runnable() {
-			@Override
-			public void run() {
-				final ProtectedRegion rg = rm.getRegion(regionname);
-				if (rg != null) {
-					for (Entry<Flag<?>, String> entry : config.autoflags.entrySet()) {
-						try {
-							setFlag(player, rg, entry.getKey(), entry.getValue());
-						} catch (InvalidFlagFormat | CommandException e) {
-							e.printStackTrace();
-						}
-					}
+		return rm.getRegion(regionname);
+	}
+
+	protected static void setFlagsForRegion(final World world, final Config config, final String regionname) {
+		final ProtectedRegion rg = getRegion(world, regionname);
+		if (rg != null) {
+			for (Entry<Flag<?>, String> entry : config.autoflags.entrySet()) {
+				try {
+					setFlag(rg, entry.getKey(), entry.getValue());
+				} catch (InvalidFlagFormat | CommandException e) {
+					e.printStackTrace();
 				}
 			}
-		}, 1);
+		}
 	}
 
 	private static final HashSet<Character> valueFlags = new HashSet<Character>(Arrays.asList(new Character[] {'g'}));
-	protected static <T> void setFlag(Player player, ProtectedRegion region, Flag<T> flag, String value) throws CommandException, InvalidFlagFormat {
+	protected static <T> void setFlag(ProtectedRegion region, Flag<T> flag, String value) throws CommandException, InvalidFlagFormat {
 		CommandContext ccontext = new CommandContext("rg "+value, valueFlags);
-		region.setFlag(flag, flag.parseInput(WGExtender.getInstance().getWorldGuard(), player, ccontext.getRemainingString(0)));
+		region.setFlag(flag, flag.parseInput(WGExtender.getInstance().getWorldGuard(), Bukkit.getConsoleSender(), ccontext.getRemainingString(0)));
 		if (ccontext.hasFlag('g')) {
 			String group = ccontext.getFlag('g');
 			RegionGroupFlag groupFlag = flag.getRegionGroupFlag();
@@ -74,7 +74,7 @@ public class AutoFlags {
 				throw new CommandException("Region flag '" + flag.getName() + "' does not have a group flag!");
 			}
 			try {
-				RegionGroup groupValue = groupFlag.parseInput(WGExtender.getInstance().getWorldGuard(), player, group);
+				RegionGroup groupValue = groupFlag.parseInput(WGExtender.getInstance().getWorldGuard(), Bukkit.getConsoleSender(), group);
 				if (groupValue == groupFlag.getDefault()) {
 					region.setFlag(groupFlag, null);
 				} else {

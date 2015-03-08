@@ -15,7 +15,7 @@
  *
  */
 
-package wgextender.wgcommandprocess;
+package wgextender.regionprotect.ownormembased;
 
 import org.bukkit.ChatColor;
 import org.bukkit.entity.Player;
@@ -27,11 +27,11 @@ import org.bukkit.event.player.PlayerCommandPreprocessEvent;
 import wgextender.Config;
 import wgextender.utils.WGRegionUtils;
 
-public class RestrictCommandProcess implements Listener {
+public class RestrictCommands implements Listener {
 
 	private Config config;
 
-	public RestrictCommandProcess(Config config) {
+	public RestrictCommands(Config config) {
 		this.config = config;
 	}
 
