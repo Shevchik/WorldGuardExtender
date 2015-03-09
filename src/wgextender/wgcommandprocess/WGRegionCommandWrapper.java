@@ -33,7 +33,6 @@ import wgextender.wgcommandprocess.BlockLimits.ProcessedClaimInfo;
 public class WGRegionCommandWrapper extends Command {
 
 	public static void inject(Config config) throws NoSuchFieldException, SecurityException, NoSuchMethodException, IllegalAccessException, IllegalArgumentException, InvocationTargetException {
-		System.out.println(CommandUtils.getCommands());
 		Command command = CommandUtils.getCommands().get("region");
 		Command wrapper = new WGRegionCommandWrapper(config, command);
 		CommandUtils.unregisterCommand(WGExtender.getInstance().getWorldGuard(), command);
@@ -80,7 +79,7 @@ public class WGRegionCommandWrapper extends Command {
 			}
 			boolean hasRegion = AutoFlags.hasRegion(player.getWorld(), regionname);
 			boolean result = originalcommand.execute(player, label, args);
-			if (hasRegion && config.autoflagsenabled) {
+			if (!hasRegion && config.autoflagsenabled) {
 				AutoFlags.setFlagsForRegion(player.getWorld(), config, regionname);
 			}
 			return result;
