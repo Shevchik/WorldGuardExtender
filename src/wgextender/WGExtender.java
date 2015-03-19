@@ -21,7 +21,6 @@ import java.util.logging.Level;
 import java.util.logging.Logger;
 
 import org.bukkit.Bukkit;
-import org.bukkit.World;
 import org.bukkit.plugin.java.JavaPlugin;
 
 import wgextender.commands.Commands;
@@ -94,20 +93,10 @@ public class WGExtender extends JavaPlugin {
 			t.printStackTrace();
 			Bukkit.shutdown();
 		}
-		saveRegions();
 		config = null;
 		we = null;
 		wg = null;
 		instance = null;
-	}
-
-	private void saveRegions() {
-		for (World world : Bukkit.getWorlds()) {
-			try {
-				getWorldGuard().getRegionManager(world).save();
-			} catch (Exception e) {
-			}
-		}
 	}
 
 	public static void log(Level level, String message) {
