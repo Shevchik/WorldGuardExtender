@@ -19,13 +19,14 @@ package wgextender.utils;
 
 import java.lang.reflect.Field;
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 import java.util.Map;
+import java.util.Map.Entry;
 
 import org.bukkit.Bukkit;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandMap;
-import org.bukkit.plugin.Plugin;
 import org.bukkit.plugin.PluginManager;
 
 public class CommandUtils {
@@ -38,36 +39,34 @@ public class CommandUtils {
 		return (Map<String, Command>) knownCommandsField.get(commandMap);
 	}
 
-	public static void unregisterCommand(Plugin owningplugin, Command command) throws NoSuchFieldException, SecurityException, IllegalArgumentException, IllegalAccessException {
-		command.unregister(getCommandMap());
-		Map<String, Command> commands = getCommands();
-		for (String name : getCommandNames(owningplugin, command)) {
-			if (commands.get(name) == command) {
-				commands.remove(name);
+	public static List<String> getCommandAliases(String commandname) {
+		try {
+			Map<String, Command> commands = getCommands();
+			Command command = commands.get(commandname);
+			if (command == null) {
+				return Collections.singletonList(commandname);
+			} else {
+				ArrayList<String> aliases = new ArrayList<String>();
+				for (Entry<String, Command> entry : getCommands().entrySet()) {
+					if (entry.getValue() == command) {
+						aliases.add(entry.getKey());
+					}
+				}
+				return aliases;
 			}
+		} catch (Throwable t) {
+			return Collections.singletonList(commandname);
 		}
 	}
 
-	public static void registerCommand(Plugin owningplugin, Command command) throws NoSuchFieldException, SecurityException, IllegalArgumentException, IllegalAccessException {
-		Map<String, Command> commands = getCommands();
-		for (String name : getCommandNames(owningplugin, command)) {
-			if (!commands.containsKey(name)) {
-				commands.put(name, command);
+	public static void replaceComamnd(Command oldcommand, Command newcommand) throws NoSuchFieldException, SecurityException, IllegalArgumentException, IllegalAccessException {
+		oldcommand.unregister(getCommandMap());
+		newcommand.register(getCommandMap());
+		for (Entry<String, Command> entry : getCommands().entrySet()) {
+			if (entry.getValue() == oldcommand) {
+				entry.setValue(newcommand);
 			}
 		}
-		command.register(getCommandMap());
-	}
-
-	private static List<String> getCommandNames(Plugin owningplugin, Command command) {
-		String pluginname = owningplugin.getName().toLowerCase();
-		ArrayList<String> names = new ArrayList<String>();
-		names.add(command.getName());
-		names.add(pluginname+":"+command.getName());
-		for (String alias : command.getAliases()) {
-			names.add(alias);
-			names.add(pluginname+":"+alias);
-		}
-		return names;
 	}
 
 	private static CommandMap getCommandMap() throws NoSuchFieldException, SecurityException, IllegalArgumentException, IllegalAccessException {

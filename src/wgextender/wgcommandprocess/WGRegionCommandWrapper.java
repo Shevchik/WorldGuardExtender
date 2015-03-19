@@ -25,7 +25,6 @@ import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
 
 import wgextender.Config;
-import wgextender.WGExtender;
 import wgextender.utils.CommandUtils;
 import wgextender.utils.WEUtils;
 import wgextender.wgcommandprocess.BlockLimits.ProcessedClaimInfo;
@@ -33,17 +32,13 @@ import wgextender.wgcommandprocess.BlockLimits.ProcessedClaimInfo;
 public class WGRegionCommandWrapper extends Command {
 
 	public static void inject(Config config) throws NoSuchFieldException, SecurityException, NoSuchMethodException, IllegalAccessException, IllegalArgumentException, InvocationTargetException {
-		Command command = CommandUtils.getCommands().get("region");
-		Command wrapper = new WGRegionCommandWrapper(config, command);
-		CommandUtils.unregisterCommand(WGExtender.getInstance().getWorldGuard(), command);
-		CommandUtils.registerCommand(WGExtender.getInstance().getWorldGuard(), wrapper);
+		WGRegionCommandWrapper wrapper = new WGRegionCommandWrapper(config, CommandUtils.getCommands().get("region"));
+		CommandUtils.replaceComamnd(wrapper.originalcommand, wrapper);
 	}
 
 	public static void uninject() throws IllegalAccessException, IllegalArgumentException, InvocationTargetException, NoSuchFieldException, SecurityException, NoSuchMethodException {
-		Command command = CommandUtils.getCommands().get("region");
-		WGRegionCommandWrapper wrapper = (WGRegionCommandWrapper) command;
-		CommandUtils.unregisterCommand(WGExtender.getInstance().getWorldGuard(), wrapper);
-		CommandUtils.registerCommand(WGExtender.getInstance().getWorldGuard(), wrapper.originalcommand);
+		WGRegionCommandWrapper wrapper = (WGRegionCommandWrapper) CommandUtils.getCommands().get("region");
+		CommandUtils.replaceComamnd(wrapper, wrapper.originalcommand);
 	}
 
 
