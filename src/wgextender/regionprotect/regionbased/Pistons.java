@@ -53,12 +53,31 @@ public class Pistons implements Listener {
 		}
 	}
 
+	private boolean isSlimeRetractAvailable = true;
+
+	@SuppressWarnings("deprecation")
 	@EventHandler(priority = EventPriority.LOW, ignoreCancelled = true)
 	public void onRetract(BlockPistonRetractEvent event) {
 		if (!config.blockpistonmoveblock) {
 			return;
 		}
+		Location pistonlocation = event.getBlock().getLocation();
 		if (event.isSticky()) {
+			if (isSlimeRetractAvailable) {
+				try {
+					for (Block block : event.getBlocks()) {
+						if (
+							!WGRegionUtils.isInTheSameRegion(pistonlocation, block.getLocation()) ||
+							!WGRegionUtils.isInTheSameRegion(pistonlocation, block.getRelative(event.getDirection()).getLocation())
+						) {
+							event.setCancelled(true);
+							break;
+						}
+					}
+				} catch (NoSuchMethodError e) {
+					isSlimeRetractAvailable = false;
+				}
+			}
 			if (!WGRegionUtils.isInTheSameRegion(event.getBlock().getLocation(), event.getRetractLocation())) {
 				event.setCancelled(true);
 			}
