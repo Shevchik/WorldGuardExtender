@@ -56,8 +56,6 @@ public class Config {
 	public boolean blockentitydamagebyexplosion = false;
 	public boolean blockpistonmoveblock = false;
 
-	public boolean animalprotectflag = true;
-
 	public boolean autoflagsenabled = false;
 	public Map<Flag<?>, String> autoflags = new HashMap<Flag<?>, String>();
 
@@ -93,8 +91,6 @@ public class Config {
 		blockentityexplosionblockdamage = config.getBoolean("regionprotect.explosion.block.enabled", blockentityexplosionblockdamage);
 		blockentitydamagebyexplosion = config.getBoolean("regionprotect.explosion.entity.enabled", blockentitydamagebyexplosion);
 		blockpistonmoveblock = config.getBoolean("regionprotect.pistonmove.enabled", blockpistonmoveblock);
-
-		animalprotectflag = config.getBoolean("customflags.damage-animals.enabled", animalprotectflag);
 
 		autoflagsenabled = config.getBoolean("autoflags.enabled",autoflagsenabled);
 		autoflags.clear();
@@ -136,8 +132,6 @@ public class Config {
 		config.set("regionprotect.explosion.block.enabled", blockentityexplosionblockdamage);
 		config.set("regionprotect.explosion.entity.enabled", blockentitydamagebyexplosion);
 		config.set("regionprotect.pistonmove.enabled", blockpistonmoveblock);
-
-		config.set("customflags.damage-animals.enabled", animalprotectflag);
 
 		config.set("autoflags.enabled", autoflagsenabled);
 		if (autoflags.isEmpty()) {
