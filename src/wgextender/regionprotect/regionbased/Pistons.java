@@ -74,6 +74,7 @@ public class Pistons implements Listener {
 							break;
 						}
 					}
+					return;
 				} catch (NoSuchMethodError e) {
 					isSlimeRetractAvailable = false;
 				}
