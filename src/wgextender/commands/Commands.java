@@ -176,7 +176,7 @@ public class Commands implements CommandExecutor, TabCompleter {
 							if (flag instanceof EnumFlag<?>) {
 								try {
 									return StringUtils.filterStartsWith(args[3], Transform.toList(
-										ReflectionUtils.getEnumValues(((EnumFlag<? extends Enum<?>>) flag).getEnumClass()),
+										((EnumFlag<? extends Enum<?>>) flag).getEnumClass().getEnumConstants(),
 										new Transform.Function<String, Enum<?>>() {
 											@Override
 											public String transform(Enum<?> original) {

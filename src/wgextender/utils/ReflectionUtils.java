@@ -22,10 +22,6 @@ import java.lang.reflect.InvocationTargetException;
 
 public class ReflectionUtils {
 
-	public static Enum<?>[] getEnumValues(Class<? extends Enum<?>> enumclass) throws IllegalAccessException, IllegalArgumentException, InvocationTargetException, NoSuchMethodException, SecurityException {
-		return (Enum<?>[]) enumclass.getMethod("values").invoke(null);
-	}
-
 	@SuppressWarnings("unchecked")
 	public static <T> T getField(Object obj, String fieldName) throws IllegalArgumentException, IllegalAccessException, NoSuchFieldException, SecurityException {
 		return (T) setAccessible(obj.getClass().getDeclaredField(fieldName)).get(obj);
