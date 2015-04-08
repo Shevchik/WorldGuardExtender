@@ -1,5 +1,5 @@
 /**
- * This program is free software; you can redistribute it and/or
+q * This program is free software; you can redistribute it and/or
  * modify it under the terms of the GNU General Public License
  * as published by the Free Software Foundation; either version 3
  * of the License, or (at your option) any later version.
@@ -31,9 +31,13 @@ import org.bukkit.command.RemoteConsoleCommandSender;
 import org.bukkit.entity.Player;
 
 import wgextender.Config;
+import wgextender.WGExtender;
+import wgextender.wgcommandprocess.AutoFlags;
 
 import com.sk89q.worldguard.protection.flags.DefaultFlag;
 import com.sk89q.worldguard.protection.flags.Flag;
+import com.sk89q.worldguard.protection.regions.GlobalProtectedRegion;
+import com.sk89q.worldguard.protection.regions.ProtectedRegion;
 
 public class Commands implements CommandExecutor {
 
@@ -61,7 +65,7 @@ public class Commands implements CommandExecutor {
 		} else if ((args.length == 1) && args[0].equalsIgnoreCase("search")) {
 			if (sender instanceof Player) {
 				List<String> regions = RegionsInAreaSearch.getRegionsInPlayerSelection((Player) sender);
-				if ((regions == null) || (regions.size() == 0)) {
+				if (regions == null || regions.isEmpty()) {
 					sender.sendMessage(ChatColor.BLUE + "Регионов пересекающихся с выделенной зоной не найдено");
 					return true;
 				} else {
@@ -76,7 +80,12 @@ public class Commands implements CommandExecutor {
 					if (flag.getName().equalsIgnoreCase(args[2])) {
 						try {
 							String value = joinString(Arrays.copyOfRange(args, 3, args.length), " ");
-							SetFlags.setFlags(flag, value, world);
+							for (ProtectedRegion region : WGExtender.getInstance().getWorldGuard().getRegionManager(world).getRegions().values()) {
+								if (region instanceof GlobalProtectedRegion) {
+									continue;
+								}
+								AutoFlags.setFlag(region, flag, value);
+							}
 							sender.sendMessage(ChatColor.BLUE + "Флаги установлены");
 							return true;
 						} catch (Exception e) {

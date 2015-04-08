@@ -64,7 +64,7 @@ public class AutoFlags {
 	}
 
 	private static final HashSet<Character> valueFlags = new HashSet<Character>(Arrays.asList(new Character[] {'g'}));
-	protected static <T> void setFlag(ProtectedRegion region, Flag<T> flag, String value) throws CommandException, InvalidFlagFormat {
+	public static <T> void setFlag(ProtectedRegion region, Flag<T> flag, String value) throws CommandException, InvalidFlagFormat {
 		CommandContext ccontext = new CommandContext("rg "+value, valueFlags);
 		region.setFlag(flag, flag.parseInput(WGExtender.getInstance().getWorldGuard(), Bukkit.getConsoleSender(), ccontext.getRemainingString(0)));
 		if (ccontext.hasFlag('g')) {

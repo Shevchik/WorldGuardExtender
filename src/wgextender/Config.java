@@ -24,6 +24,7 @@ import java.util.HashMap;
 import java.util.HashSet;
 import java.util.LinkedHashMap;
 import java.util.Map;
+import java.util.Map.Entry;
 import java.util.Set;
 
 import org.bukkit.configuration.ConfigurationSection;
@@ -118,8 +119,8 @@ public class Config {
 		if (blocklimits.isEmpty()) {
 			config.createSection("claim.blocklimits.limits");
 		}
-		for (String group : blocklimits.keySet()) {
-			config.set("claim.blocklimits.limits." + group, blocklimits.get(group));
+		for (Entry<String, Integer> entry : blocklimits.entrySet()) {
+			config.set("claim.blocklimits.limits." + entry.getKey(), entry.getValue());
 		}
 
 		config.set("regionprotect.flow.lava.enabled", blocklavaflow);
@@ -137,8 +138,8 @@ public class Config {
 		if (autoflags.isEmpty()) {
 			config.createSection("autoflags.flags");
 		}
-		for (Flag<?> flag : autoflags.keySet()) {
-			config.set("autoflags.flags." + flag.getName(), autoflags.get(flag));
+		for (Entry<Flag<?>, String> entry : autoflags.entrySet()) {
+			config.set("autoflags.flags." + entry.getKey().getName(), entry.getValue());
 		}
 
 		config.set("restrictcommands.enabled", restrictcommandsinregionsenabled);
