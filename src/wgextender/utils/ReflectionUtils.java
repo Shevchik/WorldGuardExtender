@@ -18,7 +18,6 @@
 package wgextender.utils;
 
 import java.lang.reflect.AccessibleObject;
-import java.lang.reflect.InvocationTargetException;
 
 public class ReflectionUtils {
 
