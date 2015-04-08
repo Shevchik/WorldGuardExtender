@@ -44,8 +44,8 @@ public class Pistons implements Listener {
 		Location pistonlocation = event.getBlock().getLocation();
 		for (Block block : event.getBlocks()) {
 			if (
-				!WGRegionUtils.isInTheSameRegion(pistonlocation, block.getLocation()) ||
-				!WGRegionUtils.isInTheSameRegion(pistonlocation, block.getRelative(event.getDirection()).getLocation())
+				!WGRegionUtils.isInTheSameRegionOrWild(pistonlocation, block.getLocation()) ||
+				!WGRegionUtils.isInTheSameRegionOrWild(pistonlocation, block.getRelative(event.getDirection()).getLocation())
 			) {
 				event.setCancelled(true);
 				break;
@@ -67,8 +67,8 @@ public class Pistons implements Listener {
 				try {
 					for (Block block : event.getBlocks()) {
 						if (
-							!WGRegionUtils.isInTheSameRegion(pistonlocation, block.getLocation()) ||
-							!WGRegionUtils.isInTheSameRegion(pistonlocation, block.getRelative(event.getDirection()).getLocation())
+							!WGRegionUtils.isInTheSameRegionOrWild(pistonlocation, block.getLocation()) ||
+							!WGRegionUtils.isInTheSameRegionOrWild(pistonlocation, block.getRelative(event.getDirection()).getLocation())
 						) {
 							event.setCancelled(true);
 							break;
@@ -79,7 +79,7 @@ public class Pistons implements Listener {
 					isSlimeRetractAvailable = false;
 				}
 			}
-			if (!WGRegionUtils.isInTheSameRegion(event.getBlock().getLocation(), event.getRetractLocation())) {
+			if (!WGRegionUtils.isInTheSameRegionOrWild(event.getBlock().getLocation(), event.getRetractLocation())) {
 				event.setCancelled(true);
 			}
 		}

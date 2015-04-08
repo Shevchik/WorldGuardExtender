@@ -98,7 +98,7 @@ public class LiquidFlow implements Listener {
 	}
 
 	private void check(Location source, Location to, Cancellable event) {
-		if (!WGRegionUtils.isInTheSameRegion(source, to)) {
+		if (!WGRegionUtils.isInTheSameRegionOrWild(source, to)) {
 			event.setCancelled(true);
 		}
 	}

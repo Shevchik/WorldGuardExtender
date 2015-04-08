@@ -38,12 +38,12 @@ public class FireSpread implements Listener {
 	public void onBlockIgniteBySpread(BlockSpreadEvent event) {
 		if (event.getNewState().getType() == Material.FIRE) {
 			if (config.blockfirespreadtoregion) {
-				if (!WGRegionUtils.isInTheSameRegion(event.getSource().getLocation(), event.getBlock().getLocation())) {
+				if (!WGRegionUtils.isInTheSameRegionOrWild(event.getSource().getLocation(), event.getBlock().getLocation())) {
 					event.setCancelled(true);
 				}
 			}
 			if (config.blockfirespreadinregion) {
-				if (WGRegionUtils.isInWGRegion(event.getSource().getLocation()) && WGRegionUtils.isInTheSameRegion(event.getSource().getLocation(), event.getBlock().getLocation())) {
+				if (WGRegionUtils.isInTheSameRegion(event.getSource().getLocation(), event.getBlock().getLocation())) {
 					event.setCancelled(true);
 				}
 			}

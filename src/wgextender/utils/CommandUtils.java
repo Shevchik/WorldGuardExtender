@@ -17,7 +17,6 @@
 
 package wgextender.utils;
 
-import java.lang.reflect.Field;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
@@ -31,12 +30,9 @@ import org.bukkit.plugin.PluginManager;
 
 public class CommandUtils {
 
-	@SuppressWarnings("unchecked")
 	public static Map<String, Command> getCommands() throws NoSuchFieldException, SecurityException, IllegalArgumentException, IllegalAccessException {
 		CommandMap commandMap = getCommandMap();
-		Field knownCommandsField = commandMap.getClass().getDeclaredField("knownCommands");
-		knownCommandsField.setAccessible(true);
-		return (Map<String, Command>) knownCommandsField.get(commandMap);
+		return ReflectionUtils.getField(commandMap, "knownCommands");
 	}
 
 	public static List<String> getCommandAliases(String commandname) {
@@ -71,9 +67,7 @@ public class CommandUtils {
 
 	private static CommandMap getCommandMap() throws NoSuchFieldException, SecurityException, IllegalArgumentException, IllegalAccessException {
 		PluginManager pm = Bukkit.getPluginManager();
-		Field commandMapField = pm.getClass().getDeclaredField("commandMap");
-		commandMapField.setAccessible(true);
-		return (CommandMap) commandMapField.get(pm);
+		return ReflectionUtils.getField(pm, "commandMap");
 	}
 
 }

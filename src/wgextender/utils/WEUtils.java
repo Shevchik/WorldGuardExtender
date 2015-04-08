@@ -38,7 +38,7 @@ public class WEUtils {
             session.getRegionSelector(weplayer.getWorld()).learnChanges();
             session.getRegionSelector(weplayer.getWorld()).explainRegionAdjust(weplayer, session);
             return true;
-		} catch (Exception e) {
+		} catch (Throwable e) {
 		}
         return false;
 	}

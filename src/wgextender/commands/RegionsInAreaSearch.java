@@ -21,7 +21,6 @@ import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
 
-import org.bukkit.ChatColor;
 import org.bukkit.entity.Player;
 
 import wgextender.WGExtender;
@@ -34,20 +33,25 @@ import com.sk89q.worldguard.protection.regions.ProtectedRegion;
 
 public class RegionsInAreaSearch {
 
-	protected static List<String> getRegionsInPlayerSelection(Player player) {
+	protected static List<String> getRegionsInPlayerSelection(Player player) throws NoSelectionException {
 		Selection psel = WGExtender.getInstance().getWorldEdit().getSelection(player);
 		if (psel == null) {
-			player.sendMessage(ChatColor.BLUE + "Сначала выделите зону поиска");
-			return null;
-		} else {
-			List<String> regions = new ArrayList<String>();
-			ProtectedRegion fakerg = new ProtectedCuboidRegion("wgexfakerg", BukkitUtil.toVector(psel.getMaximumPoint()).toBlockVector(), BukkitUtil.toVector(psel.getMinimumPoint()).toBlockVector());
-			ApplicableRegionSet ars = WGExtender.getInstance().getWorldGuard().getRegionManager(psel.getWorld()).getApplicableRegions(fakerg);
-			Iterator<ProtectedRegion> it = ars.iterator();
-			while (it.hasNext()) {
-				regions.add(it.next().getId());
-			}
-			return regions;
+			throw new NoSelectionException();
+		}
+		ArrayList<String> regions = new ArrayList<String>();
+		ProtectedRegion fakerg = new ProtectedCuboidRegion("wgexfakerg", BukkitUtil.toVector(psel.getMaximumPoint()).toBlockVector(), BukkitUtil.toVector(psel.getMinimumPoint()).toBlockVector());
+		ApplicableRegionSet ars = WGExtender.getInstance().getWorldGuard().getRegionManager(psel.getWorld()).getApplicableRegions(fakerg);
+		Iterator<ProtectedRegion> it = ars.iterator();
+		while (it.hasNext()) {
+			regions.add(it.next().getId());
+		}
+		return regions;
+	}
+
+	protected static class NoSelectionException extends Exception {
+		private static final long serialVersionUID = 1L;
+		public NoSelectionException() {
+			super("Selection not found");
 		}
 	}
 

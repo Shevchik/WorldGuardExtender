@@ -64,24 +64,20 @@ public class AutoFlags {
 	}
 
 	private static final HashSet<Character> valueFlags = new HashSet<Character>(Arrays.asList(new Character[] {'g'}));
-	public static <T> void setFlag(ProtectedRegion region, Flag<T> flag, String value) throws CommandException, InvalidFlagFormat {
+	public static <T> void setFlag(ProtectedRegion region, Flag<T> flag, String value) throws InvalidFlagFormat, CommandException {
 		CommandContext ccontext = new CommandContext("rg "+value, valueFlags);
 		region.setFlag(flag, flag.parseInput(WGExtender.getInstance().getWorldGuard(), Bukkit.getConsoleSender(), ccontext.getRemainingString(0)));
 		if (ccontext.hasFlag('g')) {
 			String group = ccontext.getFlag('g');
 			RegionGroupFlag groupFlag = flag.getRegionGroupFlag();
 			if (groupFlag == null) {
-				throw new CommandException("Region flag '" + flag.getName() + "' does not have a group flag!");
+				throw new CommandException("Флаг '" + flag.getName() + "' не поддерживает групповое разделение");
 			}
-			try {
-				RegionGroup groupValue = groupFlag.parseInput(WGExtender.getInstance().getWorldGuard(), Bukkit.getConsoleSender(), group);
-				if (groupValue == groupFlag.getDefault()) {
-					region.setFlag(groupFlag, null);
-				} else {
-					region.setFlag(groupFlag, groupValue);
-				}
-			} catch (InvalidFlagFormat e) {
-				throw new CommandException(e.getMessage());
+			RegionGroup groupValue = groupFlag.parseInput(WGExtender.getInstance().getWorldGuard(), Bukkit.getConsoleSender(), group);
+			if (groupValue == groupFlag.getDefault()) {
+				region.setFlag(groupFlag, null);
+			} else {
+				region.setFlag(groupFlag, groupValue);
 			}
 		}
 	}

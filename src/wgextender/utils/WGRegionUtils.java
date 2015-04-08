@@ -33,16 +33,22 @@ public class WGRegionUtils  {
 
 	private static final RegionQuery regionQuery = WGBukkit.getPlugin().getRegionContainer().createQuery();
 
-	public static boolean isInWGRegion(Location location) {
-		return getARS(location).size() > 0;
-	}
-
 	public static boolean canBypassProtection(Player player) {
 		return new RegionPermissionModel(WGExtender.getInstance().getWorldGuard(), player).mayIgnoreRegionProtection(player.getWorld());
 	}
 
-	public static boolean isInTheSameRegion(Location location1, Location location2) {
+	public static boolean isInWGRegion(Location location) {
+		return getARS(location).size() > 0;
+	}
+
+	public static boolean isInTheSameRegionOrWild(Location location1, Location location2) {
 		return getARS(location1).getRegions().equals(getARS(location2).getRegions());
+	}
+
+	public static boolean isInTheSameRegion(Location location1, Location location2) {
+		ApplicableRegionSet ars1 = getARS(location1);
+		ApplicableRegionSet ars2 = getARS(location2);
+		return ars1.size() > 0 && ars1.getRegions().equals(ars2.getRegions());
 	}
 
 	public static boolean canBuild(Player player, Location location) {
