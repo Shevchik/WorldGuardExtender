@@ -15,7 +15,7 @@
  *
  */
 
-package wgextender.regionprotect.ownormembased;
+package wgextender.features.regionprotect.ownormembased;
 
 import java.util.ArrayList;
 import java.util.Arrays;

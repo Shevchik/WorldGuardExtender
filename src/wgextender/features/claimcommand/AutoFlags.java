@@ -15,7 +15,7 @@
  *
  */
 
-package wgextender.wgcommandprocess;
+package wgextender.features.claimcommand;
 
 import java.util.Arrays;
 import java.util.HashSet;

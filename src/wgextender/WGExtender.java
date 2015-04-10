@@ -24,14 +24,16 @@ import org.bukkit.Bukkit;
 import org.bukkit.plugin.java.JavaPlugin;
 
 import wgextender.commands.Commands;
-import wgextender.regionprotect.ownormembased.IgniteByPlayer;
-import wgextender.regionprotect.ownormembased.RestrictCommands;
-import wgextender.regionprotect.regionbased.BlockBurn;
-import wgextender.regionprotect.regionbased.EntityExplode;
-import wgextender.regionprotect.regionbased.FireSpread;
-import wgextender.regionprotect.regionbased.LiquidFlow;
-import wgextender.regionprotect.regionbased.Pistons;
-import wgextender.wgcommandprocess.WGRegionCommandWrapper;
+import wgextender.features.claimcommand.WGRegionCommandWrapper;
+import wgextender.features.extendedwand.WEWandCommandWrapper;
+import wgextender.features.extendedwand.WEWandListener;
+import wgextender.features.regionprotect.ownormembased.IgniteByPlayer;
+import wgextender.features.regionprotect.ownormembased.RestrictCommands;
+import wgextender.features.regionprotect.regionbased.BlockBurn;
+import wgextender.features.regionprotect.regionbased.EntityExplode;
+import wgextender.features.regionprotect.regionbased.FireSpread;
+import wgextender.features.regionprotect.regionbased.LiquidFlow;
+import wgextender.features.regionprotect.regionbased.Pistons;
 
 import com.sk89q.worldedit.bukkit.WorldEditPlugin;
 import com.sk89q.worldguard.bukkit.WorldGuardPlugin;
@@ -75,10 +77,12 @@ public class WGExtender extends JavaPlugin {
 		getServer().getPluginManager().registerEvents(new BlockBurn(config), this);
 		getServer().getPluginManager().registerEvents(new Pistons(config), this);
 		getServer().getPluginManager().registerEvents(new EntityExplode(config), this);
+		getServer().getPluginManager().registerEvents(new WEWandListener(), this);
 		try {
 			WGRegionCommandWrapper.inject(config);
+			WEWandCommandWrapper.inject(config);
 		} catch (Throwable t) {
-			log(Level.SEVERE, "Unable to inject WorldGuard region command wrapper, shutting down");
+			log(Level.SEVERE, "Unable to inject command wrappers, shutting down");
 			t.printStackTrace();
 			Bukkit.shutdown();
 		}
@@ -87,9 +91,10 @@ public class WGExtender extends JavaPlugin {
 	@Override
 	public void onDisable() {
 		try {
+			WEWandCommandWrapper.uninject();
 			WGRegionCommandWrapper.uninject();
 		} catch (Throwable t) {
-			log(Level.SEVERE, "Unable to uninject WorldGuard region command wrapper, shutting down");
+			log(Level.SEVERE, "Unable to uninject command wrappers, shutting down");
 			t.printStackTrace();
 			Bukkit.shutdown();
 		}

@@ -35,10 +35,10 @@ import org.bukkit.entity.Player;
 import wgextender.Config;
 import wgextender.WGExtender;
 import wgextender.commands.RegionsInAreaSearch.NoSelectionException;
+import wgextender.features.claimcommand.AutoFlags;
 import wgextender.utils.ReflectionUtils;
 import wgextender.utils.StringUtils;
 import wgextender.utils.Transform;
-import wgextender.wgcommandprocess.AutoFlags;
 
 import com.sk89q.minecraft.util.commands.CommandException;
 import com.sk89q.worldguard.protection.flags.BooleanFlag;

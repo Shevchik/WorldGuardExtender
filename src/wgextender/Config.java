@@ -63,6 +63,8 @@ public class Config {
 	public boolean restrictcommandsinregionsenabled = false;
 	public Set<String> restrictedcommands = new HashSet<String>();
 
+	public boolean extendedwewand = false;
+
 	public void loadConfig() {
 		loadcfg();
 		savecfg();
@@ -107,6 +109,8 @@ public class Config {
 
 		restrictcommandsinregionsenabled = config.getBoolean("restrictcommands.enabled", restrictcommandsinregionsenabled);
 		restrictedcommands = new HashSet<String>(config.getStringList("restrictcommands.commands"));
+
+		extendedwewand = config.getBoolean("extendedwewand.enabled", extendedwewand);
 	}
 
 	private void savecfg() {
@@ -143,6 +147,8 @@ public class Config {
 
 		config.set("restrictcommands.enabled", restrictcommandsinregionsenabled);
 		config.set("restrictcommands.commands", new ArrayList<String>(restrictedcommands));
+
+		config.set("extendedwewand.enabled", extendedwewand);
 
 		try {config.save(configfile);} catch (IOException e) {}
 	}

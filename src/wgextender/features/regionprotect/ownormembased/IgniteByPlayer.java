@@ -15,37 +15,44 @@
  *
  */
 
-package wgextender.regionprotect.regionbased;
+package wgextender.features.regionprotect.ownormembased;
 
-import org.bukkit.Material;
+import org.bukkit.ChatColor;
+import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.EventPriority;
 import org.bukkit.event.Listener;
-import org.bukkit.event.block.BlockSpreadEvent;
+import org.bukkit.event.block.BlockIgniteEvent;
+import org.bukkit.event.block.BlockIgniteEvent.IgniteCause;
 
 import wgextender.Config;
 import wgextender.utils.WGRegionUtils;
 
-public class FireSpread implements Listener {
+public class IgniteByPlayer implements Listener {
 
 	private Config config;
 
-	public FireSpread(Config config) {
+	public IgniteByPlayer(Config config) {
 		this.config = config;
 	}
 
 	@EventHandler(priority = EventPriority.LOW, ignoreCancelled = true)
-	public void onBlockIgniteBySpread(BlockSpreadEvent event) {
-		if (event.getNewState().getType() == Material.FIRE) {
-			if (config.blockfirespreadtoregion) {
-				if (!WGRegionUtils.isInTheSameRegionOrWild(event.getSource().getLocation(), event.getBlock().getLocation())) {
-					event.setCancelled(true);
-				}
+	public void onPlayerIgnitedBlock(BlockIgniteEvent event) {
+		if (!config.blockigniteotherregionbyplayer) {
+			return;
+		}
+		Player player = event.getPlayer();
+		if (player != null) {
+			if (
+				!WGRegionUtils.canBypassProtection(player) &&
+				!WGRegionUtils.canBuild(player, event.getBlock().getLocation())
+			) {
+				player.sendMessage(ChatColor.RED + "Вы не можете поджечь блок в чужом регионе");
+				event.setCancelled(true);
 			}
-			if (config.blockfirespreadinregion) {
-				if (WGRegionUtils.isInTheSameRegion(event.getSource().getLocation(), event.getBlock().getLocation())) {
-					event.setCancelled(true);
-				}
+		} else if (event.getCause() == IgniteCause.FIREBALL) {
+			if (WGRegionUtils.isInWGRegion(event.getBlock().getLocation())) {
+				event.setCancelled(true);
 			}
 		}
 	}

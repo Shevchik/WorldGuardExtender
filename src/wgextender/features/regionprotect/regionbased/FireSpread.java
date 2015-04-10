@@ -15,31 +15,38 @@
  *
  */
 
-package wgextender.regionprotect.regionbased;
+package wgextender.features.regionprotect.regionbased;
 
+import org.bukkit.Material;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.EventPriority;
 import org.bukkit.event.Listener;
-import org.bukkit.event.block.BlockBurnEvent;
+import org.bukkit.event.block.BlockSpreadEvent;
 
 import wgextender.Config;
 import wgextender.utils.WGRegionUtils;
 
-public class BlockBurn implements Listener {
+public class FireSpread implements Listener {
 
 	private Config config;
 
-	public BlockBurn(Config config) {
+	public FireSpread(Config config) {
 		this.config = config;
 	}
 
 	@EventHandler(priority = EventPriority.LOW, ignoreCancelled = true)
-	public void onBlockBurn(BlockBurnEvent event) {
-		if (!config.blockblockburninregion) {
-			return;
-		}
-		if (WGRegionUtils.isInWGRegion(event.getBlock().getLocation())) {
-			event.setCancelled(true);
+	public void onBlockIgniteBySpread(BlockSpreadEvent event) {
+		if (event.getNewState().getType() == Material.FIRE) {
+			if (config.blockfirespreadtoregion) {
+				if (!WGRegionUtils.isInTheSameRegionOrWild(event.getSource().getLocation(), event.getBlock().getLocation())) {
+					event.setCancelled(true);
+				}
+			}
+			if (config.blockfirespreadinregion) {
+				if (WGRegionUtils.isInTheSameRegion(event.getSource().getLocation(), event.getBlock().getLocation())) {
+					event.setCancelled(true);
+				}
+			}
 		}
 	}
 

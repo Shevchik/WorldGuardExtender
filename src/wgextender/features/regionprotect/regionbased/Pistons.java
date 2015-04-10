@@ -15,7 +15,7 @@
  *
  */
 
-package wgextender.regionprotect.regionbased;
+package wgextender.features.regionprotect.regionbased;
 
 import org.bukkit.Location;
 import org.bukkit.block.Block;

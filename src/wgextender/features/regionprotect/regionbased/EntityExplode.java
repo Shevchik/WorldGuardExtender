@@ -15,7 +15,7 @@
  *
  */
 
-package wgextender.regionprotect.regionbased;
+package wgextender.features.regionprotect.regionbased;
 
 import java.util.Iterator;
 

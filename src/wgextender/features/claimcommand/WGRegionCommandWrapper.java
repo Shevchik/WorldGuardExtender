@@ -15,7 +15,7 @@
  *
  */
 
-package wgextender.wgcommandprocess;
+package wgextender.features.claimcommand;
 
 import java.lang.reflect.InvocationTargetException;
 
@@ -25,9 +25,9 @@ import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
 
 import wgextender.Config;
+import wgextender.features.claimcommand.BlockLimits.ProcessedClaimInfo;
 import wgextender.utils.CommandUtils;
 import wgextender.utils.WEUtils;
-import wgextender.wgcommandprocess.BlockLimits.ProcessedClaimInfo;
 
 public class WGRegionCommandWrapper extends Command {
 
