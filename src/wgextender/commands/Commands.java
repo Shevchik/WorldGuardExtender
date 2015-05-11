@@ -77,7 +77,7 @@ public class Commands implements CommandExecutor, TabCompleter {
 					sender.sendMessage(ChatColor.BLUE + "wgex search - ищет регионы в выделенной области");
 					sender.sendMessage(ChatColor.BLUE + "wgex setflag {world} {flag} {value}  - устанавливает флаг {flag} со значением {value} на все регионы в мире {world}");
 					sender.sendMessage(ChatColor.BLUE + "wgex removeowner {name} - удаляет игрока из списков владельцев всех регионов");
-					sender.sendMessage(ChatColor.BLUE + "wgex removemember {name} - удаляет игрока из списков владельцев всех регионов");
+					sender.sendMessage(ChatColor.BLUE + "wgex removemember {name} - удаляет игрока из списков членов всех регионов");
 					return true;
 				}
 				case "reload": {
@@ -146,7 +146,7 @@ public class Commands implements CommandExecutor, TabCompleter {
 							region.setOwners(owners);
 						}
 					}
-					sender.sendMessage(ChatColor.BLUE + "Игрок удалён из списков владельцев всех приватов");
+					sender.sendMessage(ChatColor.BLUE + "Игрок удалён из списков владельцев всех регионов");
 					return true;
 				}
 				case "removemember": {
@@ -165,7 +165,7 @@ public class Commands implements CommandExecutor, TabCompleter {
 							region.setMembers(owners);
 						}
 					}
-					sender.sendMessage(ChatColor.BLUE + "Игрок удалён из списков владельцев всех приватов");
+					sender.sendMessage(ChatColor.BLUE + "Игрок удалён из списков членов всех регионов");
 					return true;
 				}
 			}
@@ -182,7 +182,9 @@ public class Commands implements CommandExecutor, TabCompleter {
 		if (args.length == 1) {
 			return StringUtils.filterStartsWith(
 				args[0],
-				sender instanceof Player ? new String[] { "help", "reload", "search", "setflag" } : new String[] { "help", "reload", "setflag"}
+				sender instanceof Player ?
+				new String[] { "help", "reload", "search", "setflag", "removeowner", "removemember" } :
+				new String[] { "help", "reload", "setflag", "removeowner", "removemember"}
 			);
 		}
 		if (args.length >= 2) {
