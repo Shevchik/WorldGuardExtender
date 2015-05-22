@@ -49,9 +49,9 @@ public class BlockLimits {
 		Vector min = psel.getNativeMinimumPoint();
 		Vector max = psel.getNativeMaximumPoint();
 		BigInteger size = BigInteger.ONE;
-		size = size.multiply(BigInteger.valueOf(max.getBlockX()).subtract(BigInteger.valueOf(min.getBlockX())));
-		size = size.multiply(BigInteger.valueOf(max.getBlockZ()).subtract(BigInteger.valueOf(min.getBlockZ())));
-		size = size.multiply(BigInteger.valueOf(max.getBlockY()).subtract(BigInteger.valueOf(min.getBlockY())));
+		size = size.multiply(BigInteger.valueOf(max.getBlockX()).subtract(BigInteger.valueOf(min.getBlockX()).add(BigInteger.ONE)));
+		size = size.multiply(BigInteger.valueOf(max.getBlockZ()).subtract(BigInteger.valueOf(min.getBlockZ()).add(BigInteger.ONE)));
+		size = size.multiply(BigInteger.valueOf(max.getBlockY()).subtract(BigInteger.valueOf(min.getBlockY()).add(BigInteger.ONE)));
 		if (size.compareTo(BigInteger.valueOf(Integer.MAX_VALUE)) > 0) {
 			info.disallow();
 			info.setInfo(size, BigInteger.valueOf(-1));
