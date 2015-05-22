@@ -48,9 +48,6 @@ public class WGExtender extends JavaPlugin {
 
 	private static Logger log;
 
-	private Config config;
-	private Commands commands;
-
 	private WorldEditPlugin we = null;
 	public WorldEditPlugin getWorldEdit() {
 		return we;
@@ -67,10 +64,9 @@ public class WGExtender extends JavaPlugin {
 		log = getLogger();
 		we = JavaPlugin.getPlugin(WorldEditPlugin.class);
 		wg = JavaPlugin.getPlugin(WorldGuardPlugin.class);
-		config = new Config(this);
+		Config config = new Config(this);
 		config.loadConfig();
-		commands = new Commands(config);
-		getCommand("wgex").setExecutor(commands);
+		getCommand("wgex").setExecutor(new Commands(config));
 		getServer().getPluginManager().registerEvents(new RestrictCommands(config), this);
 		getServer().getPluginManager().registerEvents(new LiquidFlow(config), this);
 		getServer().getPluginManager().registerEvents(new IgniteByPlayer(config), this);
@@ -100,7 +96,6 @@ public class WGExtender extends JavaPlugin {
 			t.printStackTrace();
 			Bukkit.shutdown();
 		}
-		config = null;
 		we = null;
 		wg = null;
 		instance = null;
