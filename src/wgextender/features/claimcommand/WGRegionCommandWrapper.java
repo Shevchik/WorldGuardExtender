@@ -24,6 +24,8 @@ import org.bukkit.command.Command;
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
 
+import com.sk89q.minecraft.util.commands.CommandException;
+
 import wgextender.Config;
 import wgextender.features.claimcommand.BlockLimits.ProcessedClaimInfo;
 import wgextender.utils.CommandUtils;
@@ -55,7 +57,7 @@ public class WGRegionCommandWrapper extends Command {
 
 	@Override
 	public boolean execute(CommandSender sender, String label, String[] args) {
-		if (sender instanceof Player && args.length >= 2 && args[0].equals("claim")) {
+		if (sender instanceof Player && args.length >= 2 && args[0].equalsIgnoreCase("claim")) {
 			Player player = (Player) sender;
 			String regionname = args[1];
 			if (config.expandvert) {
@@ -73,11 +75,15 @@ public class WGRegionCommandWrapper extends Command {
 				return true;
 			}
 			boolean hasRegion = AutoFlags.hasRegion(player.getWorld(), regionname);
-			boolean result = originalcommand.execute(player, label, args);
-			if (!hasRegion && config.autoflagsenabled) {
-				AutoFlags.setFlagsForRegion(player.getWorld(), config, regionname);
+			try {
+				WEClaimCommand.claim(regionname, sender);
+				if (!hasRegion && config.autoflagsenabled) {
+					AutoFlags.setFlagsForRegion(player.getWorld(), config, regionname);
+				}
+			} catch (CommandException ex) {
+				sender.sendMessage(ChatColor.RED + ex.getMessage());
 			}
-			return result;
+			return true;
 		} else {
 			return originalcommand.execute(sender, label, args);
 		}
