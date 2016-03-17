@@ -1,7 +1,6 @@
 package wgextender.features.regionprotect.ownormembased;
 
-import org.bukkit.ChatColor;
-import org.bukkit.Material;
+import org.bukkit.ChatColor;s
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.EventPriority;
 import org.bukkit.event.Listener;
@@ -22,7 +21,7 @@ public class OffHandTempFix implements Listener {
 		if (event.getHand() != EquipmentSlot.OFF_HAND) {
 			return;
 		}
-		if (event.getItem().getType() == Material.AIR) {
+		if (event.getItem() == null) {
 			return;
 		}
 		if (
