@@ -1,6 +1,6 @@
 package wgextender.features.regionprotect.ownormembased;
 
-import org.bukkit.ChatColor;s
+import org.bukkit.ChatColor;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.EventPriority;
 import org.bukkit.event.Listener;
