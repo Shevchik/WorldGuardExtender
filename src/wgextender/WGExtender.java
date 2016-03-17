@@ -28,6 +28,7 @@ import wgextender.features.claimcommand.WGRegionCommandWrapper;
 import wgextender.features.extendedwand.WEWandCommandWrapper;
 import wgextender.features.extendedwand.WEWandListener;
 import wgextender.features.regionprotect.ownormembased.IgniteByPlayer;
+import wgextender.features.regionprotect.ownormembased.OffHandTempFix;
 import wgextender.features.regionprotect.ownormembased.RestrictCommands;
 import wgextender.features.regionprotect.regionbased.BlockBurn;
 import wgextender.features.regionprotect.regionbased.BlockExplode;
@@ -76,6 +77,7 @@ public class WGExtender extends JavaPlugin {
 		getServer().getPluginManager().registerEvents(new EntityExplode(config), this);
 		getServer().getPluginManager().registerEvents(new BlockExplode(config), this);
 		getServer().getPluginManager().registerEvents(new WEWandListener(), this);
+		getServer().getPluginManager().registerEvents(new OffHandTempFix(), this);
 		try {
 			WGRegionCommandWrapper.inject(config);
 			WEWandCommandWrapper.inject(config);
