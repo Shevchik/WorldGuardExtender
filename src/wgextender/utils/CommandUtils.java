@@ -19,6 +19,7 @@ package wgextender.utils;
 
 import java.util.ArrayList;
 import java.util.Collections;
+import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
 import java.util.Map.Entry;
@@ -56,9 +57,13 @@ public class CommandUtils {
 	}
 
 	public static void replaceComamnd(Command oldcommand, Command newcommand) throws NoSuchFieldException, SecurityException, IllegalArgumentException, IllegalAccessException {
-		oldcommand.unregister(getCommandMap());
-		newcommand.register(getCommandMap());
-		for (Entry<String, Command> entry : getCommands().entrySet()) {
+		getCommandMap().register("wgextender", newcommand);
+		Iterator<Entry<String, Command>> iterator = getCommands().entrySet().iterator();
+		while (iterator.hasNext()) {
+			Entry<String, Command> entry = iterator.next();
+			if (entry.getValue() == newcommand) {
+				iterator.remove();
+			}
 			if (entry.getValue() == oldcommand) {
 				entry.setValue(newcommand);
 			}
