@@ -42,7 +42,7 @@ public class BlockLimits {
 
 	public ProcessedClaimInfo processClaimInfo(Config config, Player player) {
 		ProcessedClaimInfo info = new ProcessedClaimInfo();
-		Selection psel = WGExtender.getInstance().getWorldEdit().getSelection(player);
+		Selection psel = WGExtender.getWorldEdit().getSelection(player);
 		if (psel == null) {
 			return info;
 		}
@@ -61,7 +61,7 @@ public class BlockLimits {
 			if (player.hasPermission("worldguard.region.unlimited")) {
 				return info;
 			}
-			String[] pgroups = vaultperms != null ? ((Permission) vaultperms).getPlayerGroups(player) : WGExtender.getInstance().getWorldGuard().getGroups(player);
+			String[] pgroups = vaultperms != null ? ((Permission) vaultperms).getPlayerGroups(player) : WGExtender.getWorldGuard().getGroups(player);
 			if (pgroups.length == 0) {
 				return info;
 			}

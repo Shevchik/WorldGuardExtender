@@ -36,8 +36,7 @@ public class WEWandListener implements Listener {
 	public void onEntityAttack(EntityDamageByEntityEvent event) {
 		Entity edamager = event.getDamager();
 		if (edamager instanceof org.bukkit.entity.Player) {
-			@SuppressWarnings("deprecation")
-			ItemStack item = ((Player) edamager).getItemInHand();
+			ItemStack item = ((Player) edamager).getInventory().getItemInMainHand();
 			if (WEWand.isWand(item)) {
 				event.setCancelled(true);
 			}

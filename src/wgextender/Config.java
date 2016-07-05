@@ -100,7 +100,7 @@ public class Config {
 		ConfigurationSection aflagscs = config.getConfigurationSection("autoflags.flags");
 		if (aflagscs != null) {
 			for (String sflag : aflagscs.getKeys(false)) {
-				Flag<?> flag = DefaultFlag.fuzzyMatchFlag(sflag);
+				Flag<?> flag = DefaultFlag.fuzzyMatchFlag(WGExtender.getWorldGuard().getFlagRegistry(), sflag);
 				if (flag != null) {
 					autoflags.put(flag, aflagscs.getString(sflag));
 				}

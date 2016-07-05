@@ -48,13 +48,13 @@ public class WGExtender extends JavaPlugin {
 
 	private static Logger log;
 
-	private WorldEditPlugin we = null;
-	public WorldEditPlugin getWorldEdit() {
+	private static WorldEditPlugin we = null;
+	public static WorldEditPlugin getWorldEdit() {
 		return we;
 	}
 
-	private WorldGuardPlugin wg = null;
-	public WorldGuardPlugin getWorldGuard() {
+	private static WorldGuardPlugin wg = null;
+	public static WorldGuardPlugin getWorldGuard() {
 		return wg;
 	}
 

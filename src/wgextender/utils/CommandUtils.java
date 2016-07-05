@@ -57,13 +57,9 @@ public class CommandUtils {
 	}
 
 	public static void replaceComamnd(Command oldcommand, Command newcommand) throws NoSuchFieldException, SecurityException, IllegalArgumentException, IllegalAccessException {
-		getCommandMap().register("wgextender", newcommand);
 		Iterator<Entry<String, Command>> iterator = getCommands().entrySet().iterator();
 		while (iterator.hasNext()) {
 			Entry<String, Command> entry = iterator.next();
-			if (entry.getValue() == newcommand) {
-				iterator.remove();
-			}
 			if (entry.getValue() == oldcommand) {
 				entry.setValue(newcommand);
 			}

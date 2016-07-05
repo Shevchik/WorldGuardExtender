@@ -107,15 +107,15 @@ public class Commands implements CommandExecutor, TabCompleter {
 					}
 					World world = Bukkit.getWorld(args[1]);
 					if (world != null) {
-						Flag<?> flag = DefaultFlag.fuzzyMatchFlag(args[2]);
+						Flag<?> flag = DefaultFlag.fuzzyMatchFlag(WGExtender.getWorldGuard().getFlagRegistry(), args[2]);
 						if (flag != null) {
 							try {
 								String value = StringUtils.join(Arrays.copyOfRange(args, 3, args.length), " ");
-								for (ProtectedRegion region : WGExtender.getInstance().getWorldGuard().getRegionManager(world).getRegions().values()) {
+								for (ProtectedRegion region : WGExtender.getWorldGuard().getRegionManager(world).getRegions().values()) {
 									if (region instanceof GlobalProtectedRegion) {
 										continue;
 									}
-									AutoFlags.setFlag(region, flag, value);
+									AutoFlags.setFlag(world, region, flag, value);
 								}
 								sender.sendMessage(ChatColor.BLUE + "Флаги установлены");
 							} catch (InvalidFlagFormat e) {
@@ -137,7 +137,7 @@ public class Commands implements CommandExecutor, TabCompleter {
 					OfflinePlayer oplayer = Bukkit.getOfflinePlayer(args[1]);
 					String name = oplayer.getName();
 					UUID uuid = oplayer.getUniqueId();
-					RegionContainer container = WGExtender.getInstance().getWorldGuard().getRegionContainer();
+					RegionContainer container = WGExtender.getWorldGuard().getRegionContainer();
 					for (RegionManager manager : container.getLoaded()) {
 						for (ProtectedRegion region : manager.getRegions().values()) {
 							DefaultDomain owners = region.getOwners();
@@ -156,7 +156,7 @@ public class Commands implements CommandExecutor, TabCompleter {
 					OfflinePlayer oplayer = Bukkit.getOfflinePlayer(args[1]);
 					String name = oplayer.getName();
 					UUID uuid = oplayer.getUniqueId();
-					RegionContainer container = WGExtender.getInstance().getWorldGuard().getRegionContainer();
+					RegionContainer container = WGExtender.getWorldGuard().getRegionContainer();
 					for (RegionManager manager : container.getLoaded()) {
 						for (ProtectedRegion region : manager.getRegions().values()) {
 							DefaultDomain owners = region.getMembers();
@@ -205,7 +205,7 @@ public class Commands implements CommandExecutor, TabCompleter {
 							}));
 						}
 						case 3: {
-							return StringUtils.filterStartsWith(args[2], Transform.toList(DefaultFlag.getFlags(), new Transform.Function<String, Flag<?>>() {
+							return StringUtils.filterStartsWith(args[2], Transform.toList(WGExtender.getWorldGuard().getFlagRegistry(), new Transform.Function<String, Flag<?>>() {
 								@Override
 								public String transform(Flag<?> original) {
 									return original.getName();
@@ -213,7 +213,7 @@ public class Commands implements CommandExecutor, TabCompleter {
 							}));
 						}
 						case 4: {
-							Flag<?> flag = DefaultFlag.fuzzyMatchFlag(args[2]);
+							Flag<?> flag = DefaultFlag.fuzzyMatchFlag(WGExtender.getWorldGuard().getFlagRegistry(), args[2]);
 							if (flag instanceof StateFlag) {
 								return StringUtils.filterStartsWith(args[3], Transform.toList(StateFlag.State.values(), new Transform.Function<String, StateFlag.State>() {
 									@Override

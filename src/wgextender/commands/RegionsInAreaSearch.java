@@ -34,13 +34,13 @@ import com.sk89q.worldguard.protection.regions.ProtectedRegion;
 public class RegionsInAreaSearch {
 
 	protected static List<String> getRegionsInPlayerSelection(Player player) throws NoSelectionException {
-		Selection psel = WGExtender.getInstance().getWorldEdit().getSelection(player);
+		Selection psel = WGExtender.getWorldEdit().getSelection(player);
 		if (psel == null) {
 			throw new NoSelectionException();
 		}
 		ArrayList<String> regions = new ArrayList<String>();
 		ProtectedRegion fakerg = new ProtectedCuboidRegion("wgexfakerg", BukkitUtil.toVector(psel.getMaximumPoint()).toBlockVector(), BukkitUtil.toVector(psel.getMinimumPoint()).toBlockVector());
-		ApplicableRegionSet ars = WGExtender.getInstance().getWorldGuard().getRegionManager(psel.getWorld()).getApplicableRegions(fakerg);
+		ApplicableRegionSet ars = WGExtender.getWorldGuard().getRegionManager(psel.getWorld()).getApplicableRegions(fakerg);
 		Iterator<ProtectedRegion> it = ars.iterator();
 		while (it.hasNext()) {
 			regions.add(it.next().getId());

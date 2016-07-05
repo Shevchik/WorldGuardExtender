@@ -53,7 +53,7 @@ public class WGRegionCommandWrapper extends Command {
 		this.originalcommand = originalcommand;
 	}
 
-	private BlockLimits blocklimits = new BlockLimits();
+	private final BlockLimits blocklimits = new BlockLimits();
 
 	@Override
 	public boolean execute(CommandSender sender, String label, String[] args) {

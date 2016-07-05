@@ -29,8 +29,8 @@ import com.sk89q.worldguard.protection.util.DomainInputResolver.UserLocatorPolic
 public class WEClaimCommand {
 
 	protected static void claim(String regionname, CommandSender sender) throws CommandException {
-		Player player = WGExtender.getInstance().getWorldGuard().checkPlayer(sender);
-		LocalPlayer localPlayer = WGExtender.getInstance().getWorldGuard().wrapPlayer(player);
+		Player player = WGExtender.getWorldGuard().checkPlayer(sender);
+		LocalPlayer localPlayer = WGExtender.getWorldGuard().wrapPlayer(player);
 		RegionPermissionModel permModel = getPermissionModel(sender);
 
 		if (!permModel.mayClaim()) {
@@ -39,12 +39,12 @@ public class WEClaimCommand {
 
 		String id = checkRegionId(regionname, false);
 
-		RegionManager manager = checkRegionManager(WGExtender.getInstance().getWorldGuard(), player.getWorld());
+		RegionManager manager = checkRegionManager(WGExtender.getWorldGuard(), player.getWorld());
 
 		checkRegionDoesNotExist(manager, id, false);
 		ProtectedRegion region = checkRegionFromSelection(player, id);
 
-		WorldConfiguration wcfg = WGExtender.getInstance().getWorldGuard().getGlobalStateManager().get(player.getWorld());
+		WorldConfiguration wcfg = WGExtender.getWorldGuard().getGlobalStateManager().get(player.getWorld());
 
 		if (!permModel.mayClaimRegionsUnbounded()) {
 			int maxRegionCount = wcfg.getMaxRegionCount(player);
@@ -89,7 +89,7 @@ public class WEClaimCommand {
 			}
 		}
 
-		RegionAdder task = new RegionAdder(WGExtender.getInstance().getWorldGuard(), manager, region);
+		RegionAdder task = new RegionAdder(WGExtender.getWorldGuard(), manager, region);
 		task.setLocatorPolicy(UserLocatorPolicy.UUID_ONLY);
 		task.setOwnersInput(new String[] { player.getName() });
 		try {

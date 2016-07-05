@@ -27,8 +27,8 @@ import com.sk89q.worldedit.regions.Region;
 public class WEUtils {
 
 	public static boolean expandVert(org.bukkit.entity.Player player) {
-		Player weplayer = WGExtender.getInstance().getWorldEdit().wrapPlayer(player);
-		LocalSession session = WGExtender.getInstance().getWorldEdit().getSession(player);
+		Player weplayer = WGExtender.getWorldEdit().wrapPlayer(player);
+		LocalSession session = WGExtender.getWorldEdit().getSession(player);
         try {
 			Region region = session.getSelection(weplayer.getWorld());
 			region.expand(

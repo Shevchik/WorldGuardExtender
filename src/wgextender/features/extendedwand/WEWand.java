@@ -30,7 +30,7 @@ public class WEWand {
 
 	@SuppressWarnings("deprecation")
 	public static ItemStack getWand() {
-		ItemStack itemstack = new ItemStack(WGExtender.getInstance().getWorldEdit().getLocalConfiguration().wandItem);
+		ItemStack itemstack = new ItemStack(WGExtender.getWorldEdit().getLocalConfiguration().wandItem);
 		ItemMeta meta = Bukkit.getItemFactory().getItemMeta(itemstack.getType());
 		meta.setDisplayName(WAND_NAME);
 		itemstack.setItemMeta(meta);
@@ -39,7 +39,7 @@ public class WEWand {
 
 	@SuppressWarnings("deprecation")
 	public static boolean isWand(ItemStack itemstack) {
-		if (itemstack.getTypeId() == WGExtender.getInstance().getWorldEdit().getLocalConfiguration().wandItem) {
+		if (itemstack.getTypeId() == WGExtender.getWorldEdit().getLocalConfiguration().wandItem) {
 			ItemMeta im = itemstack.getItemMeta();
 			if (im != null) {
 				return WAND_NAME.equals(im.getDisplayName());

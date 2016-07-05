@@ -23,7 +23,6 @@ import org.bukkit.entity.Player;
 import wgextender.WGExtender;
 
 import com.sk89q.worldguard.bukkit.RegionQuery;
-import com.sk89q.worldguard.bukkit.WGBukkit;
 import com.sk89q.worldguard.bukkit.permission.RegionPermissionModel;
 import com.sk89q.worldguard.protection.ApplicableRegionSet;
 import com.sk89q.worldguard.protection.flags.DefaultFlag;
@@ -31,10 +30,10 @@ import com.sk89q.worldguard.protection.flags.StateFlag;
 
 public class WGRegionUtils  {
 
-	private static final RegionQuery regionQuery = WGBukkit.getPlugin().getRegionContainer().createQuery();
+	private static final RegionQuery regionQuery = WGExtender.getWorldGuard().getRegionContainer().createQuery();
 
 	public static boolean canBypassProtection(Player player) {
-		return new RegionPermissionModel(WGExtender.getInstance().getWorldGuard(), player).mayIgnoreRegionProtection(player.getWorld());
+		return new RegionPermissionModel(WGExtender.getWorldGuard(), player).mayIgnoreRegionProtection(player.getWorld());
 	}
 
 	public static boolean isInWGRegion(Location location) {
