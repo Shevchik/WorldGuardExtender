@@ -27,6 +27,9 @@ import wgextender.commands.Commands;
 import wgextender.features.claimcommand.WGRegionCommandWrapper;
 import wgextender.features.extendedwand.WEWandCommandWrapper;
 import wgextender.features.extendedwand.WEWandListener;
+import wgextender.features.flags.ChorusFruitUseFlag;
+import wgextender.features.flags.FlagRegistration;
+import wgextender.features.regionprotect.ownormembased.ChorusFruitFlagHandler;
 import wgextender.features.regionprotect.ownormembased.IgniteByPlayer;
 import wgextender.features.regionprotect.ownormembased.PvPHandlingListener;
 import wgextender.features.regionprotect.ownormembased.RestrictCommands;
@@ -67,6 +70,7 @@ public class WGExtender extends JavaPlugin {
 		log = getLogger();
 		we = JavaPlugin.getPlugin(WorldEditPlugin.class);
 		wg = JavaPlugin.getPlugin(WorldGuardPlugin.class);
+		ChorusFruitUseFlag.assignInstance();
 		Config config = new Config(this);
 		config.loadConfig();
 		getCommand("wgex").setExecutor(new Commands(config));
@@ -79,9 +83,11 @@ public class WGExtender extends JavaPlugin {
 		getServer().getPluginManager().registerEvents(new EntityExplode(config), this);
 		getServer().getPluginManager().registerEvents(new BlockExplode(config), this);
 		getServer().getPluginManager().registerEvents(new WEWandListener(), this);
+		getServer().getPluginManager().registerEvents(new ChorusFruitFlagHandler(), this);
 		try {
 			WGRegionCommandWrapper.inject(config);
 			WEWandCommandWrapper.inject(config);
+			FlagRegistration.registerFlag(ChorusFruitUseFlag.getInstance());
 			pvplistener = new PvPHandlingListener(config);
 			pvplistener.inject();
 		} catch (Throwable t) {
