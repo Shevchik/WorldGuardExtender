@@ -28,6 +28,7 @@ import wgextender.features.claimcommand.WGRegionCommandWrapper;
 import wgextender.features.extendedwand.WEWandCommandWrapper;
 import wgextender.features.extendedwand.WEWandListener;
 import wgextender.features.regionprotect.ownormembased.IgniteByPlayer;
+import wgextender.features.regionprotect.ownormembased.PvPHandlingListener;
 import wgextender.features.regionprotect.ownormembased.RestrictCommands;
 import wgextender.features.regionprotect.regionbased.BlockBurn;
 import wgextender.features.regionprotect.regionbased.BlockExplode;
@@ -58,6 +59,8 @@ public class WGExtender extends JavaPlugin {
 		return wg;
 	}
 
+	private PvPHandlingListener pvplistener;
+
 	@Override
 	public void onEnable() {
 		instance = this;
@@ -79,8 +82,10 @@ public class WGExtender extends JavaPlugin {
 		try {
 			WGRegionCommandWrapper.inject(config);
 			WEWandCommandWrapper.inject(config);
+			pvplistener = new PvPHandlingListener(config);
+			pvplistener.inject();
 		} catch (Throwable t) {
-			log(Level.SEVERE, "Unable to inject command wrappers, shutting down");
+			log(Level.SEVERE, "Unable to inject, shutting down");
 			t.printStackTrace();
 			Bukkit.shutdown();
 		}
@@ -91,8 +96,9 @@ public class WGExtender extends JavaPlugin {
 		try {
 			WEWandCommandWrapper.uninject();
 			WGRegionCommandWrapper.uninject();
+			pvplistener.uninject();
 		} catch (Throwable t) {
-			log(Level.SEVERE, "Unable to uninject command wrappers, shutting down");
+			log(Level.SEVERE, "Unable to uninject, shutting down");
 			t.printStackTrace();
 			Bukkit.shutdown();
 		}

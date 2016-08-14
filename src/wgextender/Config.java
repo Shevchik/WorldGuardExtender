@@ -65,6 +65,11 @@ public class Config {
 
 	public boolean extendedwewand = false;
 
+	public Boolean miscPvpMode = null;
+	private final String miscPvpModeAllow = "allow";
+	private final String miscPvpModeDeny = "deny";
+	private final String miscPvpModeDefault = "default";
+
 	public void loadConfig() {
 		loadcfg();
 		savecfg();
@@ -111,6 +116,15 @@ public class Config {
 		restrictedcommands = new HashSet<String>(config.getStringList("restrictcommands.commands"));
 
 		extendedwewand = config.getBoolean("extendedwewand.enabled", extendedwewand);
+
+		String miscPvpModeStr = config.getString("misc.pvpmode", miscPvpModeDefault);
+		if (miscPvpModeStr.equalsIgnoreCase(miscPvpModeAllow)) {
+			miscPvpMode = Boolean.TRUE;
+		} else if (miscPvpModeStr.equalsIgnoreCase(miscPvpModeDeny)) {
+			miscPvpMode = Boolean.FALSE;
+		} else {
+			miscPvpMode = null;
+		}
 	}
 
 	private void savecfg() {
@@ -149,6 +163,8 @@ public class Config {
 		config.set("restrictcommands.commands", new ArrayList<String>(restrictedcommands));
 
 		config.set("extendedwewand.enabled", extendedwewand);
+
+		config.set("misc.pvpmode", miscPvpMode != null ? miscPvpMode ? miscPvpModeAllow : miscPvpModeDeny : miscPvpModeDefault);
 
 		try {config.save(configfile);} catch (IOException e) {}
 	}

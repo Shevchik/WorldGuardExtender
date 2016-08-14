@@ -30,7 +30,7 @@ import com.sk89q.worldguard.protection.flags.StateFlag;
 
 public class WGRegionUtils  {
 
-	private static final RegionQuery regionQuery = WGExtender.getWorldGuard().getRegionContainer().createQuery();
+	public static final RegionQuery REGION_QUERY = WGExtender.getWorldGuard().getRegionContainer().createQuery();
 
 	public static boolean canBypassProtection(Player player) {
 		return new RegionPermissionModel(WGExtender.getWorldGuard(), player).mayIgnoreRegionProtection(player.getWorld());
@@ -55,11 +55,11 @@ public class WGRegionUtils  {
 	}
 
 	public static boolean isFlagAllows(Player player, Location location, StateFlag flag) {
-		return regionQuery.testState(location, player, flag);
+		return REGION_QUERY.testState(location, player, flag);
 	}
 
 	private static ApplicableRegionSet getARS(Location l) {
-		return regionQuery.getApplicableRegions(l);
+		return REGION_QUERY.getApplicableRegions(l);
 	}
 
 }
