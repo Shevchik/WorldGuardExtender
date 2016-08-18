@@ -104,8 +104,13 @@ public class PvPHandlingListener extends WGOverrideListener {
 				canDamage = query.queryState(playerAttacker.getLocation(), playerAttacker, combine(event, DefaultFlag.PVP)) != State.DENY &&
 							query.queryState(target, playerAttacker, combine(event, DefaultFlag.PVP)) != State.DENY;
 			} else {
-				canDamage = query.queryState(playerAttacker.getLocation(), playerAttacker, combine(event, DefaultFlag.PVP)) == State.ALLOW &&
-							query.queryState(target, playerAttacker, combine(event, DefaultFlag.PVP)) == State.ALLOW;
+				if (!WGRegionUtils.isInWGRegion(playerAttacker.getLocation()) && !WGRegionUtils.isInWGRegion(target)) {
+					canDamage = true;
+				} else {
+					canDamage = query.queryState(playerAttacker.getLocation(), playerAttacker, combine(event, DefaultFlag.PVP)) == State.ALLOW &&
+								query.queryState(target, playerAttacker, combine(event, DefaultFlag.PVP)) == State.ALLOW;
+				}
+
 			}
 
 			// Fire the disallow PVP event
