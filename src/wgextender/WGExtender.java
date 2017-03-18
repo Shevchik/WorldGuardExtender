@@ -31,6 +31,7 @@ import wgextender.features.extendedwand.WEWandListener;
 import wgextender.features.flags.ChorusFruitUseFlag;
 import wgextender.features.flags.FlagRegistration;
 import wgextender.features.flags.OldPVPAttackSpeedFlag;
+import wgextender.features.flags.OldPVPNoBowFlag;
 import wgextender.features.flags.OldPVPNoShieldBlockFlag;
 import wgextender.features.regionprotect.ownormembased.ChorusFruitFlagHandler;
 import wgextender.features.regionprotect.ownormembased.IgniteByPlayer;
@@ -77,6 +78,7 @@ public class WGExtender extends JavaPlugin {
 		ChorusFruitUseFlag.assignInstance();
 		OldPVPAttackSpeedFlag.assignInstance();
 		OldPVPNoShieldBlockFlag.assignInstance();
+		OldPVPNoBowFlag.assignInstance();
 		Config config = new Config(this);
 		config.loadConfig();
 		getCommand("wgex").setExecutor(new Commands(config));
@@ -96,6 +98,7 @@ public class WGExtender extends JavaPlugin {
 			FlagRegistration.registerFlag(ChorusFruitUseFlag.getInstance());
 			FlagRegistration.registerFlag(OldPVPAttackSpeedFlag.getInstance());
 			FlagRegistration.registerFlag(OldPVPNoShieldBlockFlag.getInstance());
+			FlagRegistration.registerFlag(OldPVPNoBowFlag.getInstance());
 			pvplistener = new PvPHandlingListener(config);
 			pvplistener.inject();
 			oldpvphandler = new OldPVPFlagsHandler();
