@@ -25,6 +25,7 @@ import wgextender.WGExtender;
 import com.sk89q.worldguard.bukkit.RegionQuery;
 import com.sk89q.worldguard.bukkit.permission.RegionPermissionModel;
 import com.sk89q.worldguard.protection.ApplicableRegionSet;
+import com.sk89q.worldguard.protection.flags.BooleanFlag;
 import com.sk89q.worldguard.protection.flags.DefaultFlag;
 import com.sk89q.worldguard.protection.flags.StateFlag;
 
@@ -56,6 +57,11 @@ public class WGRegionUtils  {
 
 	public static boolean isFlagAllows(Player player, Location location, StateFlag flag) {
 		return REGION_QUERY.testState(location, player, flag);
+	}
+
+	public static boolean isFlagTrue(Player player, Location location, BooleanFlag flag) {
+		Boolean bool = REGION_QUERY.queryValue(location, player, flag);
+		return bool != null && bool;
 	}
 
 	private static ApplicableRegionSet getARS(Location l) {

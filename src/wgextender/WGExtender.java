@@ -25,10 +25,12 @@ import org.bukkit.plugin.java.JavaPlugin;
 
 import wgextender.commands.Commands;
 import wgextender.features.claimcommand.WGRegionCommandWrapper;
+import wgextender.features.custom.OldPVPFlagsHandler;
 import wgextender.features.extendedwand.WEWandCommandWrapper;
 import wgextender.features.extendedwand.WEWandListener;
 import wgextender.features.flags.ChorusFruitUseFlag;
 import wgextender.features.flags.FlagRegistration;
+import wgextender.features.flags.OldPVPAttackSpeed;
 import wgextender.features.regionprotect.ownormembased.ChorusFruitFlagHandler;
 import wgextender.features.regionprotect.ownormembased.IgniteByPlayer;
 import wgextender.features.regionprotect.ownormembased.PvPHandlingListener;
@@ -63,6 +65,7 @@ public class WGExtender extends JavaPlugin {
 	}
 
 	private PvPHandlingListener pvplistener;
+	private OldPVPFlagsHandler oldpvphandler;
 
 	@Override
 	public void onEnable() {
@@ -71,6 +74,7 @@ public class WGExtender extends JavaPlugin {
 		we = JavaPlugin.getPlugin(WorldEditPlugin.class);
 		wg = JavaPlugin.getPlugin(WorldGuardPlugin.class);
 		ChorusFruitUseFlag.assignInstance();
+		OldPVPAttackSpeed.assignInstance();
 		Config config = new Config(this);
 		config.loadConfig();
 		getCommand("wgex").setExecutor(new Commands(config));
@@ -88,8 +92,11 @@ public class WGExtender extends JavaPlugin {
 			WGRegionCommandWrapper.inject(config);
 			WEWandCommandWrapper.inject(config);
 			FlagRegistration.registerFlag(ChorusFruitUseFlag.getInstance());
+			FlagRegistration.registerFlag(OldPVPAttackSpeed.getInstance());
 			pvplistener = new PvPHandlingListener(config);
 			pvplistener.inject();
+			oldpvphandler = new OldPVPFlagsHandler();
+			oldpvphandler.start();
 		} catch (Throwable t) {
 			log(Level.SEVERE, "Unable to inject, shutting down");
 			t.printStackTrace();
