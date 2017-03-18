@@ -6,14 +6,18 @@ import java.util.UUID;
 import org.bukkit.Bukkit;
 import org.bukkit.attribute.Attribute;
 import org.bukkit.attribute.AttributeInstance;
+import org.bukkit.entity.Entity;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.EventPriority;
 import org.bukkit.event.Listener;
+import org.bukkit.event.entity.EntityDamageByEntityEvent;
+import org.bukkit.event.entity.EntityDamageEvent.DamageModifier;
 import org.bukkit.event.player.PlayerQuitEvent;
 
 import wgextender.WGExtender;
-import wgextender.features.flags.OldPVPAttackSpeed;
+import wgextender.features.flags.OldPVPAttackSpeedFlag;
+import wgextender.features.flags.OldPVPNoShieldBlockFlag;
 import wgextender.utils.WGRegionUtils;
 
 public class OldPVPFlagsHandler implements Listener {
@@ -26,7 +30,7 @@ public class OldPVPFlagsHandler implements Listener {
 			@Override
 			public void run() {
 				for (Player player : Bukkit.getOnlinePlayers()) {
-					if (WGRegionUtils.isFlagTrue(player, player.getLocation(), OldPVPAttackSpeed.getInstance())) {
+					if (WGRegionUtils.isFlagTrue(player.getLocation(), OldPVPAttackSpeedFlag.getInstance())) {
 						if (!oldValues.containsKey(player.getUniqueId())) {
 							AttributeInstance attribute = player.getAttribute(Attribute.GENERIC_ATTACK_SPEED);
 							oldValues.put(player.getUniqueId(), attribute.getBaseValue());
@@ -38,6 +42,16 @@ public class OldPVPFlagsHandler implements Listener {
 				}
 			}
 		}, 0, 1);
+	}
+
+	@EventHandler(priority = EventPriority.LOWEST)
+	public void onEntityDamageByEntity(EntityDamageByEntityEvent event) {
+		Entity entity = event.getEntity();
+		if (entity instanceof Player) {
+			if (WGRegionUtils.isFlagTrue(entity.getLocation(), OldPVPNoShieldBlockFlag.getInstance())) {
+				event.setDamage(DamageModifier.BLOCKING, 0);
+			}
+		}
 	}
 
 	@EventHandler(priority = EventPriority.LOWEST)

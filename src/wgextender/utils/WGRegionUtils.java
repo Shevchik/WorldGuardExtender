@@ -59,8 +59,8 @@ public class WGRegionUtils  {
 		return REGION_QUERY.testState(location, player, flag);
 	}
 
-	public static boolean isFlagTrue(Player player, Location location, BooleanFlag flag) {
-		Boolean bool = REGION_QUERY.queryValue(location, player, flag);
+	public static boolean isFlagTrue(Location location, BooleanFlag flag) {
+		Boolean bool = REGION_QUERY.queryValue(location, (Player) null, flag);
 		return bool != null && bool;
 	}
 
