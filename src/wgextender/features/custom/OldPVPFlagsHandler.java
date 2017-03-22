@@ -57,6 +57,12 @@ public class OldPVPFlagsHandler implements Listener {
 		}, 0, 1);
 	}
 
+	public void stop() {
+		for (Player player : Bukkit.getOnlinePlayers()) {
+			reset(player);
+		}
+	}
+
 	@EventHandler(priority = EventPriority.LOWEST)
 	public void onQuit(PlayerQuitEvent event) {
 		reset(event.getPlayer());

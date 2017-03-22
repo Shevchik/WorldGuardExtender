@@ -116,6 +116,7 @@ public class WGExtender extends JavaPlugin {
 			WEWandCommandWrapper.uninject();
 			WGRegionCommandWrapper.uninject();
 			pvplistener.uninject();
+			oldpvphandler.stop();
 		} catch (Throwable t) {
 			log(Level.SEVERE, "Unable to uninject, shutting down");
 			t.printStackTrace();
