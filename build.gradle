@@ -1,0 +1,46 @@
+plugins {
+    id 'java'
+    id 'idea'
+    id 'nebula.provided-base' version '3.1.0'
+}
+
+group 'wgextender'
+version '1.0-SNAPSHOT'
+
+sourceCompatibility = 1.7
+
+ext {
+    bukkitVersion = '1.9.4'
+    wgVersion = '6.2'
+    weVersion = '6.1.4-SNAPSHOT'
+    vaultVersion = '1.6'
+}
+
+repositories {
+    mavenCentral()
+
+	maven {
+	    name 'vault-repo'
+		url 'http://nexus.hc.to/content/repositories/pub_releases'
+    }
+
+    maven {
+        name "spigot-repo"
+        url "https://hub.spigotmc.org/nexus/content/repositories/snapshots/"
+    }
+
+    maven {
+        name 'sk89q-repo'
+        url 'http://maven.sk89q.com/repo/'
+    }
+}
+
+dependencies {
+    provided(group: 'net.milkbowl.vault', name: 'VaultAPI', version: "$vaultVersion") {
+        exclude group: 'org.bukkit'
+    }
+    provided group: 'org.bukkit', name: 'bukkit', version: "$bukkitVersion-R0.1-SNAPSHOT"
+    provided group: 'com.sk89q.worldguard', name: 'worldguard-legacy', version : "$wgVersion"
+    provided group: 'com.sk89q.worldedit', name: 'worldedit-core', version : "$weVersion"
+    provided group: 'com.sk89q.worldedit', name: 'worldedit-bukkit', version : "$weVersion"
+}
