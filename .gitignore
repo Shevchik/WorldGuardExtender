@@ -221,4 +221,8 @@ pip-log.txt
 .idea/
 *ipr
 
+#################
+## Gradle
+#################
 
+.gradle/
