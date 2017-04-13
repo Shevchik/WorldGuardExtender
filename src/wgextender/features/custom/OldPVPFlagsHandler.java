@@ -1,15 +1,8 @@
 package wgextender.features.custom;
 
-import java.lang.reflect.Field;
-import java.util.HashMap;
-import java.util.Map;
-import java.util.UUID;
-import java.util.logging.Level;
-
+import com.google.common.base.Function;
 import org.bukkit.Bukkit;
 import org.bukkit.Material;
-import org.bukkit.attribute.Attribute;
-import org.bukkit.attribute.AttributeInstance;
 import org.bukkit.entity.Entity;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
@@ -20,16 +13,20 @@ import org.bukkit.event.entity.EntityDamageEvent;
 import org.bukkit.event.entity.EntityDamageEvent.DamageModifier;
 import org.bukkit.event.player.PlayerInteractEvent;
 import org.bukkit.event.player.PlayerQuitEvent;
-import org.bukkit.inventory.EquipmentSlot;
-
-import com.google.common.base.Function;
-
+import org.bukkit.inventory.ItemStack;
 import wgextender.WGExtender;
 import wgextender.features.flags.OldPVPAttackSpeedFlag;
 import wgextender.features.flags.OldPVPNoBowFlag;
 import wgextender.features.flags.OldPVPNoShieldBlockFlag;
 import wgextender.utils.ReflectionUtils;
+import wgextender.utils.VersionUtils;
 import wgextender.utils.WGRegionUtils;
+
+import java.lang.reflect.Field;
+import java.util.HashMap;
+import java.util.Map;
+import java.util.UUID;
+import java.util.logging.Level;
 
 public class OldPVPFlagsHandler implements Listener {
 
@@ -39,22 +36,26 @@ public class OldPVPFlagsHandler implements Listener {
 	public void start() throws NoSuchFieldException, SecurityException {
 		functionsField = ReflectionUtils.getField(EntityDamageEvent.class, "modifierFunctions");
 		Bukkit.getPluginManager().registerEvents(this, WGExtender.getInstance());
-		Bukkit.getScheduler().scheduleSyncRepeatingTask(WGExtender.getInstance(), new Runnable() {
-			@Override
-			public void run() {
-				for (Player player : Bukkit.getOnlinePlayers()) {
-					if (WGRegionUtils.isFlagTrue(player.getLocation(), OldPVPAttackSpeedFlag.getInstance())) {
-						if (!oldValues.containsKey(player.getUniqueId())) {
-							AttributeInstance attribute = player.getAttribute(Attribute.GENERIC_ATTACK_SPEED);
-							oldValues.put(player.getUniqueId(), attribute.getBaseValue());
-							attribute.setBaseValue(16.0);
+
+		if (VersionUtils.isMC19OrNewer()) {
+			Bukkit.getScheduler().scheduleSyncRepeatingTask(WGExtender.getInstance(), new Runnable() {
+				@Override
+				public void run() {
+					for (Player player : Bukkit.getOnlinePlayers()) {
+						if (WGRegionUtils.isFlagTrue(player.getLocation(), OldPVPAttackSpeedFlag.getInstance())) {
+							if (!oldValues.containsKey(player.getUniqueId())) {
+								org.bukkit.attribute.AttributeInstance attribute =
+										player.getAttribute(org.bukkit.attribute.Attribute.GENERIC_ATTACK_SPEED);
+								oldValues.put(player.getUniqueId(), attribute.getBaseValue());
+								attribute.setBaseValue(16.0);
+							}
+						} else {
+							reset(player);
 						}
-					} else {
-						reset(player);
 					}
 				}
-			}
-		}, 0, 1);
+			}, 0, 1);
+		}
 	}
 
 	public void stop() {
@@ -69,9 +70,11 @@ public class OldPVPFlagsHandler implements Listener {
 	}
 
 	private void reset(Player player) {
-		Double oldValue = oldValues.remove(player.getUniqueId());
-		if (oldValue != null) {
-			player.getAttribute(Attribute.GENERIC_ATTACK_SPEED).setBaseValue(oldValue);
+		if (VersionUtils.isMC19OrNewer()) {
+            Double oldValue = oldValues.remove(player.getUniqueId());
+            if (oldValue != null) {
+                player.getAttribute(org.bukkit.attribute.Attribute.GENERIC_ATTACK_SPEED).setBaseValue(oldValue);
+            }
 		}
 	}
 
@@ -97,8 +100,8 @@ public class OldPVPFlagsHandler implements Listener {
 					double magicModifier = func.get(DamageModifier.MAGIC).apply(damage);
 					event.setDamage(DamageModifier.MAGIC, magicModifier);
 					damage += magicModifier;
-					double absorbtionModifier = func.get(DamageModifier.ABSORPTION).apply(damage);
-					event.setDamage(DamageModifier.ABSORPTION, absorbtionModifier);
+					double absorptionModifier = func.get(DamageModifier.ABSORPTION).apply(damage);
+					event.setDamage(DamageModifier.ABSORPTION, absorptionModifier);
 				} catch (IllegalArgumentException | IllegalAccessException e) {
 					WGExtender.getInstance().getLogger().log(Level.SEVERE, "Unable to recalculate blocking damage", e);
 				}
@@ -108,7 +111,17 @@ public class OldPVPFlagsHandler implements Listener {
 
 	@EventHandler(priority = EventPriority.LOWEST)
 	public void onInteract(PlayerInteractEvent event) {
-		if (event.getHand() == EquipmentSlot.OFF_HAND && event.getPlayer().getInventory().getItemInOffHand().getType() == Material.BOW) {
+		ItemStack itemInHand;
+		if (!VersionUtils.isMC19OrNewer()) {
+			//noinspection deprecation
+			itemInHand = event.getPlayer().getInventory().getItemInHand();
+		} else if (event.getHand() == org.bukkit.inventory.EquipmentSlot.OFF_HAND) {
+			itemInHand = event.getPlayer().getInventory().getItemInOffHand();
+		} else {
+			itemInHand = new ItemStack(Material.AIR);
+		}
+
+		if (itemInHand.getType() == Material.BOW) {
 			if (WGRegionUtils.isFlagTrue(event.getPlayer().getLocation(), OldPVPNoBowFlag.getInstance())) {
 				event.setCancelled(true);
 			}

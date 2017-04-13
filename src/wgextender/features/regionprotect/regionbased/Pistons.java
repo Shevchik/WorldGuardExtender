@@ -24,12 +24,12 @@ import org.bukkit.event.EventPriority;
 import org.bukkit.event.Listener;
 import org.bukkit.event.block.BlockPistonExtendEvent;
 import org.bukkit.event.block.BlockPistonRetractEvent;
-
 import wgextender.Config;
+import wgextender.utils.VersionUtils;
 import wgextender.utils.WGRegionUtils;
 
 public class Pistons implements Listener {
-
+	private boolean isSlimeRetractAvailable = VersionUtils.isMC18OrNewer();
 	private Config config;
 
 	public Pistons(Config config) {
@@ -38,14 +38,14 @@ public class Pistons implements Listener {
 
 	@EventHandler(priority = EventPriority.LOW, ignoreCancelled = true)
 	public void onExtend(BlockPistonExtendEvent event) {
-		if (!config.blockpistonmoveblock) {
+		if (!config.blockPistonMoveBlock) {
 			return;
 		}
-		Location pistonlocation = event.getBlock().getLocation();
+		Location pistonLocation = event.getBlock().getLocation();
 		for (Block block : event.getBlocks()) {
 			if (
-				!WGRegionUtils.isInTheSameRegionOrWild(pistonlocation, block.getLocation()) ||
-				!WGRegionUtils.isInTheSameRegionOrWild(pistonlocation, block.getRelative(event.getDirection()).getLocation())
+				!WGRegionUtils.isInTheSameRegionOrWild(pistonLocation, block.getLocation()) ||
+				!WGRegionUtils.isInTheSameRegionOrWild(pistonLocation, block.getRelative(event.getDirection()).getLocation())
 			) {
 				event.setCancelled(true);
 				break;
@@ -53,22 +53,20 @@ public class Pistons implements Listener {
 		}
 	}
 
-	private boolean isSlimeRetractAvailable = true;
-
 	@SuppressWarnings("deprecation")
 	@EventHandler(priority = EventPriority.LOW, ignoreCancelled = true)
 	public void onRetract(BlockPistonRetractEvent event) {
-		if (!config.blockpistonmoveblock) {
+		if (!config.blockPistonMoveBlock) {
 			return;
 		}
-		Location pistonlocation = event.getBlock().getLocation();
+		Location pistonLocation = event.getBlock().getLocation();
 		if (event.isSticky()) {
 			if (isSlimeRetractAvailable) {
 				try {
 					for (Block block : event.getBlocks()) {
 						if (
-							!WGRegionUtils.isInTheSameRegionOrWild(pistonlocation, block.getLocation()) ||
-							!WGRegionUtils.isInTheSameRegionOrWild(pistonlocation, block.getRelative(event.getDirection()).getLocation())
+							!WGRegionUtils.isInTheSameRegionOrWild(pistonLocation, block.getLocation()) ||
+							!WGRegionUtils.isInTheSameRegionOrWild(pistonLocation, block.getRelative(event.getDirection()).getLocation())
 						) {
 							event.setCancelled(true);
 							break;

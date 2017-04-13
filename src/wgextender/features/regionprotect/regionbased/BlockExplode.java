@@ -37,9 +37,10 @@ public class BlockExplode implements Listener {
 
 	@EventHandler(priority = EventPriority.LOW, ignoreCancelled = true)
 	public void onBlockExplode(BlockExplodeEvent event) {
-		if (!config.blockentityexplosionblockdamage) {
+		if (!config.blockEntityExplosionBlockDamage) {
 			return;
 		}
+
 		Iterator<Block> it = event.blockList().iterator();
 		while (it.hasNext()) {
 			if (WGRegionUtils.isInWGRegion(it.next().getLocation())) {

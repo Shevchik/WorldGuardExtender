@@ -44,7 +44,7 @@ public class EntityExplode implements Listener {
 
 	@EventHandler(priority = EventPriority.LOW, ignoreCancelled = true)
 	public void onEntityExplode(EntityExplodeEvent event) {
-		if (!config.blockentityexplosionblockdamage) {
+		if (!config.blockEntityExplosionBlockDamage) {
 			return;
 		}
 		if (event.getEntity() instanceof TNTPrimed) {
@@ -72,7 +72,7 @@ public class EntityExplode implements Listener {
 
 	@EventHandler(priority = EventPriority.LOW, ignoreCancelled = true)
 	public void onEntityDamageByExplosion(EntityDamageByEntityEvent e) {
-		if (!config.blockentityexplosionblockdamage) {
+		if (!config.blockEntityExplosionBlockDamage) {
 			return;
 		}
 		if ((e.getCause() == DamageCause.BLOCK_EXPLOSION) || (e.getCause() == DamageCause.ENTITY_EXPLOSION)) {

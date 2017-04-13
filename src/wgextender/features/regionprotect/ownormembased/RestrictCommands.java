@@ -40,7 +40,7 @@ public class RestrictCommands implements Listener {
 
 	public RestrictCommands(Config config) {
 		this.config = config;
-		restrictedCommands = config.restrictedcommands.toArray(new String[config.restrictedcommands.size()]);
+		restrictedCommands = config.restrictedCommands.toArray(new String[config.restrictedCommands.size()]);
 		startRestrictedCommandsCompute();
 	}
 
@@ -49,11 +49,11 @@ public class RestrictCommands implements Listener {
 			private final Pattern whitespacesplit = Pattern.compile("\\s+");
 			@Override
 			public void run() {
-				if (!config.restrictcommandsinregionsenabled) {
+				if (!config.restrictCommandsInRegionsEnabled) {
 					return;
 				}
 				ArrayList<String> computedRestrictedCommands = new ArrayList<String>();
-				for (String restrictedCommand : config.restrictedcommands) {
+				for (String restrictedCommand : config.restrictedCommands) {
 					String[] split = whitespacesplit.split(restrictedCommand);
 					for (String alias : CommandUtils.getCommandAliases(split[0])) {
 						computedRestrictedCommands.add(join(alias, split.length > 1 ? Arrays.copyOfRange(split, 1, split.length) : null, " "));
@@ -68,7 +68,7 @@ public class RestrictCommands implements Listener {
 
 	@EventHandler(priority = EventPriority.HIGHEST, ignoreCancelled = true)
 	public void ProcessWGCommand(PlayerCommandPreprocessEvent event) {
-		if (!config.restrictcommandsinregionsenabled) {
+		if (!config.restrictCommandsInRegionsEnabled) {
 			return;
 		}
 		Player player = event.getPlayer();
@@ -78,7 +78,7 @@ public class RestrictCommands implements Listener {
 		if (WGRegionUtils.isInWGRegion(player.getLocation()) && !WGRegionUtils.canBuild(player, player.getLocation())) {
 			String message = event.getMessage();
 			message = message.replaceFirst("/", "").toLowerCase();
-			for (String rcommand : config.restrictedcommands) {
+			for (String rcommand : config.restrictedCommands) {
 				if (message.startsWith(rcommand) && (message.length() == rcommand.length() || message.charAt(rcommand.length()) == ' ')) {
 					event.setCancelled(true);
 					player.sendMessage(ChatColor.RED + "Вы не можете использовать эту команду на чужом регионе");

@@ -38,7 +38,7 @@ public class IgniteByPlayer implements Listener {
 
 	@EventHandler(priority = EventPriority.LOW, ignoreCancelled = true)
 	public void onPlayerIgnitedBlock(BlockIgniteEvent event) {
-		if (!config.blockigniteotherregionbyplayer) {
+		if (!config.blockIgniteOtherRegionByPlayer) {
 			return;
 		}
 		Player player = event.getPlayer();

@@ -60,7 +60,7 @@ public class WGRegionCommandWrapper extends Command {
 		if (sender instanceof Player && args.length >= 2 && args[0].equalsIgnoreCase("claim")) {
 			Player player = (Player) sender;
 			String regionname = args[1];
-			if (config.expandvert) {
+			if (config.expandByVertical) {
 				boolean result = WEUtils.expandVert((Player) sender);
 				if (result) {
 					player.sendMessage(ChatColor.YELLOW + "Регион автоматически расширен по вертикали");
@@ -77,7 +77,7 @@ public class WGRegionCommandWrapper extends Command {
 			boolean hasRegion = AutoFlags.hasRegion(player.getWorld(), regionname);
 			try {
 				WEClaimCommand.claim(regionname, sender);
-				if (!hasRegion && config.autoflagsenabled) {
+				if (!hasRegion && config.autoFlagsEnabled) {
 					AutoFlags.setFlagsForRegion(player.getWorld(), config, regionname);
 				}
 			} catch (CommandException ex) {
