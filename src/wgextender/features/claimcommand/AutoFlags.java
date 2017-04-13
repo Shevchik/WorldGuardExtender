@@ -64,7 +64,7 @@ public class AutoFlags {
 	protected static void setFlagsForRegion(final World world, final Config config, final String regionname) {
 		final ProtectedRegion rg = getRegion(world, regionname);
 		if (rg != null) {
-			for (Entry<Flag<?>, String> entry : config.autoflags.entrySet()) {
+			for (Entry<Flag<?>, String> entry : config.autoFlags.entrySet()) {
 				try {
 					setFlag(world, rg, entry.getKey(), entry.getValue());
 				} catch (InvalidFlagFormat | CommandException e) {

@@ -17,8 +17,6 @@
 
 package wgextender.features.extendedwand;
 
-import java.util.Iterator;
-
 import org.bukkit.entity.Entity;
 import org.bukkit.entity.Item;
 import org.bukkit.entity.Player;
@@ -28,15 +26,22 @@ import org.bukkit.event.Listener;
 import org.bukkit.event.entity.EntityDamageByEntityEvent;
 import org.bukkit.event.entity.PlayerDeathEvent;
 import org.bukkit.event.player.PlayerDropItemEvent;
+import org.bukkit.inventory.Inventory;
 import org.bukkit.inventory.ItemStack;
+import org.bukkit.inventory.PlayerInventory;
+import wgextender.utils.VersionUtils;
+
+import java.util.Iterator;
 
 public class WEWandListener implements Listener {
 
 	@EventHandler(priority = EventPriority.HIGHEST, ignoreCancelled = true)
 	public void onEntityAttack(EntityDamageByEntityEvent event) {
 		Entity edamager = event.getDamager();
-		if (edamager instanceof org.bukkit.entity.Player) {
-			ItemStack item = ((Player) edamager).getInventory().getItemInMainHand();
+		if (edamager instanceof Player) {
+			PlayerInventory inventory = ((Player) edamager).getInventory();
+			//noinspection deprecation
+			ItemStack item = (VersionUtils.isMC19OrNewer()) ? inventory.getItemInMainHand() : inventory.getItemInHand();
 			if (WEWand.isWand(item)) {
 				event.setCancelled(true);
 			}
@@ -45,11 +50,11 @@ public class WEWandListener implements Listener {
 
 	@EventHandler(priority = EventPriority.HIGHEST, ignoreCancelled = true)
 	public void onPlayerDeath(PlayerDeathEvent event) {
-		Iterator<ItemStack> dropsit = event.getDrops().iterator();
-		while (dropsit.hasNext()) {
-			ItemStack item = dropsit.next();
+		Iterator<ItemStack> dropsIt = event.getDrops().iterator();
+		while (dropsIt.hasNext()) {
+			ItemStack item = dropsIt.next();
 			if (WEWand.isWand(item)) {
-				dropsit.remove();
+				dropsIt.remove();
 			}
 		}
 	}

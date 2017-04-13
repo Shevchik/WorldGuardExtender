@@ -215,3 +215,12 @@ pip-log.txt
 
 #Mr Developer
 .mr.developer.cfg
+
+
+##################
+## IntelliJ Idea
+##################
+
+# Project files
+.idea/
+*.ipr

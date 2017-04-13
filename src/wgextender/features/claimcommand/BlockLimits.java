@@ -57,7 +57,7 @@ public class BlockLimits {
 			info.setInfo(size, BigInteger.valueOf(-1));
 			return info;
 		}
-		if (config.blocklimitsenabled) {
+		if (config.blockLimitsEnabled) {
 			if (player.hasPermission("worldguard.region.unlimited")) {
 				return info;
 			}
@@ -68,8 +68,8 @@ public class BlockLimits {
 			int maxblocks = 0;
 			for (String pgroup : pgroups) {
 				pgroup = pgroup.toLowerCase();
-				if (config.blocklimits.containsKey(pgroup)) {
-					maxblocks = Math.max(maxblocks, config.blocklimits.get(pgroup));
+				if (config.blockLimits.containsKey(pgroup)) {
+					maxblocks = Math.max(maxblocks, config.blockLimits.get(pgroup));
 				}
 			}
 			BigInteger maxblocksi = BigInteger.valueOf(maxblocks);
