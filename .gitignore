@@ -217,9 +217,9 @@ pip-log.txt
 .mr.developer.cfg
 
 
-#############
-## Python
-#############
+##################
+## IntelliJ Idea
+##################
 
 # Project files
 .idea/
