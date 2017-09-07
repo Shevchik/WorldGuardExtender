@@ -47,6 +47,8 @@ import com.sk89q.worldguard.protection.flags.InvalidFlagFormat;
 import com.sk89q.worldguard.protection.managers.RegionManager;
 import com.sk89q.worldguard.protection.regions.ProtectedRegion;
 
+import net.md_5.bungee.api.chat.BaseComponent;
+
 public class AutoFlags {
 
 	protected static boolean hasRegion(final World world, final String regionname) {
@@ -185,6 +187,17 @@ public class AutoFlags {
 		}
 		@Override
 		public void sendRawMessage(String arg0) {
+		}
+
+		@Override
+		public Spigot spigot() {
+			return new Spigot() {
+				public void sendMessage(BaseComponent component) {
+				}
+
+				public void sendMessage(BaseComponent... components) {
+				}
+			};
 		}
 	}
 
