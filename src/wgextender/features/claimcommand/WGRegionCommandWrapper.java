@@ -17,8 +17,6 @@
 
 package wgextender.features.claimcommand;
 
-import java.lang.reflect.InvocationTargetException;
-
 import org.bukkit.ChatColor;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandSender;
@@ -33,21 +31,21 @@ import wgextender.utils.WEUtils;
 
 public class WGRegionCommandWrapper extends Command {
 
-	public static void inject(Config config) throws NoSuchFieldException, SecurityException, NoSuchMethodException, IllegalAccessException, IllegalArgumentException, InvocationTargetException {
+	public static void inject(Config config) throws IllegalAccessException {
 		WGRegionCommandWrapper wrapper = new WGRegionCommandWrapper(config, CommandUtils.getCommands().get("region"));
 		CommandUtils.replaceComamnd(wrapper.originalcommand, wrapper);
 	}
 
-	public static void uninject() throws IllegalAccessException, IllegalArgumentException, InvocationTargetException, NoSuchFieldException, SecurityException, NoSuchMethodException {
+	public static void uninject() throws IllegalAccessException {
 		WGRegionCommandWrapper wrapper = (WGRegionCommandWrapper) CommandUtils.getCommands().get("region");
 		CommandUtils.replaceComamnd(wrapper, wrapper.originalcommand);
 	}
 
 
-	private Config config;
-	private Command originalcommand;
+	protected final Config config;
+	protected final Command originalcommand;
 
-	private WGRegionCommandWrapper(Config config, Command originalcommand) {
+	protected WGRegionCommandWrapper(Config config, Command originalcommand) {
 		super(originalcommand.getName(), originalcommand.getDescription(), originalcommand.getUsage(), originalcommand.getAliases());
 		this.config = config;
 		this.originalcommand = originalcommand;
@@ -57,7 +55,7 @@ public class WGRegionCommandWrapper extends Command {
 
 	@Override
 	public boolean execute(CommandSender sender, String label, String[] args) {
-		if (sender instanceof Player && args.length >= 2 && args[0].equalsIgnoreCase("claim")) {
+		if ((sender instanceof Player) && (args.length >= 2) && args[0].equalsIgnoreCase("claim")) {
 			Player player = (Player) sender;
 			String regionname = args[1];
 			if (config.expandvert) {

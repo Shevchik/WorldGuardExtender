@@ -19,23 +19,21 @@ package wgextender.features.regionprotect.regionbased;
 
 import org.bukkit.Location;
 import org.bukkit.block.Block;
+import org.bukkit.block.data.BlockData;
+import org.bukkit.block.data.Directional;
 import org.bukkit.event.Cancellable;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.EventPriority;
 import org.bukkit.event.Listener;
 import org.bukkit.event.block.BlockDispenseEvent;
 import org.bukkit.event.block.BlockFromToEvent;
-import org.bukkit.inventory.ItemStack;
-import org.bukkit.material.DirectionalContainer;
-import org.bukkit.material.MaterialData;
 
 import wgextender.Config;
 import wgextender.utils.WGRegionUtils;
 
 public class LiquidFlow implements Listener {
 
-	private Config config;
-
+	protected final Config config;
 	public LiquidFlow(Config config) {
 		this.config = config;
 	}
@@ -44,15 +42,13 @@ public class LiquidFlow implements Listener {
 	public void onLiquidFlow(BlockFromToEvent event) {
 		Block b = event.getBlock();
 		switch (b.getType()) {
-			case LAVA:
-			case STATIONARY_LAVA: {
+			case LAVA: {
 				if (config.blocklavaflow) {
 					check(b.getLocation(), event.getToBlock().getLocation(), event);
 				}
 				break;
 			}
-			case WATER:
-			case STATIONARY_WATER: {
+			case WATER: {
 				if (config.blockwaterflow) {
 					check(b.getLocation(), event.getToBlock().getLocation(), event);
 				}
@@ -69,27 +65,26 @@ public class LiquidFlow implements Listener {
 
 	@EventHandler(priority = EventPriority.LOW, ignoreCancelled = true)
 	public void onDispenserDispense(BlockDispenseEvent event) {
-		ItemStack item = event.getItem();
-		Block dispenser = event.getBlock();
-		MaterialData mdata = dispenser.getState().getData();
-		if (mdata instanceof DirectionalContainer) {
-			Block nextBlock = dispenser.getRelative(((DirectionalContainer) mdata).getFacing());
-			switch (item.getType()) {
+		Block block = event.getBlock();
+		BlockData blockData = block.getState().getBlockData();
+		if (blockData instanceof Directional) {
+			Block nextBlock = block.getRelative(((Directional) blockData).getFacing());
+			switch (event.getItem().getType()) {
 				case LAVA_BUCKET: {
 					if (config.blocklavaflow) {
-						check(dispenser.getLocation(), nextBlock.getLocation(), event);
+						check(block.getLocation(), nextBlock.getLocation(), event);
 					}
 					break;
 				}
 				case WATER_BUCKET: {
 					if (config.blockwaterflow) {
-						check(dispenser.getLocation(), nextBlock.getLocation(), event);
+						check(block.getLocation(), nextBlock.getLocation(), event);
 					}
 					break;
 				}
 				default: {
 					if (config.blockotherliquidflow) {
-						check(dispenser.getLocation(), nextBlock.getLocation(), event);
+						check(block.getLocation(), nextBlock.getLocation(), event);
 					}
 					break;
 				}
@@ -97,7 +92,7 @@ public class LiquidFlow implements Listener {
 		}
 	}
 
-	private void check(Location source, Location to, Cancellable event) {
+	protected void check(Location source, Location to, Cancellable event) {
 		if (!WGRegionUtils.isInTheSameRegionOrWild(source, to)) {
 			event.setCancelled(true);
 		}

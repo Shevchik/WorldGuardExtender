@@ -35,19 +35,18 @@ import org.bukkit.permissions.PermissionAttachment;
 import org.bukkit.permissions.PermissionAttachmentInfo;
 import org.bukkit.plugin.Plugin;
 
-import wgextender.Config;
-import wgextender.WGExtender;
-
 import com.sk89q.minecraft.util.commands.Command;
 import com.sk89q.minecraft.util.commands.CommandContext;
 import com.sk89q.minecraft.util.commands.CommandException;
+import com.sk89q.worldguard.bukkit.WorldGuardPlugin;
 import com.sk89q.worldguard.bukkit.commands.region.RegionCommands;
 import com.sk89q.worldguard.protection.flags.Flag;
-import com.sk89q.worldguard.protection.flags.InvalidFlagFormat;
 import com.sk89q.worldguard.protection.managers.RegionManager;
 import com.sk89q.worldguard.protection.regions.ProtectedRegion;
 
 import net.md_5.bungee.api.chat.BaseComponent;
+import wgextender.Config;
+import wgextender.utils.WGRegionUtils;
 
 public class AutoFlags {
 
@@ -56,7 +55,7 @@ public class AutoFlags {
 	}
 
 	protected static ProtectedRegion getRegion(final World world, final String regionname) {
-		final RegionManager rm = WGExtender.getWorldGuard().getRegionManager(world);
+		final RegionManager rm = WGRegionUtils.getRegionManager(world);
 		if (rm == null) {
 			return null;
 		}
@@ -69,30 +68,30 @@ public class AutoFlags {
 			for (Entry<Flag<?>, String> entry : config.autoflags.entrySet()) {
 				try {
 					setFlag(world, rg, entry.getKey(), entry.getValue());
-				} catch (InvalidFlagFormat | CommandException e) {
+				} catch (CommandException e) {
 					e.printStackTrace();
 				}
 			}
 		}
 	}
 
-	private static final RegionCommands regionCommands = new RegionCommands(WGExtender.getWorldGuard());
-	private static final FakeConsoleComandSender fakeCommandSender = new FakeConsoleComandSender();
-	private static final Set<Character> flagCommandValueFlags = getFlagCommandValueFlags();
-	public static <T> void setFlag(World world, ProtectedRegion region, Flag<T> flag, String value) throws InvalidFlagFormat, CommandException {
+	protected static final RegionCommands regionCommands = new RegionCommands(WorldGuardPlugin.inst());
+	protected static final FakeConsoleComandSender fakeCommandSender = new FakeConsoleComandSender();
+	protected static final Set<Character> flagCommandValueFlags = getFlagCommandValueFlags();
+	public static <T> void setFlag(World world, ProtectedRegion region, Flag<T> flag, String value) throws CommandException {
 		CommandContext ccontext = new CommandContext(String.format("flag %s -w %s %s %s", region.getId(), world.getName(), flag.getName(), value), flagCommandValueFlags);
 		regionCommands.flag(ccontext, fakeCommandSender);
 	}
 
 
-	private static Set<Character> getFlagCommandValueFlags() {
+	protected static Set<Character> getFlagCommandValueFlags() {
 		try {
 			Method method = RegionCommands.class.getMethod("flag", CommandContext.class, CommandSender.class);
 			Command annotation = method.getAnnotation(Command.class);
 			char[] flags = annotation.flags().toCharArray();
-			Set<Character> valueFlags = new HashSet<Character>();
+			Set<Character> valueFlags = new HashSet<>();
 			for (int i = 0; i < flags.length; ++i) {
-				if (flags.length > i + 1 && flags[i + 1] == ':') {
+				if ((flags.length > (i + 1)) && (flags[i + 1] == ':')) {
 					valueFlags.add(flags[i]);
 					++i;
 				}
@@ -192,9 +191,11 @@ public class AutoFlags {
 		@Override
 		public Spigot spigot() {
 			return new Spigot() {
+				@Override
 				public void sendMessage(BaseComponent component) {
 				}
 
+				@Override
 				public void sendMessage(BaseComponent... components) {
 				}
 			};

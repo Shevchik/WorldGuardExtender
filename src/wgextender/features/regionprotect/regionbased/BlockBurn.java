@@ -27,8 +27,7 @@ import wgextender.utils.WGRegionUtils;
 
 public class BlockBurn implements Listener {
 
-	private Config config;
-
+	protected final Config config;
 	public BlockBurn(Config config) {
 		this.config = config;
 	}

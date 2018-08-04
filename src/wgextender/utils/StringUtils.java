@@ -24,7 +24,7 @@ import java.util.List;
 public class StringUtils {
 
 	public static List<String> filterStartsWith(String part, List<String> all) {
-		ArrayList<String> result = new ArrayList<String>();
+		ArrayList<String> result = new ArrayList<>();
 		for (String element : all) {
 			if (element.toLowerCase().startsWith(part.toLowerCase())) {
 				result.add(element);
@@ -35,22 +35,6 @@ public class StringUtils {
 
 	public static List<String> filterStartsWith(String part, String[] all) {
 		return filterStartsWith(part, Arrays.asList(all));
-	}
-
-	public static String join(String[] args, String delimiter) {
-		if (args.length == 0) {
-			return "";
-		}
-		if (args.length == 1) {
-			return args[0];
-		}
-		StringBuilder builder = new StringBuilder();
-		builder.append(args[0]);
-		for (int i = 1; i < args.length; i++) {
-			builder.append(delimiter);
-			builder.append(args[i]);
-		}
-		return builder.toString();
 	}
 
 }

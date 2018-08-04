@@ -31,9 +31,10 @@ import org.bukkit.plugin.PluginManager;
 
 public class CommandUtils {
 
-	public static Map<String, Command> getCommands() throws NoSuchFieldException, SecurityException, IllegalArgumentException, IllegalAccessException {
+	@SuppressWarnings("unchecked")
+	public static Map<String, Command> getCommands() throws IllegalAccessException {
 		CommandMap commandMap = getCommandMap();
-		return ReflectionUtils.getField(commandMap, "knownCommands");
+		return (Map<String, Command>) ReflectionUtils.getField(commandMap.getClass(), "knownCommands").get(commandMap);
 	}
 
 	public static List<String> getCommandAliases(String commandname) {
@@ -43,7 +44,7 @@ public class CommandUtils {
 			if (command == null) {
 				return Collections.singletonList(commandname);
 			} else {
-				ArrayList<String> aliases = new ArrayList<String>();
+				ArrayList<String> aliases = new ArrayList<>();
 				for (Entry<String, Command> entry : getCommands().entrySet()) {
 					if (entry.getValue() == command) {
 						aliases.add(entry.getKey());
@@ -56,7 +57,7 @@ public class CommandUtils {
 		}
 	}
 
-	public static void replaceComamnd(Command oldcommand, Command newcommand) throws NoSuchFieldException, SecurityException, IllegalArgumentException, IllegalAccessException {
+	public static void replaceComamnd(Command oldcommand, Command newcommand) throws IllegalAccessException {
 		Iterator<Entry<String, Command>> iterator = getCommands().entrySet().iterator();
 		while (iterator.hasNext()) {
 			Entry<String, Command> entry = iterator.next();
@@ -66,9 +67,9 @@ public class CommandUtils {
 		}
 	}
 
-	private static CommandMap getCommandMap() throws NoSuchFieldException, SecurityException, IllegalArgumentException, IllegalAccessException {
+	protected static CommandMap getCommandMap() throws IllegalAccessException {
 		PluginManager pm = Bukkit.getPluginManager();
-		return ReflectionUtils.getField(pm, "commandMap");
+		return (CommandMap) ReflectionUtils.getField(pm.getClass(), "commandMap").get(pm);
 	}
 
 }

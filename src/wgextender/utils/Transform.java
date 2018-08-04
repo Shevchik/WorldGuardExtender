@@ -23,7 +23,7 @@ import java.util.List;
 public class Transform {
 
 	public static <T, O> List<T> toList(Iterable<O> list, Function<T, O> transform) {
-		ArrayList<T> transformedlist = new ArrayList<T>();
+		ArrayList<T> transformedlist = new ArrayList<>();
 		for (O element : list) {
 			transformedlist.add(transform.transform(element));
 		}
@@ -31,7 +31,7 @@ public class Transform {
 	}
 
 	public static <T, O> List<T> toList(O[] array, Function<T, O> transform) {
-		ArrayList<T> transformedlist = new ArrayList<T>();
+		ArrayList<T> transformedlist = new ArrayList<>();
 		for (O element : array) {
 			transformedlist.add(transform.transform(element));
 		}

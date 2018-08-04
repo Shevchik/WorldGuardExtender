@@ -19,35 +19,28 @@ package wgextender.features.claimcommand;
 
 import java.math.BigInteger;
 
-import net.milkbowl.vault.permission.Permission;
-
-import org.bukkit.Bukkit;
 import org.bukkit.entity.Player;
 
-import wgextender.Config;
-import wgextender.WGExtender;
-
+import com.sk89q.worldedit.IncompleteRegionException;
 import com.sk89q.worldedit.Vector;
-import com.sk89q.worldedit.bukkit.selections.Selection;
+import com.sk89q.worldedit.regions.Region;
+
+import wgextender.Config;
+import wgextender.VaultIntegration;
+import wgextender.utils.WEUtils;
 
 public class BlockLimits {
 
-	private Object vaultperms;
-
-	public BlockLimits() {
-		if (Bukkit.getPluginManager().getPlugin("Vault") != null) {
-			vaultperms = Bukkit.getServicesManager().getRegistration(net.milkbowl.vault.permission.Permission.class).getProvider();
-		}
-	}
-
 	public ProcessedClaimInfo processClaimInfo(Config config, Player player) {
 		ProcessedClaimInfo info = new ProcessedClaimInfo();
-		Selection psel = WGExtender.getWorldEdit().getSelection(player);
-		if (psel == null) {
+		Region psel;
+		try {
+			psel = WEUtils.getSelection(player);
+		} catch (IncompleteRegionException e) {
 			return info;
 		}
-		Vector min = psel.getNativeMinimumPoint();
-		Vector max = psel.getNativeMaximumPoint();
+		Vector min = psel.getMinimumPoint();
+		Vector max = psel.getMaximumPoint();
 		BigInteger size = BigInteger.ONE;
 		size = size.multiply(BigInteger.valueOf(max.getBlockX()).subtract(BigInteger.valueOf(min.getBlockX())).add(BigInteger.ONE));
 		size = size.multiply(BigInteger.valueOf(max.getBlockZ()).subtract(BigInteger.valueOf(min.getBlockZ())).add(BigInteger.ONE));
@@ -61,7 +54,7 @@ public class BlockLimits {
 			if (player.hasPermission("worldguard.region.unlimited")) {
 				return info;
 			}
-			String[] pgroups = vaultperms != null ? ((Permission) vaultperms).getPlayerGroups(player) : WGExtender.getWorldGuard().getGroups(player);
+			String[] pgroups = VaultIntegration.getInstance().getPermissions().getPlayerGroups(player);
 			if (pgroups.length == 0) {
 				return info;
 			}

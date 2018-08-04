@@ -1,5 +1,5 @@
 /**
-q * This program is free software; you can redistribute it and/or
+ * This program is free software; you can redistribute it and/or
  * modify it under the terms of the GNU General Public License
  * as published by the Free Software Foundation; either version 3
  * of the License, or (at your option) any later version.
@@ -21,6 +21,8 @@ import java.util.Arrays;
 import java.util.Collections;
 import java.util.List;
 import java.util.UUID;
+import java.util.stream.Collectors;
+import java.util.stream.StreamSupport;
 
 import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
@@ -29,44 +31,55 @@ import org.bukkit.World;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandExecutor;
 import org.bukkit.command.CommandSender;
-import org.bukkit.command.ConsoleCommandSender;
-import org.bukkit.command.RemoteConsoleCommandSender;
 import org.bukkit.command.TabCompleter;
 import org.bukkit.entity.Player;
 
-import wgextender.Config;
-import wgextender.WGExtender;
-import wgextender.commands.RegionsInAreaSearch.NoSelectionException;
-import wgextender.features.claimcommand.AutoFlags;
-import wgextender.utils.StringUtils;
-import wgextender.utils.Transform;
-
 import com.sk89q.minecraft.util.commands.CommandException;
-import com.sk89q.worldguard.bukkit.RegionContainer;
+import com.sk89q.worldedit.IncompleteRegionException;
+import com.sk89q.worldedit.regions.Region;
+import com.sk89q.worldguard.WorldGuard;
 import com.sk89q.worldguard.domains.DefaultDomain;
+import com.sk89q.worldguard.protection.ApplicableRegionSet;
 import com.sk89q.worldguard.protection.flags.BooleanFlag;
-import com.sk89q.worldguard.protection.flags.DefaultFlag;
 import com.sk89q.worldguard.protection.flags.EnumFlag;
 import com.sk89q.worldguard.protection.flags.Flag;
-import com.sk89q.worldguard.protection.flags.InvalidFlagFormat;
+import com.sk89q.worldguard.protection.flags.Flags;
 import com.sk89q.worldguard.protection.flags.StateFlag;
 import com.sk89q.worldguard.protection.flags.StateFlag.State;
 import com.sk89q.worldguard.protection.managers.RegionManager;
 import com.sk89q.worldguard.protection.regions.GlobalProtectedRegion;
+import com.sk89q.worldguard.protection.regions.ProtectedCuboidRegion;
 import com.sk89q.worldguard.protection.regions.ProtectedRegion;
 
+import wgextender.Config;
+import wgextender.features.claimcommand.AutoFlags;
+import wgextender.utils.StringUtils;
+import wgextender.utils.Transform;
+import wgextender.utils.WEUtils;
+import wgextender.utils.WGRegionUtils;
+
+//TODO: refactor
 public class Commands implements CommandExecutor, TabCompleter {
 
-	private Config config;
-
+	protected final Config config;
 	public Commands(Config config) {
 		this.config = config;
+	}
+
+	protected static List<String> getRegionsInPlayerSelection(Player player) throws IncompleteRegionException {
+		Region psel = WEUtils.getSelection(player);
+		ProtectedRegion fakerg = new ProtectedCuboidRegion("wgexfakerg", psel.getMaximumPoint().toBlockVector(), psel.getMinimumPoint().toBlockVector());
+		ApplicableRegionSet ars = WGRegionUtils.getRegionManager(player.getWorld()).getApplicableRegions(fakerg);
+		return
+			StreamSupport.stream(ars.spliterator(), false)
+			.map(ProtectedRegion::getId)
+			.collect(Collectors.toList());
 	}
 
 	@SuppressWarnings("deprecation")
 	@Override
 	public boolean onCommand(CommandSender sender, Command arg1, String label, String[] args) {
-		if (!canExecute(sender)) {
+		if (!sender.hasPermission("wgextender.admin")) {
 			sender.sendMessage(ChatColor.RED+"Недостаточно прав");
 			return true;
 		}
@@ -88,13 +101,13 @@ public class Commands implements CommandExecutor, TabCompleter {
 				case "search": {
 					if (sender instanceof Player) {
 						try {
-							List<String> regions = RegionsInAreaSearch.getRegionsInPlayerSelection((Player) sender);
+							List<String> regions = getRegionsInPlayerSelection((Player) sender);
 							if (regions.isEmpty()) {
 								sender.sendMessage(ChatColor.BLUE + "Регионов пересекающихся с выделенной зоной не найдено");
 							} else {
 								sender.sendMessage(ChatColor.BLUE + "Найдены регионы пересекающиеся с выделенной зоной: "+ regions);
 							}
-						} catch (NoSelectionException e) {
+						} catch (IncompleteRegionException e) {
 							sender.sendMessage(ChatColor.BLUE + "Сначала выделите зону поиска");
 						}
 						return true;
@@ -107,19 +120,17 @@ public class Commands implements CommandExecutor, TabCompleter {
 					}
 					World world = Bukkit.getWorld(args[1]);
 					if (world != null) {
-						Flag<?> flag = DefaultFlag.fuzzyMatchFlag(WGExtender.getWorldGuard().getFlagRegistry(), args[2]);
+						Flag<?> flag = Flags.fuzzyMatchFlag(WorldGuard.getInstance().getFlagRegistry(), args[2]);
 						if (flag != null) {
 							try {
-								String value = StringUtils.join(Arrays.copyOfRange(args, 3, args.length), " ");
-								for (ProtectedRegion region : WGExtender.getWorldGuard().getRegionManager(world).getRegions().values()) {
+								String value = String.join(" ", Arrays.copyOfRange(args, 3, args.length));
+								for (ProtectedRegion region : WGRegionUtils.getRegionManager(world).getRegions().values()) {
 									if (region instanceof GlobalProtectedRegion) {
 										continue;
 									}
 									AutoFlags.setFlag(world, region, flag, value);
 								}
 								sender.sendMessage(ChatColor.BLUE + "Флаги установлены");
-							} catch (InvalidFlagFormat e) {
-								sender.sendMessage(ChatColor.BLUE + "Неправильное значение для флага "+flag.getName()+": "+e.getMessage());
 							} catch (CommandException e) {
 								sender.sendMessage(ChatColor.BLUE + "Неправильный формат флага "+flag.getName()+": "+e.getMessage());
 							}
@@ -137,8 +148,7 @@ public class Commands implements CommandExecutor, TabCompleter {
 					OfflinePlayer oplayer = Bukkit.getOfflinePlayer(args[1]);
 					String name = oplayer.getName();
 					UUID uuid = oplayer.getUniqueId();
-					RegionContainer container = WGExtender.getWorldGuard().getRegionContainer();
-					for (RegionManager manager : container.getLoaded()) {
+					for (RegionManager manager : WGRegionUtils.getRegionContainer().getLoaded()) {
 						for (ProtectedRegion region : manager.getRegions().values()) {
 							DefaultDomain owners = region.getOwners();
 							owners.removePlayer(uuid);
@@ -156,8 +166,7 @@ public class Commands implements CommandExecutor, TabCompleter {
 					OfflinePlayer oplayer = Bukkit.getOfflinePlayer(args[1]);
 					String name = oplayer.getName();
 					UUID uuid = oplayer.getUniqueId();
-					RegionContainer container = WGExtender.getWorldGuard().getRegionContainer();
-					for (RegionManager manager : container.getLoaded()) {
+					for (RegionManager manager : WGRegionUtils.getRegionContainer().getLoaded()) {
 						for (ProtectedRegion region : manager.getRegions().values()) {
 							DefaultDomain owners = region.getMembers();
 							owners.removePlayer(uuid);
@@ -176,7 +185,7 @@ public class Commands implements CommandExecutor, TabCompleter {
 	@SuppressWarnings("unchecked")
 	@Override
 	public List<String> onTabComplete(CommandSender sender, Command cmd, String label, String[] args) {
-		if (!canExecute(sender)) {
+		if (!sender.hasPermission("wgextender.admin")) {
 			return Collections.emptyList();
 		}
 		if (args.length == 1) {
@@ -197,45 +206,22 @@ public class Commands implements CommandExecutor, TabCompleter {
 				case "setflag": {
 					switch (args.length) {
 						case 2: {
-							return StringUtils.filterStartsWith(args[1], Transform.toList(Bukkit.getWorlds(), new Transform.Function<String, World>() {
-								@Override
-								public String transform(World original) {
-									return original.getName();
-								}
-							}));
+							return StringUtils.filterStartsWith(args[1], Transform.toList(Bukkit.getWorlds(), World::getName));
 						}
 						case 3: {
-							return StringUtils.filterStartsWith(args[2], Transform.toList(WGExtender.getWorldGuard().getFlagRegistry(), new Transform.Function<String, Flag<?>>() {
-								@Override
-								public String transform(Flag<?> original) {
-									return original.getName();
-								}
-							}));
+							return StringUtils.filterStartsWith(args[2], Transform.toList(WorldGuard.getInstance().getFlagRegistry(), Flag::getName));
 						}
 						case 4: {
-							Flag<?> flag = DefaultFlag.fuzzyMatchFlag(WGExtender.getWorldGuard().getFlagRegistry(), args[2]);
+							Flag<?> flag = Flags.fuzzyMatchFlag(WorldGuard.getInstance().getFlagRegistry(), args[2]);
 							if (flag instanceof StateFlag) {
-								return StringUtils.filterStartsWith(args[3], Transform.toList(StateFlag.State.values(), new Transform.Function<String, StateFlag.State>() {
-									@Override
-									public String transform(State original) {
-										return original.toString();
-									}
-								}));
+								return StringUtils.filterStartsWith(args[3], Transform.toList(StateFlag.State.values(), State::toString));
 							}
 							if (flag instanceof BooleanFlag) {
 								return StringUtils.filterStartsWith(args[3], new String[] {"true", "false"});
 							}
 							if (flag instanceof EnumFlag<?>) {
 								try {
-									return StringUtils.filterStartsWith(args[3], Transform.toList(
-										((EnumFlag<? extends Enum<?>>) flag).getEnumClass().getEnumConstants(),
-										new Transform.Function<String, Enum<?>>() {
-											@Override
-											public String transform(Enum<?> original) {
-												return original.toString();
-											}
-										})
-									);
+									return StringUtils.filterStartsWith(args[3], Transform.toList(((EnumFlag<? extends Enum<?>>) flag).getEnumClass().getEnumConstants(), Enum::toString));
 								} catch (Exception e) {
 								}
 							}
@@ -248,18 +234,5 @@ public class Commands implements CommandExecutor, TabCompleter {
 		}
 		return Collections.emptyList();
 	}
-
-	private boolean canExecute(CommandSender sender) {
-		if ((sender instanceof ConsoleCommandSender) || (sender instanceof RemoteConsoleCommandSender)) {
-			return true;
-		} else if (sender instanceof Player) {
-			if (sender.isOp() || sender.hasPermission("wgextender.admin")) {
-				return true;
-			}
-		}
-		return false;
-	}
-
-
 
 }

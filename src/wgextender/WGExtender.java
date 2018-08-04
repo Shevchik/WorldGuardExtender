@@ -18,7 +18,6 @@
 package wgextender;
 
 import java.util.logging.Level;
-import java.util.logging.Logger;
 
 import org.bukkit.Bukkit;
 import org.bukkit.plugin.java.JavaPlugin;
@@ -34,18 +33,12 @@ import wgextender.features.flags.OldPVPAttackSpeedFlag;
 import wgextender.features.flags.OldPVPNoBowFlag;
 import wgextender.features.flags.OldPVPNoShieldBlockFlag;
 import wgextender.features.regionprotect.ownormembased.ChorusFruitFlagHandler;
-import wgextender.features.regionprotect.ownormembased.IgniteByPlayer;
 import wgextender.features.regionprotect.ownormembased.PvPHandlingListener;
 import wgextender.features.regionprotect.ownormembased.RestrictCommands;
 import wgextender.features.regionprotect.regionbased.BlockBurn;
-import wgextender.features.regionprotect.regionbased.BlockExplode;
-import wgextender.features.regionprotect.regionbased.EntityExplode;
+import wgextender.features.regionprotect.regionbased.Explode;
 import wgextender.features.regionprotect.regionbased.FireSpread;
 import wgextender.features.regionprotect.regionbased.LiquidFlow;
-import wgextender.features.regionprotect.regionbased.Pistons;
-
-import com.sk89q.worldedit.bukkit.WorldEditPlugin;
-import com.sk89q.worldguard.bukkit.WorldGuardPlugin;
 
 public class WGExtender extends JavaPlugin {
 
@@ -54,16 +47,8 @@ public class WGExtender extends JavaPlugin {
 		return instance;
 	}
 
-	private static Logger log;
-
-	private static WorldEditPlugin we = null;
-	public static WorldEditPlugin getWorldEdit() {
-		return we;
-	}
-
-	private static WorldGuardPlugin wg = null;
-	public static WorldGuardPlugin getWorldGuard() {
-		return wg;
+	public WGExtender() {
+		instance = this;
 	}
 
 	private PvPHandlingListener pvplistener;
@@ -71,10 +56,6 @@ public class WGExtender extends JavaPlugin {
 
 	@Override
 	public void onEnable() {
-		instance = this;
-		log = getLogger();
-		we = JavaPlugin.getPlugin(WorldEditPlugin.class);
-		wg = JavaPlugin.getPlugin(WorldGuardPlugin.class);
 		ChorusFruitUseFlag.assignInstance();
 		OldPVPAttackSpeedFlag.assignInstance();
 		OldPVPNoShieldBlockFlag.assignInstance();
@@ -84,12 +65,9 @@ public class WGExtender extends JavaPlugin {
 		getCommand("wgex").setExecutor(new Commands(config));
 		getServer().getPluginManager().registerEvents(new RestrictCommands(config), this);
 		getServer().getPluginManager().registerEvents(new LiquidFlow(config), this);
-		getServer().getPluginManager().registerEvents(new IgniteByPlayer(config), this);
 		getServer().getPluginManager().registerEvents(new FireSpread(config), this);
 		getServer().getPluginManager().registerEvents(new BlockBurn(config), this);
-		getServer().getPluginManager().registerEvents(new Pistons(config), this);
-		getServer().getPluginManager().registerEvents(new EntityExplode(config), this);
-		getServer().getPluginManager().registerEvents(new BlockExplode(config), this);
+		getServer().getPluginManager().registerEvents(new Explode(config), this);
 		getServer().getPluginManager().registerEvents(new WEWandListener(), this);
 		getServer().getPluginManager().registerEvents(new ChorusFruitFlagHandler(), this);
 		try {
@@ -104,7 +82,7 @@ public class WGExtender extends JavaPlugin {
 			oldpvphandler = new OldPVPFlagsHandler();
 			oldpvphandler.start();
 		} catch (Throwable t) {
-			log(Level.SEVERE, "Unable to inject, shutting down");
+			getLogger().log(Level.SEVERE, "Unable to inject, shutting down", t);
 			t.printStackTrace();
 			Bukkit.shutdown();
 		}
@@ -118,18 +96,8 @@ public class WGExtender extends JavaPlugin {
 			pvplistener.uninject();
 			oldpvphandler.stop();
 		} catch (Throwable t) {
-			log(Level.SEVERE, "Unable to uninject, shutting down");
-			t.printStackTrace();
+			getLogger().log(Level.SEVERE, "Unable to uninject, shutting down", t);
 			Bukkit.shutdown();
-		}
-		we = null;
-		wg = null;
-		instance = null;
-	}
-
-	public static void log(Level level, String message) {
-		if (log != null) {
-			log.log(Level.SEVERE, message);
 		}
 	}
 

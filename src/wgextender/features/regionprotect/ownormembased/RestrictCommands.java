@@ -36,15 +36,10 @@ import wgextender.utils.WGRegionUtils;
 
 public class RestrictCommands implements Listener {
 
-	protected Config config;
-
+	protected final Config config;
 	public RestrictCommands(Config config) {
 		this.config = config;
 		restrictedCommands = config.restrictedcommands.toArray(new String[config.restrictedcommands.size()]);
-		startRestrictedCommandsCompute();
-	}
-
-	private void startRestrictedCommandsCompute() {
 		Bukkit.getScheduler().runTaskTimerAsynchronously(WGExtender.getInstance(), new Runnable() {
 			private final Pattern whitespacesplit = Pattern.compile("\\s+");
 			@Override
@@ -52,7 +47,7 @@ public class RestrictCommands implements Listener {
 				if (!config.restrictcommandsinregionsenabled) {
 					return;
 				}
-				ArrayList<String> computedRestrictedCommands = new ArrayList<String>();
+				ArrayList<String> computedRestrictedCommands = new ArrayList<>();
 				for (String restrictedCommand : config.restrictedcommands) {
 					String[] split = whitespacesplit.split(restrictedCommand);
 					for (String alias : CommandUtils.getCommandAliases(split[0])) {
@@ -67,7 +62,7 @@ public class RestrictCommands implements Listener {
 	protected volatile String[] restrictedCommands;
 
 	@EventHandler(priority = EventPriority.HIGHEST, ignoreCancelled = true)
-	public void ProcessWGCommand(PlayerCommandPreprocessEvent event) {
+	public void onCommandPreprocess(PlayerCommandPreprocessEvent event) {
 		if (!config.restrictcommandsinregionsenabled) {
 			return;
 		}
@@ -78,8 +73,8 @@ public class RestrictCommands implements Listener {
 		if (WGRegionUtils.isInWGRegion(player.getLocation()) && !WGRegionUtils.canBuild(player, player.getLocation())) {
 			String message = event.getMessage();
 			message = message.replaceFirst("/", "").toLowerCase();
-			for (String rcommand : config.restrictedcommands) {
-				if (message.startsWith(rcommand) && (message.length() == rcommand.length() || message.charAt(rcommand.length()) == ' ')) {
+			for (String rcommand : restrictedCommands) {
+				if (message.startsWith(rcommand) && ((message.length() == rcommand.length()) || (message.charAt(rcommand.length()) == ' '))) {
 					event.setCancelled(true);
 					player.sendMessage(ChatColor.RED + "Вы не можете использовать эту команду на чужом регионе");
 					return;
@@ -88,14 +83,14 @@ public class RestrictCommands implements Listener {
 		}
 	}
 
-	static String join(String firstElement, String[] args, String join) {
-		if (args == null || args.length == 0) {
+	protected static String join(String firstElement, String[] args, String delimiter) {
+		if ((args == null) || (args.length == 0)) {
 			return firstElement;
 		}
 		StringBuilder sb = new StringBuilder(50);
 		sb.append(firstElement);
 		for (int i = 0; i < args.length; i++) {
-			sb.append(join);
+			sb.append(delimiter);
 			sb.append(args[i]);
 		}
 		return sb.toString();

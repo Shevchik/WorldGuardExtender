@@ -17,8 +17,6 @@
 
 package wgextender.features.extendedwand;
 
-import java.lang.reflect.InvocationTargetException;
-
 import org.bukkit.ChatColor;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandSender;
@@ -29,20 +27,20 @@ import wgextender.utils.CommandUtils;
 
 public class WEWandCommandWrapper extends Command {
 
-	public static void inject(Config config) throws NoSuchFieldException, SecurityException, NoSuchMethodException, IllegalAccessException, IllegalArgumentException, InvocationTargetException {
+	public static void inject(Config config) throws IllegalAccessException {
 		WEWandCommandWrapper wrapper = new WEWandCommandWrapper(config, CommandUtils.getCommands().get("/wand"));
 		CommandUtils.replaceComamnd(wrapper.originalcommand, wrapper);
 	}
 
-	public static void uninject() throws IllegalAccessException, IllegalArgumentException, InvocationTargetException, NoSuchFieldException, SecurityException, NoSuchMethodException {
+	public static void uninject() throws IllegalAccessException {
 		WEWandCommandWrapper wrapper = (WEWandCommandWrapper) CommandUtils.getCommands().get("/wand");
 		CommandUtils.replaceComamnd(wrapper, wrapper.originalcommand);
 	}
 
-	private Config config;
-	private Command originalcommand;
+	protected final Config config;
+	protected final Command originalcommand;
 
-	private WEWandCommandWrapper(Config config, Command originalcommand) {
+	protected WEWandCommandWrapper(Config config, Command originalcommand) {
 		super(originalcommand.getName(), originalcommand.getDescription(), originalcommand.getUsage(), originalcommand.getAliases());
 		this.config = config;
 		this.originalcommand = originalcommand;

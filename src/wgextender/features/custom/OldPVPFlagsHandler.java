@@ -31,27 +31,25 @@ import wgextender.features.flags.OldPVPNoShieldBlockFlag;
 import wgextender.utils.ReflectionUtils;
 import wgextender.utils.WGRegionUtils;
 
+@SuppressWarnings("deprecation")
 public class OldPVPFlagsHandler implements Listener {
 
-	private final HashMap<UUID, Double> oldValues = new HashMap<>();
-	private Field functionsField;
+	protected final HashMap<UUID, Double> oldValues = new HashMap<>();
+	protected Field functionsField;
 
-	public void start() throws NoSuchFieldException, SecurityException {
+	public void start() {
 		functionsField = ReflectionUtils.getField(EntityDamageEvent.class, "modifierFunctions");
 		Bukkit.getPluginManager().registerEvents(this, WGExtender.getInstance());
-		Bukkit.getScheduler().scheduleSyncRepeatingTask(WGExtender.getInstance(), new Runnable() {
-			@Override
-			public void run() {
-				for (Player player : Bukkit.getOnlinePlayers()) {
-					if (WGRegionUtils.isFlagTrue(player.getLocation(), OldPVPAttackSpeedFlag.getInstance())) {
-						if (!oldValues.containsKey(player.getUniqueId())) {
-							AttributeInstance attribute = player.getAttribute(Attribute.GENERIC_ATTACK_SPEED);
-							oldValues.put(player.getUniqueId(), attribute.getBaseValue());
-							attribute.setBaseValue(16.0);
-						}
-					} else {
-						reset(player);
+		Bukkit.getScheduler().scheduleSyncRepeatingTask(WGExtender.getInstance(), () -> {
+			for (Player player : Bukkit.getOnlinePlayers()) {
+				if (WGRegionUtils.isFlagTrue(player.getLocation(), OldPVPAttackSpeedFlag.getInstance())) {
+					if (!oldValues.containsKey(player.getUniqueId())) {
+						AttributeInstance attribute = player.getAttribute(Attribute.GENERIC_ATTACK_SPEED);
+						oldValues.put(player.getUniqueId(), attribute.getBaseValue());
+						attribute.setBaseValue(16.0);
 					}
+				} else {
+					reset(player);
 				}
 			}
 		}, 0, 1);
@@ -75,7 +73,7 @@ public class OldPVPFlagsHandler implements Listener {
 		}
 	}
 
-	@SuppressWarnings({ "unchecked", "deprecation" })
+	@SuppressWarnings("unchecked")
 	@EventHandler(priority = EventPriority.LOWEST)
 	public void onEntityDamageByEntity(EntityDamageByEntityEvent event) {
 		Entity entity = event.getEntity();
@@ -108,7 +106,7 @@ public class OldPVPFlagsHandler implements Listener {
 
 	@EventHandler(priority = EventPriority.LOWEST)
 	public void onInteract(PlayerInteractEvent event) {
-		if (event.getHand() == EquipmentSlot.OFF_HAND && event.getPlayer().getInventory().getItemInOffHand().getType() == Material.BOW) {
+		if ((event.getHand() == EquipmentSlot.OFF_HAND) && (event.getPlayer().getInventory().getItemInOffHand().getType() == Material.BOW)) {
 			if (WGRegionUtils.isFlagTrue(event.getPlayer().getLocation(), OldPVPNoBowFlag.getInstance())) {
 				event.setCancelled(true);
 			}

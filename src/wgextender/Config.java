@@ -31,12 +31,13 @@ import org.bukkit.configuration.ConfigurationSection;
 import org.bukkit.configuration.file.FileConfiguration;
 import org.bukkit.configuration.file.YamlConfiguration;
 
-import com.sk89q.worldguard.protection.flags.DefaultFlag;
+import com.sk89q.worldguard.WorldGuard;
 import com.sk89q.worldguard.protection.flags.Flag;
+import com.sk89q.worldguard.protection.flags.Flags;
 
 public class Config {
 
-	private File configfile;
+	protected final File configfile;
 	public Config(WGExtender plugin) {
 		configfile = new File(plugin.getDataFolder(), "config.yml");
 	}
@@ -44,31 +45,30 @@ public class Config {
 	public boolean expandvert = false;
 
 	public boolean blocklimitsenabled = false;
-	public LinkedHashMap<String, Integer> blocklimits = new LinkedHashMap<String, Integer>();
+	public Map<String, Integer> blocklimits = new LinkedHashMap<>();
 
 	public boolean blocklavaflow = false;
 	public boolean blockwaterflow = false;
 	public boolean blockotherliquidflow = false;
-	public boolean blockigniteotherregionbyplayer = false;
 	public boolean blockfirespreadtoregion = false;
 	public boolean blockfirespreadinregion = false;
 	public boolean blockblockburninregion = false;
 	public boolean blockentityexplosionblockdamage = false;
 	public boolean blockentitydamagebyexplosion = false;
-	public boolean blockpistonmoveblock = false;
 
 	public boolean autoflagsenabled = false;
-	public Map<Flag<?>, String> autoflags = new HashMap<Flag<?>, String>();
+	public Map<Flag<?>, String> autoflags = new HashMap<>();
 
 	public boolean restrictcommandsinregionsenabled = false;
-	public Set<String> restrictedcommands = new HashSet<String>();
+	public Set<String> restrictedcommands = new HashSet<>();
 
 	public boolean extendedwewand = false;
 
 	public Boolean miscPvpMode = null;
-	private final String miscPvpModeAllow = "allow";
-	private final String miscPvpModeDeny = "deny";
-	private final String miscPvpModeDefault = "default";
+
+	protected static final String miscPvpModeAllow = "allow";
+	protected static final String miscPvpModeDeny = "deny";
+	protected static final String miscPvpModeDefault = "default";
 
 	public void loadConfig() {
 		loadcfg();
@@ -78,7 +78,7 @@ public class Config {
 	private void loadcfg() {
 		FileConfiguration config = YamlConfiguration.loadConfiguration(configfile);
 
-		expandvert = config.getBoolean("claim.vertexpand.enabled", expandvert);
+		expandvert = config.getBoolean("claim.vertexpand", expandvert);
 
 		blocklimitsenabled = config.getBoolean("claim.blocklimits.enabled", blocklimitsenabled);
 		blocklimits.clear();
@@ -89,23 +89,21 @@ public class Config {
 			}
 		}
 
-		blocklavaflow = config.getBoolean("regionprotect.flow.lava.enabled", blocklavaflow);
-		blockwaterflow = config.getBoolean("regionprotect.flow.water.enabled", blockwaterflow);
-		blockotherliquidflow = config.getBoolean("regionprotect.flow.otherliquid.enabled", blockotherliquidflow);
-		blockigniteotherregionbyplayer = config.getBoolean("regionprotect.ignitebyplayer.enabled", blockigniteotherregionbyplayer);
-		blockfirespreadtoregion = config.getBoolean("regionprotect.fire.spread.toregion.enabled", blockfirespreadtoregion);
-		blockfirespreadinregion = config.getBoolean("regionprotect.fire.spread.inregion.enabled", blockfirespreadinregion);
-		blockblockburninregion = config.getBoolean("regionprotect.fire.burn.enabled", blockblockburninregion);
-		blockentityexplosionblockdamage = config.getBoolean("regionprotect.explosion.block.enabled", blockentityexplosionblockdamage);
-		blockentitydamagebyexplosion = config.getBoolean("regionprotect.explosion.entity.enabled", blockentitydamagebyexplosion);
-		blockpistonmoveblock = config.getBoolean("regionprotect.pistonmove.enabled", blockpistonmoveblock);
+		blocklavaflow = config.getBoolean("regionprotect.flow.lava", blocklavaflow);
+		blockwaterflow = config.getBoolean("regionprotect.flow.water", blockwaterflow);
+		blockotherliquidflow = config.getBoolean("regionprotect.flow.other", blockotherliquidflow);
+		blockfirespreadtoregion = config.getBoolean("regionprotect.fire.spread.toregion", blockfirespreadtoregion);
+		blockfirespreadinregion = config.getBoolean("regionprotect.fire.spread.inregion", blockfirespreadinregion);
+		blockblockburninregion = config.getBoolean("regionprotect.fire.burn", blockblockburninregion);
+		blockentityexplosionblockdamage = config.getBoolean("regionprotect.explosion.block", blockentityexplosionblockdamage);
+		blockentitydamagebyexplosion = config.getBoolean("regionprotect.explosion.entity", blockentitydamagebyexplosion);
 
 		autoflagsenabled = config.getBoolean("autoflags.enabled",autoflagsenabled);
 		autoflags.clear();
 		ConfigurationSection aflagscs = config.getConfigurationSection("autoflags.flags");
 		if (aflagscs != null) {
 			for (String sflag : aflagscs.getKeys(false)) {
-				Flag<?> flag = DefaultFlag.fuzzyMatchFlag(WGExtender.getWorldGuard().getFlagRegistry(), sflag);
+				Flag<?> flag = Flags.fuzzyMatchFlag(WorldGuard.getInstance().getFlagRegistry(), sflag);
 				if (flag != null) {
 					autoflags.put(flag, aflagscs.getString(sflag));
 				}
@@ -113,9 +111,9 @@ public class Config {
 		}
 
 		restrictcommandsinregionsenabled = config.getBoolean("restrictcommands.enabled", restrictcommandsinregionsenabled);
-		restrictedcommands = new HashSet<String>(config.getStringList("restrictcommands.commands"));
+		restrictedcommands = new HashSet<>(config.getStringList("restrictcommands.commands"));
 
-		extendedwewand = config.getBoolean("extendedwewand.enabled", extendedwewand);
+		extendedwewand = config.getBoolean("extendedwewand", extendedwewand);
 
 		String miscPvpModeStr = config.getString("misc.pvpmode", miscPvpModeDefault);
 		if (miscPvpModeStr.equalsIgnoreCase(miscPvpModeAllow)) {
@@ -130,7 +128,7 @@ public class Config {
 	private void savecfg() {
 		FileConfiguration config = new YamlConfiguration();
 
-		config.set("claim.vertexpand.enabled", expandvert);
+		config.set("claim.vertexpand", expandvert);
 
 		config.set("claim.blocklimits.enabled", blocklimitsenabled);
 		if (blocklimits.isEmpty()) {
@@ -140,16 +138,14 @@ public class Config {
 			config.set("claim.blocklimits.limits." + entry.getKey(), entry.getValue());
 		}
 
-		config.set("regionprotect.flow.lava.enabled", blocklavaflow);
-		config.set("regionprotect.flow.water.enabled", blockwaterflow);
-		config.set("regionprotect.flow.otherliquid.enabled", blockotherliquidflow);
-		config.set("regionprotect.ignitebyplayer.enabled", blockigniteotherregionbyplayer);
-		config.set("regionprotect.fire.spread.toregion.enabled", blockfirespreadtoregion);
-		config.set("regionprotect.fire.spread.inregion.enabled", blockfirespreadinregion);
-		config.set("regionprotect.fire.burn.enabled", blockblockburninregion);
-		config.set("regionprotect.explosion.block.enabled", blockentityexplosionblockdamage);
-		config.set("regionprotect.explosion.entity.enabled", blockentitydamagebyexplosion);
-		config.set("regionprotect.pistonmove.enabled", blockpistonmoveblock);
+		config.set("regionprotect.flow.lava", blocklavaflow);
+		config.set("regionprotect.flow.water", blockwaterflow);
+		config.set("regionprotect.flow.other", blockotherliquidflow);
+		config.set("regionprotect.fire.spread.toregion", blockfirespreadtoregion);
+		config.set("regionprotect.fire.spread.inregion", blockfirespreadinregion);
+		config.set("regionprotect.fire.burn", blockblockburninregion);
+		config.set("regionprotect.explosion.block", blockentityexplosionblockdamage);
+		config.set("regionprotect.explosion.entity", blockentitydamagebyexplosion);
 
 		config.set("autoflags.enabled", autoflagsenabled);
 		if (autoflags.isEmpty()) {
@@ -162,7 +158,7 @@ public class Config {
 		config.set("restrictcommands.enabled", restrictcommandsinregionsenabled);
 		config.set("restrictcommands.commands", new ArrayList<String>(restrictedcommands));
 
-		config.set("extendedwewand.enabled", extendedwewand);
+		config.set("extendedwewand", extendedwewand);
 
 		config.set("misc.pvpmode", miscPvpMode != null ? miscPvpMode ? miscPvpModeAllow : miscPvpModeDeny : miscPvpModeDefault);
 

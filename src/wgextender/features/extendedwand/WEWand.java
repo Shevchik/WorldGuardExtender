@@ -19,27 +19,36 @@ package wgextender.features.extendedwand;
 
 import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
+import org.bukkit.Material;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.meta.ItemMeta;
 
-import wgextender.WGExtender;
+import wgextender.utils.WEUtils;
 
 public class WEWand {
 
-	private static final String WAND_NAME = ChatColor.LIGHT_PURPLE+"Selection wand";
+	protected static final String WAND_NAME = ChatColor.LIGHT_PURPLE + "Selection wand";
 
-	@SuppressWarnings("deprecation")
+	protected static Material cachedWandMaterial;
+
+	protected static Material getWandMaterial() {
+		String weWandMaterialName = WEUtils.getWorldEditPlugin().getLocalConfiguration().wandItem.toUpperCase();
+		if (cachedWandMaterial == null || !cachedWandMaterial.toString().equals(weWandMaterialName)) {
+			cachedWandMaterial = Material.getMaterial(weWandMaterialName.split(":")[1]);
+		}
+		return cachedWandMaterial;
+	}
+
 	public static ItemStack getWand() {
-		ItemStack itemstack = new ItemStack(WGExtender.getWorldEdit().getLocalConfiguration().wandItem);
+		ItemStack itemstack = new ItemStack(getWandMaterial());
 		ItemMeta meta = Bukkit.getItemFactory().getItemMeta(itemstack.getType());
 		meta.setDisplayName(WAND_NAME);
 		itemstack.setItemMeta(meta);
 		return itemstack;
 	}
 
-	@SuppressWarnings("deprecation")
 	public static boolean isWand(ItemStack itemstack) {
-		if (itemstack.getTypeId() == WGExtender.getWorldEdit().getLocalConfiguration().wandItem) {
+		if (itemstack.getType().equals(getWandMaterial())) {
 			ItemMeta im = itemstack.getItemMeta();
 			if (im != null) {
 				return WAND_NAME.equals(im.getDisplayName());

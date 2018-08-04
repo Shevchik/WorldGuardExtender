@@ -28,8 +28,7 @@ import wgextender.utils.WGRegionUtils;
 
 public class FireSpread implements Listener {
 
-	private Config config;
-
+	protected final Config config;
 	public FireSpread(Config config) {
 		this.config = config;
 	}

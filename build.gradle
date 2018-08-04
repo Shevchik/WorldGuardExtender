@@ -1,0 +1,100 @@
+buildscript {
+	repositories {
+		mavenCentral()
+	}
+}
+
+plugins {
+	id 'java'
+}
+
+apply from: 'helper.gradle'
+
+
+tasks.withType(JavaCompile) {
+	options.encoding = 'UTF-8'
+}
+
+
+group 'protocolsupport'
+version '4.29-dev'
+sourceCompatibility = JavaVersion.VERSION_1_8
+
+
+File dlDepsDirC = new File('dllibsc')
+dlDepsDirC.mkdirs()
+
+def dlDepsC = [
+	new Tuple(
+		'https://repo.perfectdreams.net/com/destroystokyo/paper/paper/1.13-R0.1-SNAPSHOT/paper-1.13-R0.1-SNAPSHOT.jar',
+		'spigot-1.13-1.jar'
+	),
+	new Tuple(
+		'http://builds.enginehub.org/job/worldedit/10258/download/worldedit-bukkit-7.0.0-SNAPSHOT-dist.jar',
+		'worldedit-1.jar'
+	),
+	new Tuple(
+		'http://builds.enginehub.org/job/worldguard/10259/download/worldguard-legacy-7.0.0-SNAPSHOT-dist.jar',
+		'worldguard-1.jar'
+	),
+	new Tuple(
+		'http://nexus.hc.to/content/repositories/pub_releases/net/milkbowl/vault/Vault/1.6.7/Vault-1.6.7.jar',
+		'vault-1.jar'
+	)
+]
+
+task updateLibs(type: DefaultTask) {doLast{
+	dlDeps(dlDepsC, dlDepsDirC)
+}}
+
+
+sourceSets {
+	main {
+		java {
+			srcDirs = ['src']
+		}
+		resources {
+			srcDirs = ['resources']
+		}
+	}
+	test {
+		java {
+			srcDirs = ['tests']
+		}
+	}
+}
+
+repositories {
+	mavenCentral()
+}
+
+dependencies {
+	compile fileTree(dir: dlDepsDirC, include: '*.jar')
+}
+
+jar {
+	doFirst {
+		new File(destinationDir, archiveName).delete()
+	}
+
+	from sourceSets.main.java.srcDirs
+	from 'LICENSE'
+
+	//remove the -all suffix
+	archiveName = jar.archiveName
+}
+
+task copyFinalJarToTarget(type: Copy) {
+	// JitPack searches for the output jar at the standard Gradle output directory (jar.archivePath)
+	// By copying it from there to our target destination JitPack can archive it in a Maven repository
+	from jar.archivePath.getPath()
+	into 'target'
+
+	//remove version suffix
+	rename (jar.archiveName, 'WGExtender.jar')
+}
+
+
+compileJava.dependsOn(clean)
+compileJava.dependsOn(updateLibs)
+jar.finalizedBy(copyFinalJarToTarget)
