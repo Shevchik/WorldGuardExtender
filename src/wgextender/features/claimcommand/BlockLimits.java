@@ -54,7 +54,7 @@ public class BlockLimits {
 			if (player.hasPermission("worldguard.region.unlimited")) {
 				return info;
 			}
-			String[] pgroups = VaultIntegration.permission.getPlayerGroups(player);
+			String[] pgroups = VaultIntegration.getInstance().getPermissions().getPlayerGroups(player);
 			if (pgroups.length == 0) {
 				return info;
 			}
