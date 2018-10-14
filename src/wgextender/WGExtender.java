@@ -81,6 +81,9 @@ public class WGExtender extends JavaPlugin {
 			pvplistener.inject();
 			oldpvphandler = new OldPVPFlagsHandler();
 			oldpvphandler.start();
+			VaultIntegration.setupPermissions();
+			VaultIntegration.setupEconomy();
+			VaultIntegration.setupChat();
 		} catch (Throwable t) {
 			getLogger().log(Level.SEVERE, "Unable to inject, shutting down", t);
 			t.printStackTrace();

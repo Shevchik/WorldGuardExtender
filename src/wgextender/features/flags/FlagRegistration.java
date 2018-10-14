@@ -14,7 +14,7 @@ import wgextender.utils.WGRegionUtils;
 
 public class FlagRegistration {
 
-	@SuppressWarnings("unchecked")
+	//Вот это надо убрать, к чему тут рефлексия? Флаги проще регистрируются
 	public static void registerFlag(Flag<?> flag) throws IllegalAccessException {
 		//manually insert flag into the registry
 		FlagRegistry registry = WorldGuard.getInstance().getFlagRegistry();
