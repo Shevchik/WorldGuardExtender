@@ -56,6 +56,7 @@ public class WGExtender extends JavaPlugin {
 
 	@Override
 	public void onEnable() {
+		VaultIntegration.getInstance().hook();
 		ChorusFruitUseFlag.assignInstance();
 		OldPVPAttackSpeedFlag.assignInstance();
 		OldPVPNoShieldBlockFlag.assignInstance();
