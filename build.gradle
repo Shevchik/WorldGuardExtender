@@ -16,37 +16,35 @@ tasks.withType(JavaCompile) {
 }
 
 
-group 'protocolsupport'
-version '4.29-dev'
+group 'worldguardextender'
+version '2,1'
 sourceCompatibility = JavaVersion.VERSION_1_8
 
+File librariesRuntimeDirectory = new File("libraries_runtime")
+File targetJarDirectory = new File("target")
 
-File dlDepsDirC = new File('dllibsc')
-dlDepsDirC.mkdirs()
-
-def dlDepsC = [
-	new Tuple(
-		'https://repo.perfectdreams.net/com/destroystokyo/paper/paper/1.13-R0.1-SNAPSHOT/paper-1.13-R0.1-SNAPSHOT.jar',
-		'spigot-1.13-1.jar'
-	),
-	new Tuple(
-		'http://builds.enginehub.org/job/worldedit/10258/download/worldedit-bukkit-7.0.0-SNAPSHOT-dist.jar',
-		'worldedit-1.jar'
-	),
-	new Tuple(
-		'http://builds.enginehub.org/job/worldguard/10259/download/worldguard-legacy-7.0.0-SNAPSHOT-dist.jar',
-		'worldguard-1.jar'
-	),
-	new Tuple(
-		'http://nexus.hc.to/content/repositories/pub_releases/net/milkbowl/vault/Vault/1.6.7/Vault-1.6.7.jar',
-		'vault-1.jar'
-	)
-]
-
-task updateLibs(type: DefaultTask) {doLast{
-	dlDeps(dlDepsC, dlDepsDirC)
+task setupFolders(type: DefaultTask) {doLast{
+	librariesRuntimeDirectory.mkdirs()
+	targetJarDirectory.mkdirs()
 }}
 
+task updateSpigot(type: BuildLibraryTask) {
+	targetDirectory = librariesRuntimeDirectory
+	targetLibraryName = "spigot-1.13.2-3.jar"
+	builderUrl = "https://papermc.io/ci/job/Paper-1.13/488/artifact/paperclip-488.jar"
+	buildCommand = "java -Dpaperclip.patchonly=true -jar {BUILDER}"
+	builtLibraryName = "cache/patched_1.13.2.jar"
+}
+
+task updateRuntimeLibraries(type: UpdateLibrariesTask) {
+	directory = librariesRuntimeDirectory
+	libraries = [
+		[url: "http://nexus.hc.to/content/repositories/pub_releases/net/milkbowl/vault/Vault/1.6.7/Vault-1.6.7.jar", name: "vault-1.jar"],
+		[url: "http://builds.enginehub.org/job/worldedit/10826/download/worldedit-bukkit-7.0.0-SNAPSHOT-dist.jar", name: "worldedit-2.jar"],
+		[url: "http://builds.enginehub.org/job/worldguard/10829/download/worldguard-legacy-7.0.0-SNAPSHOT-dist.jar", name: "worldguard-2.jar"]
+	]
+	manualLibraries = new HashSet<>(Arrays.asList(updateSpigot.targetLibraryName))
+}
 
 sourceSets {
 	main {
@@ -69,7 +67,7 @@ repositories {
 }
 
 dependencies {
-	compile fileTree(dir: dlDepsDirC, include: '*.jar')
+	compile fileTree(dir: librariesRuntimeDirectory, include: '*.jar')
 }
 
 jar {
@@ -80,21 +78,20 @@ jar {
 	from sourceSets.main.java.srcDirs
 	from 'LICENSE'
 
-	//remove the -all suffix
 	archiveName = jar.archiveName
 }
 
-task copyFinalJarToTarget(type: Copy) {
-	// JitPack searches for the output jar at the standard Gradle output directory (jar.archivePath)
-	// By copying it from there to our target destination JitPack can archive it in a Maven repository
-	from jar.archivePath.getPath()
-	into 'target'
-
-	//remove version suffix
-	rename (jar.archiveName, 'WGExtender.jar')
-}
+task copyFinalJarToTarget(type: DefaultTask) {doLast{
+	java.nio.file.Files.copy(
+		new File(jar.archivePath.getPath()).toPath(),
+		new File(targetJarDirectory, jar.baseName + '.jar').toPath(),
+		java.nio.file.StandardCopyOption.REPLACE_EXISTING
+	)
+}}
 
 
 compileJava.dependsOn(clean)
-compileJava.dependsOn(updateLibs)
+compileJava.dependsOn(setupFolders)
+compileJava.dependsOn(updateSpigot)
+compileJava.dependsOn(updateRuntimeLibraries)
 jar.finalizedBy(copyFinalJarToTarget)

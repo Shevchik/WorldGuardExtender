@@ -23,9 +23,9 @@ import org.bukkit.plugin.java.JavaPlugin;
 
 import com.sk89q.worldedit.IncompleteRegionException;
 import com.sk89q.worldedit.LocalSession;
-import com.sk89q.worldedit.Vector;
 import com.sk89q.worldedit.bukkit.BukkitAdapter;
 import com.sk89q.worldedit.bukkit.WorldEditPlugin;
+import com.sk89q.worldedit.math.BlockVector3;
 import com.sk89q.worldedit.regions.Region;
 import com.sk89q.worldguard.WorldGuard;
 import com.sk89q.worldguard.bukkit.BukkitWorldConfiguration;
@@ -59,8 +59,8 @@ public class WEUtils {
         try {
 			Region region = session.getSelection(weworld);
 			region.expand(
-				new Vector(0, (weworld.getMaxY() + 1), 0),
-				new Vector(0, -(weworld.getMaxY() + 1), 0)
+				BlockVector3.at(0, (weworld.getMaxY() + 1), 0),
+				BlockVector3.at(0, -(weworld.getMaxY() + 1), 0)
 			);
             session.getRegionSelector(weworld).learnChanges();
             return true;

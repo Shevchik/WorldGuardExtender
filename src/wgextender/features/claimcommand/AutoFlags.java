@@ -17,34 +17,30 @@
 
 package wgextender.features.claimcommand;
 
+import java.io.File;
 import java.lang.reflect.Method;
 import java.util.Collections;
 import java.util.HashSet;
 import java.util.Map.Entry;
 import java.util.Set;
+import java.util.UUID;
 
 import org.bukkit.Bukkit;
-import org.bukkit.Server;
 import org.bukkit.World;
-import org.bukkit.command.CommandSender;
-import org.bukkit.command.ConsoleCommandSender;
-import org.bukkit.conversations.Conversation;
-import org.bukkit.conversations.ConversationAbandonedEvent;
-import org.bukkit.permissions.Permission;
-import org.bukkit.permissions.PermissionAttachment;
-import org.bukkit.permissions.PermissionAttachmentInfo;
-import org.bukkit.plugin.Plugin;
 
 import com.sk89q.minecraft.util.commands.Command;
 import com.sk89q.minecraft.util.commands.CommandContext;
 import com.sk89q.minecraft.util.commands.CommandException;
-import com.sk89q.worldguard.bukkit.WorldGuardPlugin;
-import com.sk89q.worldguard.bukkit.commands.region.RegionCommands;
+import com.sk89q.worldedit.extension.platform.Actor;
+import com.sk89q.worldedit.internal.cui.CUIEvent;
+import com.sk89q.worldedit.session.SessionKey;
+import com.sk89q.worldedit.util.auth.AuthorizationException;
+import com.sk89q.worldguard.WorldGuard;
+import com.sk89q.worldguard.commands.region.RegionCommands;
 import com.sk89q.worldguard.protection.flags.Flag;
 import com.sk89q.worldguard.protection.managers.RegionManager;
 import com.sk89q.worldguard.protection.regions.ProtectedRegion;
 
-import net.md_5.bungee.api.chat.BaseComponent;
 import wgextender.Config;
 import wgextender.utils.WGRegionUtils;
 
@@ -75,8 +71,8 @@ public class AutoFlags {
 		}
 	}
 
-	protected static final RegionCommands regionCommands = new RegionCommands(WorldGuardPlugin.inst());
-	protected static final FakeConsoleComandSender fakeCommandSender = new FakeConsoleComandSender();
+	protected static final RegionCommands regionCommands = new RegionCommands(WorldGuard.getInstance());
+	protected static final FakeActor fakeCommandSender = new FakeActor();
 	protected static final Set<Character> flagCommandValueFlags = getFlagCommandValueFlags();
 	public static <T> void setFlag(World world, ProtectedRegion region, Flag<T> flag, String value) throws CommandException {
 		CommandContext ccontext = new CommandContext(String.format("flag %s -w %s %s %s", region.getId(), world.getName(), flag.getName(), value), flagCommandValueFlags);
@@ -86,7 +82,7 @@ public class AutoFlags {
 
 	protected static Set<Character> getFlagCommandValueFlags() {
 		try {
-			Method method = RegionCommands.class.getMethod("flag", CommandContext.class, CommandSender.class);
+			Method method = RegionCommands.class.getMethod("flag", CommandContext.class, Actor.class);
 			Command annotation = method.getAnnotation(Command.class);
 			char[] flags = annotation.flags().toCharArray();
 			Set<Character> valueFlags = new HashSet<>();
@@ -103,102 +99,60 @@ public class AutoFlags {
 		}
 	}
 
-	private static final class FakeConsoleComandSender implements ConsoleCommandSender {
+	private static final class FakeActor implements Actor {
 		@Override
 		public String getName() {
 			return Bukkit.getConsoleSender().getName();
 		}
 		@Override
-		public Server getServer() {
-			return Bukkit.getServer();
-		}
-		@Override
-		public void sendMessage(String arg0) {
-		}
-		@Override
-		public void sendMessage(String[] arg0) {
-		}
-		@Override
-		public PermissionAttachment addAttachment(Plugin arg0) {
+		public UUID getUniqueId() {
 			return null;
 		}
 		@Override
-		public PermissionAttachment addAttachment(Plugin arg0, int arg1) {
+		public SessionKey getSessionKey() {
 			return null;
-		}
-		@Override
-		public PermissionAttachment addAttachment(Plugin arg0, String arg1, boolean arg2) {
-			return null;
-		}
-		@Override
-		public PermissionAttachment addAttachment(Plugin arg0, String arg1, boolean arg2, int arg3) {
-			return null;
-		}
-		@Override
-		public Set<PermissionAttachmentInfo> getEffectivePermissions() {
-			return Collections.emptySet();
 		}
 		@Override
 		public boolean hasPermission(String arg0) {
 			return true;
 		}
 		@Override
-		public boolean hasPermission(Permission arg0) {
-			return true;
+		public void checkPermission(String arg0) throws AuthorizationException {
 		}
 		@Override
-		public boolean isPermissionSet(String arg0) {
-			return true;
+		public String[] getGroups() {
+			return null;
 		}
 		@Override
-		public boolean isPermissionSet(Permission arg0) {
-			return true;
-		}
-		@Override
-		public void recalculatePermissions() {
-		}
-		@Override
-		public void removeAttachment(PermissionAttachment arg0) {
-		}
-		@Override
-		public boolean isOp() {
-			return true;
-		}
-		@Override
-		public void setOp(boolean arg0) {
-		}
-		@Override
-		public void abandonConversation(Conversation arg0) {
-		}
-		@Override
-		public void abandonConversation(Conversation arg0, ConversationAbandonedEvent arg1) {
-		}
-		@Override
-		public void acceptConversationInput(String arg0) {
-		}
-		@Override
-		public boolean beginConversation(Conversation arg0) {
+		public boolean canDestroyBedrock() {
 			return false;
 		}
 		@Override
-		public boolean isConversing() {
+		public void dispatchCUIEvent(CUIEvent arg0) {
+		}
+		@Override
+		public boolean isPlayer() {
 			return false;
 		}
 		@Override
-		public void sendRawMessage(String arg0) {
+		public File openFileOpenDialog(String[] arg0) {
+			return null;
 		}
-
 		@Override
-		public Spigot spigot() {
-			return new Spigot() {
-				@Override
-				public void sendMessage(BaseComponent component) {
-				}
-
-				@Override
-				public void sendMessage(BaseComponent... components) {
-				}
-			};
+		public File openFileSaveDialog(String[] arg0) {
+			return null;
+		}
+		@Override
+		public void print(String arg0) {
+		}
+		@Override
+		public void printDebug(String arg0) {
+		}
+		@Override
+		public void printError(String arg0) {
+		}
+		@Override
+		public void printRaw(String arg0) {
 		}
 	}
 

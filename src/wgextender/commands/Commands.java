@@ -68,7 +68,7 @@ public class Commands implements CommandExecutor, TabCompleter {
 
 	protected static List<String> getRegionsInPlayerSelection(Player player) throws IncompleteRegionException {
 		Region psel = WEUtils.getSelection(player);
-		ProtectedRegion fakerg = new ProtectedCuboidRegion("wgexfakerg", psel.getMaximumPoint().toBlockVector(), psel.getMinimumPoint().toBlockVector());
+		ProtectedRegion fakerg = new ProtectedCuboidRegion("wgexfakerg", psel.getMaximumPoint(), psel.getMinimumPoint());
 		ApplicableRegionSet ars = WGRegionUtils.getRegionManager(player.getWorld()).getApplicableRegions(fakerg);
 		return
 			StreamSupport.stream(ars.spliterator(), false)

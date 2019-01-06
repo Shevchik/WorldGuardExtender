@@ -12,7 +12,7 @@ import com.sk89q.worldedit.regions.Region;
 import com.sk89q.worldguard.LocalPlayer;
 import com.sk89q.worldguard.bukkit.BukkitWorldConfiguration;
 import com.sk89q.worldguard.bukkit.WorldGuardPlugin;
-import com.sk89q.worldguard.bukkit.commands.task.RegionAdder;
+import com.sk89q.worldguard.commands.task.RegionAdder;
 import com.sk89q.worldguard.internal.permission.RegionPermissionModel;
 import com.sk89q.worldguard.protection.ApplicableRegionSet;
 import com.sk89q.worldguard.protection.managers.RegionManager;
@@ -26,6 +26,9 @@ import wgextender.utils.WGRegionUtils;
 public class WEClaimCommand {
 
 	protected static void claim(String id, CommandSender sender) throws CommandException {
+		if (!(sender instanceof Player)) {
+			throw new CommandException("Эта команда только для игроков");
+		}
 		if (id.equalsIgnoreCase("__global__")) {
 			throw new CommandException("Нельзя заприватить __global__.");
 		}
@@ -33,9 +36,7 @@ public class WEClaimCommand {
 			throw new CommandException("Имя региона '" + id + "' содержит запрещённые символы.");
 		}
 
-		WorldGuardPlugin worldguardplugin = WorldGuardPlugin.inst();
-
-		Player player = worldguardplugin.checkPlayer(sender);
+		Player player = (Player) sender;
 
 		BukkitWorldConfiguration wcfg = WEUtils.getWorldConfig(player);
 
@@ -43,7 +44,7 @@ public class WEClaimCommand {
 			throw new CommandException("The maximum claim volume get in the configuration is higher than is supported. " + "Currently, it must be " + Integer.MAX_VALUE + " or smaller. Please contact a server administrator.");
 		}
 
-		LocalPlayer localPlayer = worldguardplugin.wrapPlayer(player);
+		LocalPlayer localPlayer = WorldGuardPlugin.inst().wrapPlayer(player);
 		RegionPermissionModel permModel = new RegionPermissionModel(localPlayer);
 
 		if (!permModel.mayClaim()) {
@@ -59,7 +60,7 @@ public class WEClaimCommand {
 		ProtectedRegion region = createProtectedRegionFromSelection(player, id);
 
 		if (!permModel.mayClaimRegionsUnbounded()) {
-			int maxRegionCount = wcfg.getMaxRegionCount(player);
+			int maxRegionCount = wcfg.getMaxRegionCount(localPlayer);
 			if ((maxRegionCount >= 0) && (manager.getRegionCountOfPlayer(localPlayer) >= maxRegionCount)) {
 				throw new CommandException("У вас слишком много регионов, удалите один из них перед тем как заприватить новый.");
 			}
@@ -78,7 +79,7 @@ public class WEClaimCommand {
 			throw new CommandException("Вы можете приватить только внутри своих регионов.");
 		}
 
-		RegionAdder task = new RegionAdder(WorldGuardPlugin.inst(), manager, region);
+		RegionAdder task = new RegionAdder(manager, region);
 		task.setLocatorPolicy(UserLocatorPolicy.UUID_ONLY);
 		task.setOwnersInput(new String[] { player.getName() });
 		try {
@@ -94,7 +95,7 @@ public class WEClaimCommand {
 		try {
 			Region selection = WEUtils.getSelection(player);
 			if (selection instanceof CuboidRegion) {
-				return new ProtectedCuboidRegion(id, selection.getMinimumPoint().toBlockVector(), selection.getMaximumPoint().toBlockVector());
+				return new ProtectedCuboidRegion(id, selection.getMinimumPoint(), selection.getMaximumPoint());
 			} else {
 				throw new CommandException("Вы можете использовать только кубическкую территорию.");
 			}
