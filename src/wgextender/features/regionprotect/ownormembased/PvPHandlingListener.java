@@ -110,12 +110,12 @@ public class PvPHandlingListener extends WGOverrideListener {
 			// null - default wg pvp logic
 			// true - allow pvp when flag not set
 			// false - disallow pvp when flag not set
-			if (config.miscPvpMode == null) {
+			if (config.miscDefaultPvPFlagOperationMode == null) {
 				canDamage =
 					query.testBuild(weTarget, associable, combine(event, Flags.PVP)) &&
 					(query.queryState(weAttacker, localPlayerAttacker, combine(event, Flags.PVP)) != State.DENY) &&
 					(query.queryState(weTarget, localPlayerAttacker, combine(event, Flags.PVP)) != State.DENY);
-			} else if (config.miscPvpMode) {
+			} else if (config.miscDefaultPvPFlagOperationMode) {
 				canDamage =
 					(query.queryState(weAttacker, localPlayerAttacker, combine(event, Flags.PVP)) != State.DENY) &&
 					(query.queryState(weTarget, localPlayerAttacker, combine(event, Flags.PVP)) != State.DENY);

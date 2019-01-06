@@ -39,16 +39,16 @@ public class RestrictCommands implements Listener {
 	protected final Config config;
 	public RestrictCommands(Config config) {
 		this.config = config;
-		restrictedCommands = config.restrictedcommands.toArray(new String[config.restrictedcommands.size()]);
+		restrictedCommands = config.restrictedCommandsInRegion.toArray(new String[config.restrictedCommandsInRegion.size()]);
 		Bukkit.getScheduler().runTaskTimerAsynchronously(WGExtender.getInstance(), new Runnable() {
 			private final Pattern whitespacesplit = Pattern.compile("\\s+");
 			@Override
 			public void run() {
-				if (!config.restrictcommandsinregionsenabled) {
+				if (!config.restrictCommandsInRegionEnabled) {
 					return;
 				}
 				ArrayList<String> computedRestrictedCommands = new ArrayList<>();
-				for (String restrictedCommand : config.restrictedcommands) {
+				for (String restrictedCommand : config.restrictedCommandsInRegion) {
 					String[] split = whitespacesplit.split(restrictedCommand);
 					for (String alias : CommandUtils.getCommandAliases(split[0])) {
 						computedRestrictedCommands.add(join(alias, split.length > 1 ? Arrays.copyOfRange(split, 1, split.length) : null, " "));
@@ -63,7 +63,7 @@ public class RestrictCommands implements Listener {
 
 	@EventHandler(priority = EventPriority.HIGHEST, ignoreCancelled = true)
 	public void onCommandPreprocess(PlayerCommandPreprocessEvent event) {
-		if (!config.restrictcommandsinregionsenabled) {
+		if (!config.restrictCommandsInRegionEnabled) {
 			return;
 		}
 		Player player = event.getPlayer();

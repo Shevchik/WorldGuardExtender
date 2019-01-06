@@ -43,19 +43,19 @@ public class LiquidFlow implements Listener {
 		Block b = event.getBlock();
 		switch (b.getType()) {
 			case LAVA: {
-				if (config.blocklavaflow) {
+				if (config.checkLavaFlow) {
 					check(b.getLocation(), event.getToBlock().getLocation(), event);
 				}
 				break;
 			}
 			case WATER: {
-				if (config.blockwaterflow) {
+				if (config.checkWaterFlow) {
 					check(b.getLocation(), event.getToBlock().getLocation(), event);
 				}
 				break;
 			}
 			default: {
-				if (config.blockotherliquidflow) {
+				if (config.checkOtherLiquidFlow) {
 					check(b.getLocation(), event.getToBlock().getLocation(), event);
 				}
 				break;
@@ -71,19 +71,19 @@ public class LiquidFlow implements Listener {
 			Block nextBlock = block.getRelative(((Directional) blockData).getFacing());
 			switch (event.getItem().getType()) {
 				case LAVA_BUCKET: {
-					if (config.blocklavaflow) {
+					if (config.checkLavaFlow) {
 						check(block.getLocation(), nextBlock.getLocation(), event);
 					}
 					break;
 				}
 				case WATER_BUCKET: {
-					if (config.blockwaterflow) {
+					if (config.checkWaterFlow) {
 						check(block.getLocation(), nextBlock.getLocation(), event);
 					}
 					break;
 				}
 				default: {
-					if (config.blockotherliquidflow) {
+					if (config.checkOtherLiquidFlow) {
 						check(block.getLocation(), nextBlock.getLocation(), event);
 					}
 					break;

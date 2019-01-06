@@ -48,7 +48,7 @@ public class WEWandCommandWrapper extends Command {
 
 	@Override
 	public boolean execute(CommandSender sender, String label, String[] args) {
-		if (!config.extendedwewand) {
+		if (!config.extendedWorldEditWandEnabled) {
 			return originalcommand.execute(sender, label, args);
 		}
 		if (sender instanceof Player) {

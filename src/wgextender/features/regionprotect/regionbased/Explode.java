@@ -18,6 +18,7 @@
 package wgextender.features.regionprotect.regionbased;
 
 import java.util.Iterator;
+import java.util.function.Predicate;
 
 import org.bukkit.Location;
 import org.bukkit.block.Block;
@@ -29,6 +30,7 @@ import org.bukkit.event.EventPriority;
 import org.bukkit.event.Listener;
 import org.bukkit.event.block.BlockExplodeEvent;
 import org.bukkit.event.entity.EntityDamageByEntityEvent;
+import org.bukkit.event.entity.EntityDamageEvent;
 import org.bukkit.event.entity.EntityDamageEvent.DamageCause;
 import org.bukkit.event.entity.EntityExplodeEvent;
 
@@ -44,27 +46,20 @@ public class Explode implements Listener {
 
 	@EventHandler(priority = EventPriority.LOW, ignoreCancelled = true)
 	public void onEntityExplode(EntityExplodeEvent event) {
-		if (!config.blockentityexplosionblockdamage) {
+		if (!config.checkExplosionBlockDamage) {
 			return;
 		}
-		if (event.getEntity() instanceof TNTPrimed) {
-			Entity source = ((TNTPrimed) event.getEntity()).getSource();
-			if (source instanceof Player) {
-				Player igniter = (Player) source;
-				boolean canBypass = WGRegionUtils.canBypassProtection(igniter);
-				Iterator<Block> it = event.blockList().iterator();
-				while (it.hasNext()) {
-					Location location = it.next().getLocation();
-					if (!canBypass && !WGRegionUtils.canBuild(igniter, location)) {
-						it.remove();
-					}
-				}
-				return;
-			}
+		Player source = findExplosionSource(event.getEntity());
+		Predicate<Location> shouldProtectBlockPredicate = null;
+		if (source != null) {
+			boolean canBypass = WGRegionUtils.canBypassProtection(source);
+			shouldProtectBlockPredicate = location -> !canBypass && !WGRegionUtils.canBuild(source, location);
+		} else {
+			shouldProtectBlockPredicate = WGRegionUtils::isInWGRegion;
 		}
 		Iterator<Block> it = event.blockList().iterator();
 		while (it.hasNext()) {
-			if (WGRegionUtils.isInWGRegion(it.next().getLocation())) {
+			if (shouldProtectBlockPredicate.test(it.next().getLocation())) {
 				it.remove();
 			}
 		}
@@ -72,7 +67,7 @@ public class Explode implements Listener {
 
 	@EventHandler(priority = EventPriority.LOW, ignoreCancelled = true)
 	public void onBlockExplode(BlockExplodeEvent event) {
-		if (!config.blockentityexplosionblockdamage) {
+		if (!config.checkExplosionBlockDamage) {
 			return;
 		}
 		Iterator<Block> it = event.blockList().iterator();
@@ -84,15 +79,35 @@ public class Explode implements Listener {
 	}
 
 	@EventHandler(priority = EventPriority.LOW, ignoreCancelled = true)
-	public void onEntityDamageByExplosion(EntityDamageByEntityEvent e) {
-		if (!config.blockentityexplosionblockdamage) {
+	public void onEntityDamageByExplosion(EntityDamageEvent e) {
+		if (!config.checkExplosionEntityDamage) {
 			return;
 		}
 		if ((e.getCause() == DamageCause.BLOCK_EXPLOSION) || (e.getCause() == DamageCause.ENTITY_EXPLOSION)) {
-			if (WGRegionUtils.isInWGRegion(e.getEntity().getLocation())) {
-				e.setCancelled(true);
+			Location locaiton = e.getEntity().getLocation();
+			if (WGRegionUtils.isInWGRegion(locaiton)) {
+				if (e instanceof EntityDamageByEntityEvent) {
+					Player source = findExplosionSource(((EntityDamageByEntityEvent) e).getDamager());
+					if ((source == null) || (!WGRegionUtils.canBypassProtection(source) && !WGRegionUtils.canBuild(source, locaiton))) {
+						e.setCancelled(true);
+					}
+				} else {
+					e.setCancelled(true);
+				}
+			}
+
+		}
+	}
+
+	protected static Player findExplosionSource(Entity exploded) {
+		if (exploded instanceof TNTPrimed) {
+			Entity source = ((TNTPrimed) exploded).getSource();
+			if (source instanceof Player) {
+				return (Player) source;
 			}
 		}
+		//TODO: explosion source for creeper (last damager or target?)?
+		return null;
 	}
 
 }
