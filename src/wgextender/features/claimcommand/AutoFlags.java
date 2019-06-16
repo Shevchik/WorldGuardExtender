@@ -35,6 +35,7 @@ import com.sk89q.worldedit.extension.platform.Actor;
 import com.sk89q.worldedit.internal.cui.CUIEvent;
 import com.sk89q.worldedit.session.SessionKey;
 import com.sk89q.worldedit.util.auth.AuthorizationException;
+import com.sk89q.worldedit.util.formatting.text.Component;
 import com.sk89q.worldguard.WorldGuard;
 import com.sk89q.worldguard.commands.region.RegionCommands;
 import com.sk89q.worldguard.protection.flags.Flag;
@@ -153,6 +154,9 @@ public class AutoFlags {
 		}
 		@Override
 		public void printRaw(String arg0) {
+		}
+		@Override
+		public void print(Component arg0) {
 		}
 	}
 

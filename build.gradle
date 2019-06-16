@@ -17,7 +17,7 @@ tasks.withType(JavaCompile) {
 
 
 group 'worldguardextender'
-version '2,1'
+version '2.2'
 sourceCompatibility = JavaVersion.VERSION_1_8
 
 File librariesRuntimeDirectory = new File("libraries_runtime")
@@ -30,18 +30,18 @@ task setupFolders(type: DefaultTask) {doLast{
 
 task updateSpigot(type: BuildLibraryTask) {
 	targetDirectory = librariesRuntimeDirectory
-	targetLibraryName = "spigot-1.13.2-3.jar"
-	builderUrl = "https://papermc.io/ci/job/Paper-1.13/488/artifact/paperclip-488.jar"
+	targetLibraryName = "spigot-1.14.2-1.jar"
+	builderUrl = "https://papermc.io/api/v1/paper/1.14.2/51/download"
 	buildCommand = "java -Dpaperclip.patchonly=true -jar {BUILDER}"
-	builtLibraryName = "cache/patched_1.13.2.jar"
+	builtLibraryName = ["cache", "patched_1.14.2.jar"]
 }
 
 task updateRuntimeLibraries(type: UpdateLibrariesTask) {
 	directory = librariesRuntimeDirectory
 	libraries = [
 		[url: "http://nexus.hc.to/content/repositories/pub_releases/net/milkbowl/vault/Vault/1.6.7/Vault-1.6.7.jar", name: "vault-1.jar"],
-		[url: "http://builds.enginehub.org/job/worldedit/10826/download/worldedit-bukkit-7.0.0-SNAPSHOT-dist.jar", name: "worldedit-2.jar"],
-		[url: "http://builds.enginehub.org/job/worldguard/10829/download/worldguard-legacy-7.0.0-SNAPSHOT-dist.jar", name: "worldguard-2.jar"]
+		[url: "http://builds.enginehub.org/job/worldedit/12015/download/worldedit-bukkit-7.0.1-SNAPSHOT-dist.jar", name: "worldedit-3.jar"],
+		[url: "http://builds.enginehub.org/job/worldguard/11975/download/worldguard-legacy-7.0.0-SNAPSHOT-dist.jar", name: "worldguard-3.jar"]
 	]
 	manualLibraries = new HashSet<>(Arrays.asList(updateSpigot.targetLibraryName))
 }
