@@ -27,7 +27,6 @@ import com.sk89q.worldguard.bukkit.util.Entities;
 import com.sk89q.worldguard.bukkit.util.Events;
 import com.sk89q.worldguard.bukkit.util.InteropUtils;
 import com.sk89q.worldguard.domains.Association;
-import com.sk89q.worldguard.internal.permission.RegionPermissionModel;
 import com.sk89q.worldguard.protection.DelayedRegionOverlapAssociation;
 import com.sk89q.worldguard.protection.association.Associables;
 import com.sk89q.worldguard.protection.association.RegionAssociable;
@@ -38,7 +37,6 @@ import com.sk89q.worldguard.protection.regions.RegionQuery;
 
 import wgextender.Config;
 import wgextender.features.regionprotect.WGOverrideListener;
-import wgextender.utils.WEUtils;
 import wgextender.utils.WGRegionUtils;
 
 public class PvPHandlingListener extends WGOverrideListener {
@@ -59,7 +57,7 @@ public class PvPHandlingListener extends WGOverrideListener {
 		if (event.getResult() == Result.ALLOW) {
 			return;
 		}
-		if (!WEUtils.getWorldConfig(event.getWorld()).useRegions) {
+		if (!WGRegionUtils.getWorldConfig(event.getWorld()).useRegions) {
 			return;
 		}
 
@@ -184,11 +182,11 @@ public class PvPHandlingListener extends WGOverrideListener {
 		} else if (rootCause instanceof Player) {
 			Player player = (Player) rootCause;
 
-			if (WEUtils.getWorldConfig(world).fakePlayerBuildOverride && InteropUtils.isFakePlayer(player)) {
+			if (WGRegionUtils.getWorldConfig(world).fakePlayerBuildOverride && InteropUtils.isFakePlayer(player)) {
 				return true;
 			}
 
-			return !pvp && new RegionPermissionModel(WorldGuardPlugin.inst().wrapPlayer(player)).mayIgnoreRegionProtection(BukkitAdapter.adapt(world));
+			return !pvp && WGRegionUtils.canBypassProtection(player);
 		} else {
 			return false;
 		}
@@ -197,6 +195,7 @@ public class PvPHandlingListener extends WGOverrideListener {
 	private static final String DENY_MESSAGE_KEY = "worldguard.region.lastMessage";
 	private static final int LAST_MESSAGE_DELAY = 500;
 
+	@SuppressWarnings("deprecation")
 	private void tellErrorMessage(DelegateEvent event, Cause cause, Location location, String what) {
 		if (event.isSilent() || cause.isIndirect()) {
 			return;

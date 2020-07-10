@@ -28,7 +28,9 @@ import wgextender.Config;
 import wgextender.features.claimcommand.BlockLimits.ProcessedClaimInfo;
 import wgextender.utils.CommandUtils;
 import wgextender.utils.WEUtils;
+import wgextender.utils.WGRegionUtils;
 
+@SuppressWarnings("deprecation")
 public class WGRegionCommandWrapper extends Command {
 
 	public static void inject(Config config) throws IllegalAccessException {
@@ -76,7 +78,7 @@ public class WGRegionCommandWrapper extends Command {
 			try {
 				WEClaimCommand.claim(regionname, sender);
 				if (!hasRegion && config.claimAutoFlagsEnabled) {
-					AutoFlags.setFlagsForRegion(player.getWorld(), config, regionname);
+					AutoFlags.setFlagsForRegion(WGRegionUtils.wrapPlayer(player), player.getWorld(), config, regionname);
 				}
 			} catch (CommandException ex) {
 				sender.sendMessage(ChatColor.RED + ex.getMessage());

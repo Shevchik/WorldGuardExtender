@@ -36,6 +36,7 @@ import org.bukkit.entity.Player;
 
 import com.sk89q.minecraft.util.commands.CommandException;
 import com.sk89q.worldedit.IncompleteRegionException;
+import com.sk89q.worldedit.bukkit.BukkitCommandSender;
 import com.sk89q.worldedit.regions.Region;
 import com.sk89q.worldguard.WorldGuard;
 import com.sk89q.worldguard.domains.DefaultDomain;
@@ -59,6 +60,7 @@ import wgextender.utils.WEUtils;
 import wgextender.utils.WGRegionUtils;
 
 //TODO: refactor
+@SuppressWarnings("deprecation")
 public class Commands implements CommandExecutor, TabCompleter {
 
 	protected final Config config;
@@ -76,7 +78,6 @@ public class Commands implements CommandExecutor, TabCompleter {
 			.collect(Collectors.toList());
 	}
 
-	@SuppressWarnings("deprecation")
 	@Override
 	public boolean onCommand(CommandSender sender, Command arg1, String label, String[] args) {
 		if (!sender.hasPermission("wgextender.admin")) {
@@ -128,14 +129,19 @@ public class Commands implements CommandExecutor, TabCompleter {
 									if (region instanceof GlobalProtectedRegion) {
 										continue;
 									}
-									AutoFlags.setFlag(world, region, flag, value);
+									if (sender instanceof Player) {
+										AutoFlags.setFlag(WGRegionUtils.wrapPlayer((Player) sender), world, region, flag, value);
+									} else {
+										AutoFlags.setFlag(new BukkitCommandSender(WEUtils.getWorldEditPlugin(), sender), world, region, flag, value);
+									}
 								}
 								sender.sendMessage(ChatColor.BLUE + "Флаги установлены");
 							} catch (CommandException e) {
 								sender.sendMessage(ChatColor.BLUE + "Неправильный формат флага "+flag.getName()+": "+e.getMessage());
 							}
+						} else {
+							sender.sendMessage(ChatColor.BLUE + "Флаг не найден");
 						}
-						sender.sendMessage(ChatColor.BLUE + "Флаг не найден");
 					} else {
 						sender.sendMessage(ChatColor.BLUE + "Мир не найден");
 					}

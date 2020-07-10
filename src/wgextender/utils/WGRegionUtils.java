@@ -22,9 +22,11 @@ import org.bukkit.World;
 import org.bukkit.entity.Player;
 
 import com.sk89q.worldedit.bukkit.BukkitAdapter;
+import com.sk89q.worldguard.LocalPlayer;
 import com.sk89q.worldguard.WorldGuard;
+import com.sk89q.worldguard.bukkit.BukkitWorldConfiguration;
 import com.sk89q.worldguard.bukkit.WorldGuardPlugin;
-import com.sk89q.worldguard.internal.permission.RegionPermissionModel;
+import com.sk89q.worldguard.internal.platform.WorldGuardPlatform;
 import com.sk89q.worldguard.protection.ApplicableRegionSet;
 import com.sk89q.worldguard.protection.flags.BooleanFlag;
 import com.sk89q.worldguard.protection.flags.Flags;
@@ -33,20 +35,36 @@ import com.sk89q.worldguard.protection.managers.RegionManager;
 import com.sk89q.worldguard.protection.regions.RegionContainer;
 import com.sk89q.worldguard.protection.regions.RegionQuery;
 
-public class WGRegionUtils  {
+public class WGRegionUtils {
 
 	public static final RegionQuery REGION_QUERY = getRegionContainer().createQuery();
 
+	public static LocalPlayer wrapPlayer(Player player) {
+		return WorldGuardPlugin.inst().wrapPlayer(player);
+	}
+
+	public static WorldGuardPlatform getPlatform() {
+		return WorldGuard.getInstance().getPlatform();
+	}
+
 	public static RegionContainer getRegionContainer() {
-		return WorldGuard.getInstance().getPlatform().getRegionContainer();
+		return getPlatform().getRegionContainer();
 	}
 
 	public static RegionManager getRegionManager(World world) {
 		return getRegionContainer().get(BukkitAdapter.adapt(world));
 	}
 
+	public static BukkitWorldConfiguration getWorldConfig(World world) {
+		return (BukkitWorldConfiguration) getPlatform().getGlobalStateManager().get(BukkitAdapter.adapt(world));
+	}
+
+	public static BukkitWorldConfiguration getWorldConfig(Player player) {
+		return getWorldConfig(player.getWorld());
+	}
+
 	public static boolean canBypassProtection(Player player) {
-		return new RegionPermissionModel(WorldGuardPlugin.inst().wrapPlayer(player)).mayIgnoreRegionProtection(BukkitAdapter.adapt(player.getWorld()));
+		return getPlatform().getSessionManager().hasBypass(wrapPlayer(player), BukkitAdapter.adapt(player.getWorld()));
 	}
 
 	public static boolean isInWGRegion(Location location) {

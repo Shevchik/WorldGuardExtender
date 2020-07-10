@@ -17,7 +17,6 @@
 
 package wgextender.utils;
 
-import org.bukkit.World;
 import org.bukkit.entity.Player;
 import org.bukkit.plugin.java.JavaPlugin;
 
@@ -27,9 +26,6 @@ import com.sk89q.worldedit.bukkit.BukkitAdapter;
 import com.sk89q.worldedit.bukkit.WorldEditPlugin;
 import com.sk89q.worldedit.math.BlockVector3;
 import com.sk89q.worldedit.regions.Region;
-import com.sk89q.worldguard.WorldGuard;
-import com.sk89q.worldguard.bukkit.BukkitWorldConfiguration;
-import com.sk89q.worldguard.config.ConfigurationManager;
 
 public class WEUtils {
 
@@ -37,19 +33,7 @@ public class WEUtils {
 		return JavaPlugin.getPlugin(WorldEditPlugin.class);
 	}
 
-    public static ConfigurationManager getConfig() {
-        return WorldGuard.getInstance().getPlatform().getGlobalStateManager();
-    }
-
-    public static BukkitWorldConfiguration getWorldConfig(World world) {
-        return (BukkitWorldConfiguration) WorldGuard.getInstance().getPlatform().getGlobalStateManager().get(BukkitAdapter.adapt(world));
-    }
-
-    public static BukkitWorldConfiguration getWorldConfig(Player player) {
-        return getWorldConfig(player.getWorld());
-    }
-
-	public static Region getSelection(Player player) throws IncompleteRegionException {
+    public static Region getSelection(Player player) throws IncompleteRegionException {
 		return getWorldEditPlugin().getSession(player).getSelection(BukkitAdapter.adapt(player.getWorld()));
 	}
 

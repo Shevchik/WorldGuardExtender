@@ -156,7 +156,7 @@ public class Config {
 		}
 
 		config.set("restrictcommands.enabled", restrictCommandsInRegionEnabled);
-		config.set("restrictcommands.commands", new ArrayList<String>(restrictedCommandsInRegion));
+		config.set("restrictcommands.commands", new ArrayList<>(restrictedCommandsInRegion));
 
 		config.set("extendedwewand", extendedWorldEditWandEnabled);
 

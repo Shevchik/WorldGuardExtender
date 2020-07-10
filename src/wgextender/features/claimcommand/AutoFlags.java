@@ -17,25 +17,18 @@
 
 package wgextender.features.claimcommand;
 
-import java.io.File;
 import java.lang.reflect.Method;
 import java.util.Collections;
 import java.util.HashSet;
 import java.util.Map.Entry;
 import java.util.Set;
-import java.util.UUID;
 
-import org.bukkit.Bukkit;
 import org.bukkit.World;
 
 import com.sk89q.minecraft.util.commands.Command;
 import com.sk89q.minecraft.util.commands.CommandContext;
 import com.sk89q.minecraft.util.commands.CommandException;
 import com.sk89q.worldedit.extension.platform.Actor;
-import com.sk89q.worldedit.internal.cui.CUIEvent;
-import com.sk89q.worldedit.session.SessionKey;
-import com.sk89q.worldedit.util.auth.AuthorizationException;
-import com.sk89q.worldedit.util.formatting.text.Component;
 import com.sk89q.worldguard.WorldGuard;
 import com.sk89q.worldguard.commands.region.RegionCommands;
 import com.sk89q.worldguard.protection.flags.Flag;
@@ -45,6 +38,7 @@ import com.sk89q.worldguard.protection.regions.ProtectedRegion;
 import wgextender.Config;
 import wgextender.utils.WGRegionUtils;
 
+@SuppressWarnings("deprecation")
 public class AutoFlags {
 
 	protected static boolean hasRegion(final World world, final String regionname) {
@@ -59,12 +53,12 @@ public class AutoFlags {
 		return rm.getRegion(regionname);
 	}
 
-	protected static void setFlagsForRegion(final World world, final Config config, final String regionname) {
+	protected static void setFlagsForRegion(Actor actor, final World world, final Config config, final String regionname) {
 		final ProtectedRegion rg = getRegion(world, regionname);
 		if (rg != null) {
 			for (Entry<Flag<?>, String> entry : config.claimAutoFlags.entrySet()) {
 				try {
-					setFlag(world, rg, entry.getKey(), entry.getValue());
+					setFlag(actor, world, rg, entry.getKey(), entry.getValue());
 				} catch (CommandException e) {
 					e.printStackTrace();
 				}
@@ -73,11 +67,10 @@ public class AutoFlags {
 	}
 
 	protected static final RegionCommands regionCommands = new RegionCommands(WorldGuard.getInstance());
-	protected static final FakeActor fakeCommandSender = new FakeActor();
 	protected static final Set<Character> flagCommandValueFlags = getFlagCommandValueFlags();
-	public static <T> void setFlag(World world, ProtectedRegion region, Flag<T> flag, String value) throws CommandException {
+	public static <T> void setFlag(Actor actor, World world, ProtectedRegion region, Flag<T> flag, String value) throws CommandException {
 		CommandContext ccontext = new CommandContext(String.format("flag %s -w %s %s %s", region.getId(), world.getName(), flag.getName(), value), flagCommandValueFlags);
-		regionCommands.flag(ccontext, fakeCommandSender);
+		regionCommands.flag(ccontext, actor);
 	}
 
 
@@ -97,66 +90,6 @@ public class AutoFlags {
 		} catch (Throwable t) {
 			t.printStackTrace();
 			return Collections.emptySet();
-		}
-	}
-
-	private static final class FakeActor implements Actor {
-		@Override
-		public String getName() {
-			return Bukkit.getConsoleSender().getName();
-		}
-		@Override
-		public UUID getUniqueId() {
-			return null;
-		}
-		@Override
-		public SessionKey getSessionKey() {
-			return null;
-		}
-		@Override
-		public boolean hasPermission(String arg0) {
-			return true;
-		}
-		@Override
-		public void checkPermission(String arg0) throws AuthorizationException {
-		}
-		@Override
-		public String[] getGroups() {
-			return null;
-		}
-		@Override
-		public boolean canDestroyBedrock() {
-			return false;
-		}
-		@Override
-		public void dispatchCUIEvent(CUIEvent arg0) {
-		}
-		@Override
-		public boolean isPlayer() {
-			return false;
-		}
-		@Override
-		public File openFileOpenDialog(String[] arg0) {
-			return null;
-		}
-		@Override
-		public File openFileSaveDialog(String[] arg0) {
-			return null;
-		}
-		@Override
-		public void print(String arg0) {
-		}
-		@Override
-		public void printDebug(String arg0) {
-		}
-		@Override
-		public void printError(String arg0) {
-		}
-		@Override
-		public void printRaw(String arg0) {
-		}
-		@Override
-		public void print(Component arg0) {
 		}
 	}
 

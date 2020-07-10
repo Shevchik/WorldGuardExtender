@@ -1,50 +1,24 @@
-buildscript {
-	repositories {
-		mavenCentral()
-	}
-}
-
 plugins {
 	id 'java'
 }
 
-apply from: 'helper.gradle'
+
+defaultTasks 'build'
 
 
-tasks.withType(JavaCompile) {
-	options.encoding = 'UTF-8'
-}
+group 'org.hurricanegames'
+version '3.0'
 
 
-group 'worldguardextender'
-version '2.2'
+import java.nio.file.Path
+import java.nio.file.Paths
+import java.nio.file.Files
+
+
+Path projectDirectoryPath = projectDir.toPath().toAbsolutePath()
+
+
 sourceCompatibility = JavaVersion.VERSION_1_8
-
-File librariesRuntimeDirectory = new File("libraries_runtime")
-File targetJarDirectory = new File("target")
-
-task setupFolders(type: DefaultTask) {doLast{
-	librariesRuntimeDirectory.mkdirs()
-	targetJarDirectory.mkdirs()
-}}
-
-task updateSpigot(type: BuildLibraryTask) {
-	targetDirectory = librariesRuntimeDirectory
-	targetLibraryName = "spigot-1.14.2-1.jar"
-	builderUrl = "https://papermc.io/api/v1/paper/1.14.2/51/download"
-	buildCommand = "java -Dpaperclip.patchonly=true -jar {BUILDER}"
-	builtLibraryName = ["cache", "patched_1.14.2.jar"]
-}
-
-task updateRuntimeLibraries(type: UpdateLibrariesTask) {
-	directory = librariesRuntimeDirectory
-	libraries = [
-		[url: "http://nexus.hc.to/content/repositories/pub_releases/net/milkbowl/vault/Vault/1.6.7/Vault-1.6.7.jar", name: "vault-1.jar"],
-		[url: "http://builds.enginehub.org/job/worldedit/12015/download/worldedit-bukkit-7.0.1-SNAPSHOT-dist.jar", name: "worldedit-3.jar"],
-		[url: "http://builds.enginehub.org/job/worldguard/11975/download/worldguard-legacy-7.0.0-SNAPSHOT-dist.jar", name: "worldguard-3.jar"]
-	]
-	manualLibraries = new HashSet<>(Arrays.asList(updateSpigot.targetLibraryName))
-}
 
 sourceSets {
 	main {
@@ -64,34 +38,53 @@ sourceSets {
 
 repositories {
 	mavenCentral()
+	jcenter()
+	maven {
+		url 'https://oss.sonatype.org/content/repositories/snapshots/'
+	}
+	maven {
+		url 'https://papermc.io/repo/repository/maven-public/'
+	}
+	maven {
+	    url 'https://maven.enginehub.org/repo/'
+	}
+	maven {
+		url 'https://jitpack.io'
+	}
 }
 
 dependencies {
-	compile fileTree(dir: librariesRuntimeDirectory, include: '*.jar')
+	compileOnly group: 'com.destroystokyo.paper', name: 'paper-api', version: '1.16.1-R0.1-SNAPSHOT'
+	compileOnly group: 'com.github.MilkBowl', name: 'VaultAPI', version: '1.7'
+	compileOnly group: 'com.sk89q.worldedit', name: 'worldedit-core', version: '7.2.0-SNAPSHOT'
+	compileOnly group: 'com.sk89q.worldedit', name: 'worldedit-bukkit', version: '7.2.0-SNAPSHOT'
+	compileOnly group: 'com.sk89q.worldguard', name: 'worldguard-bukkit', version: '7.0.4-SNAPSHOT'
 }
 
-jar {
-	doFirst {
-		new File(destinationDir, archiveName).delete()
-	}
+compileJava {
+	options.encoding = 'UTF-8'
+	options.incremental = false
+}
 
+
+jar {
 	from sourceSets.main.java.srcDirs
 	from 'LICENSE'
 
 	archiveName = jar.archiveName
 }
 
+
 task copyFinalJarToTarget(type: DefaultTask) {doLast{
+	Path targetJarDirectory = projectDirectoryPath.resolve("target")
+	Files.createDirectories(targetJarDirectory)
 	java.nio.file.Files.copy(
-		new File(jar.archivePath.getPath()).toPath(),
-		new File(targetJarDirectory, jar.baseName + '.jar').toPath(),
+		jar.archivePath.toPath().toAbsolutePath(),
+		targetJarDirectory.resolve(jar.baseName + '.jar'),
 		java.nio.file.StandardCopyOption.REPLACE_EXISTING
 	)
 }}
 
 
 compileJava.dependsOn(clean)
-compileJava.dependsOn(setupFolders)
-compileJava.dependsOn(updateSpigot)
-compileJava.dependsOn(updateRuntimeLibraries)
 jar.finalizedBy(copyFinalJarToTarget)

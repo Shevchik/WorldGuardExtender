@@ -22,9 +22,9 @@ public abstract class WGOverrideListener implements Listener {
 			if (method.isAnnotationPresent(EventHandler.class)) {
 				Class<?> eventClass = method.getParameterTypes()[0];
 				HandlerList hl = (HandlerList) eventClass.getMethod("getHandlerList").invoke(null);
-				for (RegisteredListener listener : new ArrayList<RegisteredListener>(Arrays.asList(hl.getRegisteredListeners()))) {
+				for (RegisteredListener listener : new ArrayList<>(Arrays.asList(hl.getRegisteredListeners()))) {
 					if (listener.getListener().getClass() == getClassToReplace()) {
-						overridenEvents.add(new Tuple<HandlerList, RegisteredListener>(hl, listener));
+						overridenEvents.add(new Tuple<>(hl, listener));
 						hl.unregister(listener);
 					}
 				}

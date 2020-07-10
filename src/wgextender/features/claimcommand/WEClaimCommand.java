@@ -23,6 +23,7 @@ import com.sk89q.worldguard.protection.util.DomainInputResolver.UserLocatorPolic
 import wgextender.utils.WEUtils;
 import wgextender.utils.WGRegionUtils;
 
+@SuppressWarnings("deprecation")
 public class WEClaimCommand {
 
 	protected static void claim(String id, CommandSender sender) throws CommandException {
@@ -38,7 +39,7 @@ public class WEClaimCommand {
 
 		Player player = (Player) sender;
 
-		BukkitWorldConfiguration wcfg = WEUtils.getWorldConfig(player);
+		BukkitWorldConfiguration wcfg = WGRegionUtils.getWorldConfig(player);
 
 		if (wcfg.maxClaimVolume >= Integer.MAX_VALUE) {
 			throw new CommandException("The maximum claim volume get in the configuration is higher than is supported. " + "Currently, it must be " + Integer.MAX_VALUE + " or smaller. Please contact a server administrator.");
