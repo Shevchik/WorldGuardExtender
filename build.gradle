@@ -36,6 +36,13 @@ sourceSets {
 	}
 }
 
+processResources{
+	from (sourceSets.main.resources.srcDirs) {
+		expand 'version': project.version
+		include 'plugin.yml'
+	}
+}
+
 repositories {
 	mavenCentral()
 	jcenter()
@@ -68,12 +75,14 @@ compileJava {
 
 
 jar {
-	from sourceSets.main.java.srcDirs
 	from 'LICENSE'
 
 	archiveName = jar.archiveName
 }
 
+clean{
+	projectDirectoryPath.resolve("target").deleteDir();
+}
 
 task copyFinalJarToTarget(type: DefaultTask) {doLast{
 	Path targetJarDirectory = projectDirectoryPath.resolve("target")

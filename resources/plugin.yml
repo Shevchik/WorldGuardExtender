@@ -1,7 +1,7 @@
 name: WGExtender
 main: wgextender.WGExtender
 api-version: 1.13
-version: 3.0
+version: ${version}
 author: _Shevchik_
 depend: [WorldGuard, WorldEdit, Vault]
 commands:
