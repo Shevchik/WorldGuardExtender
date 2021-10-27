@@ -36,6 +36,7 @@ import com.sk89q.worldguard.protection.regions.RegionContainer;
 import com.sk89q.worldguard.protection.regions.RegionQuery;
 
 public class WGRegionUtils {
+	public static FakeActor FAKE_ACTOR = new FakeActor();
 
 	public static final RegionQuery REGION_QUERY = getRegionContainer().createQuery();
 

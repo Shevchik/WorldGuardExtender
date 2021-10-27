@@ -7,7 +7,7 @@ defaultTasks 'build'
 
 
 group 'org.hurricanegames'
-version '3.0'
+version '3.0.2'
 
 
 import java.nio.file.Path
@@ -33,6 +33,13 @@ sourceSets {
 		java {
 			srcDirs = ['tests']
 		}
+	}
+}
+
+processResources{
+	from (sourceSets.main.resources.srcDirs) {
+		expand 'version': project.version
+		include 'plugin.yml'
 	}
 }
 
@@ -68,12 +75,14 @@ compileJava {
 
 
 jar {
-	from sourceSets.main.java.srcDirs
 	from 'LICENSE'
 
 	archiveName = jar.archiveName
 }
 
+clean{
+	projectDirectoryPath.resolve("target").deleteDir();
+}
 
 task copyFinalJarToTarget(type: DefaultTask) {doLast{
 	Path targetJarDirectory = projectDirectoryPath.resolve("target")

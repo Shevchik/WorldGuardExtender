@@ -1,5 +1,7 @@
 package wgextender.features.claimcommand;
 
+import com.sk89q.worldedit.regions.Polygonal2DRegion;
+import com.sk89q.worldguard.protection.regions.ProtectedPolygonalRegion;
 import org.bukkit.ChatColor;
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
@@ -58,9 +60,10 @@ public class WEClaimCommand {
 			throw new CommandException("Регион с таким именем уже существует, выберите другое.");
 		}
 
-		ProtectedRegion region = createProtectedRegionFromSelection(player, id);
+		boolean mayClaimRegionsUnbounded = permModel.mayClaimRegionsUnbounded();
+		ProtectedRegion region = createProtectedRegionFromSelection(player, id, mayClaimRegionsUnbounded);
 
-		if (!permModel.mayClaimRegionsUnbounded()) {
+		if (!mayClaimRegionsUnbounded) {
 			int maxRegionCount = wcfg.getMaxRegionCount(localPlayer);
 			if ((maxRegionCount >= 0) && (manager.getRegionCountOfPlayer(localPlayer) >= maxRegionCount)) {
 				throw new CommandException("У вас слишком много регионов, удалите один из них перед тем как заприватить новый.");
@@ -92,16 +95,23 @@ public class WEClaimCommand {
 		}
 	}
 
-	private static ProtectedRegion createProtectedRegionFromSelection(Player player, String id) throws CommandException {
+	private static ProtectedRegion createProtectedRegionFromSelection(Player player,  String id, boolean mayClaimRegionsUnbounded) throws CommandException {
 		try {
 			Region selection = WEUtils.getSelection(player);
-			if (selection instanceof CuboidRegion) {
+			if (selection instanceof Polygonal2DRegion && mayClaimRegionsUnbounded) {
+				Polygonal2DRegion polySel = (Polygonal2DRegion) selection;
+				int minY = polySel.getMinimumPoint().getBlockY();
+				int maxY = polySel.getMaximumPoint().getBlockY();
+				return new ProtectedPolygonalRegion(id, polySel.getPoints(), minY, maxY);
+			} else if (selection instanceof CuboidRegion) {
 				return new ProtectedCuboidRegion(id, selection.getMinimumPoint(), selection.getMaximumPoint());
 			} else {
-				throw new CommandException("Вы можете использовать только кубическкую территорию.");
+				throw new CommandException(mayClaimRegionsUnbounded
+						?"Вы можете использовать только кубическую или полигональную территорию."
+						:"Вы можете использовать только кубическую территорию.");
 			}
 		} catch (IncompleteRegionException e) {
-			throw new CommandException("Сначала выделите территорию. " + "Используйте WorldEdit для выделения " + "(wiki: http://wiki.sk89q.com/wiki/WorldEdit).");
+			throw new CommandException("Сначала выделите территорию. " + "Используйте WorldEdit для выделения " + "(wiki: https://worldedit.enginehub.org).");
 		}
 
 	}

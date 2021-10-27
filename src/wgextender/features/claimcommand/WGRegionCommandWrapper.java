@@ -78,7 +78,7 @@ public class WGRegionCommandWrapper extends Command {
 			try {
 				WEClaimCommand.claim(regionname, sender);
 				if (!hasRegion && config.claimAutoFlagsEnabled) {
-					AutoFlags.setFlagsForRegion(WGRegionUtils.wrapPlayer(player), player.getWorld(), config, regionname);
+					AutoFlags.setFlagsForRegion(WGRegionUtils.FAKE_ACTOR, player.getWorld(), config, regionname);
 				}
 			} catch (CommandException ex) {
 				sender.sendMessage(ChatColor.RED + ex.getMessage());
